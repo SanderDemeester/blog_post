@@ -1,0 +1,66 @@
+Encryption with AES encryption algoritm.
+
+AES werkt op 16-byte blokken, zonder rekening te houden met de key-lengte. Het aantal rondes dat gebruikt wordt bij het de "key scheduling" hangt wel af van de key lengte.
+Als de key een lengte heeft van 128-bits (16 bytes), dan is het aantal rondes 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 rondes. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 rondes. In het algemeen is het aantal rondes gelijk aan (key-size in 4-byte woorden)+6. Elke ronde heeft 16 bytes nodig voor "keying material"
+
+128 bit key: 160 bytes + extra key permutation 176 bytes
+192 bit key: 192 bytes + extra key permutation 208 bytes
+256 bit key: 224 bytes + extra key permutation 240 bytes
+
+Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per keer. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte blok. 
+
+Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.
+
+Om de 4 iteraties (bij een 128 bit key) wordt een transformatie toegepast, de vorige 4 bytes worden "ge-xorded". Deze transformatie bestaat uit:
+   - het roteren van een 4 byte woord.
+   - de AES sbox gebruiken (subsitutie)
+   - XOR met een ronde constante
+
+De rotatie:
+   De 1ste byte wordt overschreven door de 2de byte. De tweede met de derde, de derde met de vierde. En de vierde met de eerste.
+
+De subsitutie:
+   De subsitutie is het opzoeken van elke byte in de vertalings tabel, en het vervangen met de gevonden byte. De translatie tabel is een 16 bij 16 array. De rij is de hoogste orde nibble van het doel byte en de kolom is de laagte order nibble. 
+   Als voorbeeld, de byte 0x1A is rij 1 met kolom 10. Dit is de "affine transformation over GF(2^{8}) van b_{i} + b_{(i+4)%8} + b_{(i+5)%8} + b_{(i+6)%8} + b_{(i+7)%8} + c_{i}
+
+De XOR:
+   Op het einde wordt de ge-roteerde, ge-subsitueerde waarde ge-xorderd met onze ronde constante. De lage order 3 bytes van de ronde constante zijn altijd 0. de hoge order byte start altijd met 0x01 en shift naar links elke 4 iteraties. Het wordt dus 0x02 in de 8ste iteratie. 0x04 bij de twaalfde iteratie etc.
+
+Het is belangrijk op te merken dat voor een 128-bit key de ronde constante 10 keer moet worden "ge-left-shift", omdat een 128 bit key 44 iteratie's nodig heeft, maar als je een byte 8 keert shift naar links eindig je met een 0x00 byte. De specificatie eist dat, waneer er overflow optreedt bij een left shift, dat je een XOR doen met de byte 0x1B. Voor de "waarom" verwijst ik naar de specificatie pagina 15. 
+
+Voor de 192-bit key scheduler is het zelfde, het verschil is dat de rotatie, subsitutie en ronde constand XOR worden toegepast bij elke 6de iteratie van het "key scheduling algoritme". Voor een 256-bit key is dit elke 8ste iteratie, omdat elke 8ste iteratie "redelijk ver" uit elkaar ligt. Wordt bij elke 4de iteratie de subsitutie gedaan, en bij elke achtste iteratie de rotatie en XOR.
+
+Het resultaat van dit alles is dat de "key scheduling" non-linear is, maar herhaalbaar. 
+
+
+AES Encryptie:
+
+AES werkt op 16-byte blokken van input, onafhankelijk van de key lengte. We zien de input als een 4 bij 4 matrix, dit is natuurlijk de volledig set van hexadecimale tekens. We zullen dit de "AES state mapping initialization" noemen. We zullen tijdens het encryptie-proces permutaties, subsituties combineren met keying materiaal met deze state om de output te produceren.
+
+We hebben dus de "Input Block ("State")", we doen een xor met de 1ste 16 bytes van de key en krijgen als output "Ronde 1 Input", ee AES key combination.
+Dit wordt gedaan voor elke ronde, en bestaat uit 4 stappen:
+    - Een subsitutie stap.
+    - Een row-shifting -stap.
+    - Een column-mixing step.
+    - Een key-combination stap.
+
+
+De subsitutie stap voeren we uit op elke byte individueel. en komt van de zelfde matrix die we gebruiken bij het "key scheduling algoritme".
+De rotatie stap voeren we uit op elke rij. De eerste rij roteren we 0 plaatsen. De tweede rij 1 plaats, de derde 2 plaatsen etc.
+De "column mixing"-stap. Deze stap is gedefineerd als een matrix multiplicatie met de matrix: <<insert matrix here>>
+AES her-defineert de "add" en "multiply" operaties voor zijn eigen versies van deze bewerkingen.
+    De "adding" operatie in AES is ge-herdefineert als een XOR operatie. Vermenevuldegen is meervoudig "adden" maar met modulo 0x1B bij overflow.
+
+De specificatie noemt deze operaties het improduct. Wat opnieuw is ge-herdefineert. Dus, het vermenevuldegen van 2 bytes is het berekeken van hun inproduct, in AES is dit dus XOR die 2 bytes samen n keer, de waarde van is het aantal linker shift operatie en XOR met 0x1B bij overflow.
+
+Column mixing stap, het toepassen van AES "inproduct".
+
+AES Decryption:
+
+Alle wat we hebben gedaan tijdens de encryptie fase moeten we nu terug herdoen. We starten met de ronden van de keys in omgekeerde volgorde. unmixen van de kolommen en unsiften van de rijen. Dit wil dus zeggen dat het decryptie proces niet bestaat uit de zelfde volgorde van operaties als bij het encryptie proces.
+
+Wat opvalt is dat we voor het decryptie proces niet opniew kunnen gebruik maken van de AES s-boxen omdat de subsitutie in omgekeerde volgorde moet verlopen. We hebben dus  1 sbox om te encrypteren en 1 om de decrypteren.
+
+Het inverteren van houdt in dat we de omgekeerde matrix multiplicatie moeten doen van elke kolom in onze matrix. Dit is niet enkel een multiplicatie maar een multiplicatie en een inversie die we beschouwen als een polynomiaal over GF(2^{8}) en ge-multiliceert modulo x^{4}+1 met een vaste polynomial a^{-1} gegeven door a^{-1}(x) = \{0b\}x^{3} + \{0d}x^{2} + \{09\}x + \{0e}. Dit is gelijk met een "matrix multiplicatie" met de matrix: <<insert matrix>>
+Dit is natuurlijk met de her-gedefineerde operaties beschreven hierboven.
+
