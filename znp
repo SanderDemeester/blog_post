@@ -10,22 +10,22 @@ Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
 Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.
 
 1. Volledigheid:
-   Als de verklaring waar is, zal Victor (die het protocol volledig correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.
+   Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.
 2. Correctheid:
    Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenterde feit correct is.
 3. Zero-Knowledge
-   Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.
+   Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.
 
 Basic Zero-Knowledge Protocol
 Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou en kan worden [hier: http://www.cs.wisc.edu/~mkowalcz/628.pdf]
 
-Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques En Louis Guillou kopieren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowlege protocolen die ik hieronder dan ook zal bespreken.
+Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques En Louis Guillou kopieren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowlege protocolen die ik hieronder zal bespreken. 
 
 Sectie: Overdragen van een oplossing voor een NP-hard probleem als oplossing voor een Zero-Knowledge bewijs 
 
 Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.
 
-stap 1. Peggy gebruikt haar informatie en een random numbber om het NP-hard probleem om te vormen tot een ander hard probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het hard probleem op te lossen.
+stap 1. Peggy gebruikt haar informatie en een random numbber om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
 2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
 3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan niet met dit nieuw probleem informatie verkrijgen over het origineel hard probleem noch kan Victor informatie verkrijgen over de oplossing.
 4. Victor vraagt Peggy om
@@ -65,7 +65,7 @@ Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn d
 
 - "Hamiltonian Cycles"
 
-Een variant van dit protocol werd eens voorgesteld door Munuel Blub [http://www.mathunion.org/ICM/ICM1986.2/Main/icm1986.2.1444.1451.ocr.pdf].
+Een variant van dit protocol werd voorgesteld door Munuel Blub [http://www.mathunion.org/ICM/ICM1986.2/Main/icm1986.2.1444.1451.ocr.pdf].
 Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
 
 Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf $G$. Victor kent $G$ maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
@@ -78,8 +78,8 @@ Daarna encrypteer Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie m
    b. Een Hamiltonian cycle tonen in $H$
 4. Peggy doet wat haar gevraagt word.
    a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltonian cycle voor $G$ of $H$
-   b. Ze toont een Hamiltonian cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltonian cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
+   b. Ze toont een Hamiltonian cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
 4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
 
-Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltonian cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltonian cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocl blijven herhalen tot hij overtuigd is van Peggy een Hamiltonian cycle kent voor $G$.
+Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltonian cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltonian cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocl blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
 
