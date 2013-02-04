@@ -7,7 +7,7 @@ Om dit idee verder uit te leggen zal ik ik onderstaande tekst gebruik maken van 
 Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijst neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zoniet heeft ze een kans van $1/2$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevat over het geheim zelf.
 
 Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
-Ons interactief tussen beide partijen moet voldoen aan volgende 3 vereisten.
+Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.
 
 1. Volledigheid:
    Als de verklaring waar is, zal Victor (die het protocol volledig correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.
