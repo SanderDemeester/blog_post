@@ -98,6 +98,6 @@ Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie 
 Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
 <hr>
 Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. <a href="https://twitter.com/SanderDemeester>@SanderDemeester</a>
-Social tracking ftw
+Dank aan <a href="https://github.com/FelixVanderJeugt">@FelixVanderJeugt</a> voor de hulp bij het maken van dit artikel.
 <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F33&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowTransparency="true"></iframe>
 
