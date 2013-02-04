@@ -1,6 +1,6 @@
-Zero-Knowledge proofs.
+	Zero-Knowledge proofs.
 
-De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat "iets" willen bewijzen aan Bob zonder dat "iets" te moeten onthullen aan Bob.
+De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat "iets" willen bewijzen aan Bob zonder dat "iets" te moeten onthullen aan.
 
 Om dit idee verder uit te leggen zal ik ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de "prover". En Victor die de rol zal spelen van de verifierer. 
 
