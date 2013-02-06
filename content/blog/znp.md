@@ -15,11 +15,11 @@ Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
 Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.
 
 <li>1. Volledigheid:<p>
-   Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</p></li>
+Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</p></li>
 <li>2. Correctheid:<p>
-  Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</p></li>
+Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</p></li>
 <li>3. Zero-Knowledge:<p>
-   Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</p></li>
+Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</p></li>
 
 Basic Zero-Knowledge Protocol
 Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf">[QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children]</a>
@@ -35,8 +35,8 @@ Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossin
 <li>3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.
 <li>4. Victor vraagt Peggy om
 <ul>
-   <li>a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
-   <li>b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
+<li>a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
+<li>b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
 </ul>
 <li>5. Peggy doet wat haar wordt gevraagd
 <li>6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
@@ -65,13 +65,13 @@ Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
 <li>2. Peggy zend H naar Victor.
 <li>3. Victor vraagt Peggy om:
 <ul>
-   <li>a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
-   <li>b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
+<li>a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
+<li>b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
 </ul>
 <li>4. Peggy doet wat haar wordt gevraagd, ofwel
 <ul>
-   <li>a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
-   <li>b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
+<li>a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
+<li>b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
 </ul>
 <li>5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
 </ul>
@@ -91,13 +91,13 @@ Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie 
 <li>2. Peggy geeft Victor $H'$.
 <li>3. Victor vraagt Peggy om:
 <ul>
-   <li>a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
-   <li>b. Een Hamiltoniaanse cycle tonen in $H$
+<li>a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
+<li>b. Een Hamiltoniaanse cycle tonen in $H$
 </ul>
 <li>4. Peggy doet wat haar gevraagt word.
 <ul>
 <li>   a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor $G$ of $H$
-   <li>b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
+<li>b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
 </ul>
 <li>4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
 </ul>

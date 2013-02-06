@@ -53,67 +53,67 @@ m: $m = c^{d} \text{ mod n }$
 Nu de werking van het protocol is begrepen ga ik 3 bekende scenario's tekenen waar deze manier van werken zijn doel mist. 
 
 Scenario 1: 
-	Eve, luistert in op de communicatie van Alice en slaagt erin om een ciphertext bericht $c$ te onderscheppen, $c$ is geëncrypteerd met Alice haar public key. Eve wilt het bericht kunnen lezen. 
-	Wiskundig uitgedrukt wilt Eve het volgende doen,
-	
-	$$m = c^{d}$$
+Eve, luistert in op de communicatie van Alice en slaagt erin om een ciphertext bericht $c$ te onderscheppen, $c$ is geëncrypteerd met Alice haar public key. Eve wilt het bericht kunnen lezen. 
+Wiskundig uitgedrukt wilt Eve het volgende doen,
 
-	Om $m$ te herstellen kiest Eve eerst een random getal $r$, zodanig dat $r$ kleiner is dan $n$ alsook Alice haar public key $e$, die gepubliceerd is.
-	Alice voert de volgende berekeningen uit:
-	
-	$$x = r^{e} \text{ mod n}$$
-	$$y = xc \text{ mod n}$$
-	$$t = r^{-1} \text{mod n}$$
-	
-	Let op dat als $x = r^{e} \text{ mod n}$, dan $r = x^{d} \text{ mod n}$
-	Nu moet Eve Alice overtuigen om y te signeren met haar private key, m.a.w $y$ te decrypteren (Let op, Alice decrypteert het bericht, niet een hash van het bericht). Alice heeft $y$ nog nooit gezien, dus ze signed $y$
-	
-	$$u = y^{d} \text{mod n}$$
-	
-	Alice stuurt het resultaat terug door naar Eve die 
+$$m = c^{d}$$
 
-	$$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n} = c^{d} \text{ mod n} = m$$
+Om $m$ te herstellen kiest Eve eerst een random getal $r$, zodanig dat $r$ kleiner is dan $n$ alsook Alice haar public key $e$, die gepubliceerd is.
+Alice voert de volgende berekeningen uit:
 
-	berekent, eve beschikt nu over m.
+$$x = r^{e} \text{ mod n}$$
+$$y = xc \text{ mod n}$$
+$$t = r^{-1} \text{mod n}$$
+
+Let op dat als $x = r^{e} \text{ mod n}$, dan $r = x^{d} \text{ mod n}$
+Nu moet Eve Alice overtuigen om y te signeren met haar private key, m.a.w $y$ te decrypteren (Let op, Alice decrypteert het bericht, niet een hash van het bericht). Alice heeft $y$ nog nooit gezien, dus ze signed $y$
+
+$$u = y^{d} \text{mod n}$$
+
+Alice stuurt het resultaat terug door naar Eve die 
+
+$$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n} = c^{d} \text{ mod n} = m$$
+
+berekent, eve beschikt nu over m.
 
 Senario 2:
-	Trent is een publieke computer notaris. Als Alice een document laat notaliseren, stuurt ze het document naar Trent. Trent signeert het document een RSA digital signature en stuurt het 
-	document terug naar Alice (opnieuw wordt hier geen one-way hash function gebruikt, Trent encrypteert het volledige document met zijn private key).
-	
-	Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht $m'$.
-	Eerst, Mallory kiest een arbitrere waarde $x$ en berekent 
-	
-	$y = x^{e} \text{ mod n}$, waar $e$ Trent zijn public key is, deze moet publiek zijn anders zouden andere entiteiten zijn signature niet kunnen controleren.
-	
-	Daarna berekent Mallory,
-	
-	$$m = ym' \text{ mod n}$$
+Trent is een publieke computer notaris. Als Alice een document laat notaliseren, stuurt ze het document naar Trent. Trent signeert het document een RSA digital signature en stuurt het 
+document terug naar Alice (opnieuw wordt hier geen one-way hash function gebruikt, Trent encrypteert het volledige document met zijn private key).
 
-	Mallory stuurt dit resultaat naar Trent, die het resultaat $m'^{d} mod \text{ } n$ terug geeft. Wat nu moet gebeuren is
+Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht $m'$.
+Eerst, Mallory kiest een arbitrere waarde $x$ en berekent 
 
-	$(m^{d} \text{ mod n})x^{-1} \text{ mod n}$, wat gelijk is aan $n'^{d}$ en dus de signature is van $m'$
+$y = x^{e} \text{ mod n}$, waar $e$ Trent zijn public key is, deze moet publiek zijn anders zouden andere entiteiten zijn signature niet kunnen controleren.
 
-	Er zijn verschillende werkwijze's mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
-	<a href="http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf">[G.I. Davida, "Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem"] </a>
-	<a href="faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf">[D.E. Denning, "Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems"] </a>
-	<a href="http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html">[Y. Desmedt and A.M. Odlykzo, "A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems"] </a>
-	
-	De manier van werken die wordt gebruikt is het zelfde voor alle exploits, en is dat de machtsverheffing de multipliciteits structuur behoudt van zijn input:
+Daarna berekent Mallory,
 
-	$$(xm)^{d} \text{ mod n} = x^{d}m^{d} \text{ mod n}$$
+$$m = ym' \text{ mod n}$$
+
+Mallory stuurt dit resultaat naar Trent, die het resultaat $m'^{d} mod \text{ } n$ terug geeft. Wat nu moet gebeuren is
+
+$(m^{d} \text{ mod n})x^{-1} \text{ mod n}$, wat gelijk is aan $n'^{d}$ en dus de signature is van $m'$
+
+Er zijn verschillende werkwijze's mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
+<a href="http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf">[G.I. Davida, "Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem"] </a>
+<a href="faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf">[D.E. Denning, "Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems"] </a>
+<a href="http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html">[Y. Desmedt and A.M. Odlykzo, "A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems"] </a>
+
+De manier van werken die wordt gebruikt is het zelfde voor alle exploits, en is dat de machtsverheffing de multipliciteits structuur behoudt van zijn input:
+
+$$(xm)^{d} \text{ mod n} = x^{d}m^{d} \text{ mod n}$$
 
 Senario 3:
-	Eve wilt dat Alice $m_{3}$ signed. Ze genereert twee berichten, $m_{1},m_{2}$ zodanig dat
-	
-	$$m_{3} \equiv m_{1}m_{2} (\text{ mod n})$$
-	
-	Als Eve instaat is om Alice $m_{1}$ en $m_{2}$ te laten signeren kan ze volgende berekening toepassen om $m_{3}$ te bekomen.
+Eve wilt dat Alice $m_{3}$ signed. Ze genereert twee berichten, $m_{1},m_{2}$ zodanig dat
 
-	$$m_{3}^{d} = (m_{1}^{d})(m_{2}^{d} \text{ mod n})$$
+$$m_{3} \equiv m_{1}m_{2} (\text{ mod n})$$
+
+Als Eve instaat is om Alice $m_{1}$ en $m_{2}$ te laten signeren kan ze volgende berekening toepassen om $m_{3}$ te bekomen.
+
+$$m_{3}^{d} = (m_{1}^{d})(m_{2}^{d} \text{ mod n})$$
 Een link naar een uitgewerkt voorbeeld met maple.
 
 Conclusie: 
 Gebruik RSA nooit om een random document te signen.
- Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen.
+Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen.
 
 <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F31&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=80&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>

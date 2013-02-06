@@ -13,7 +13,7 @@ Er bestaan <a href="http://en.wikipedia.org/wiki/Integer_factorization#Factoring
 
 Ikzelf heb voor mijn versie (die zeker niet optimaal is) een Direct Search Factorization algoritme gebruikt waar ik steun op de eigenschap:
 $$
- \begin{equation}
+\begin{equation}
 \frac{n}{\sqrt{n}+1} &lt; \sqrt{n}
 \end{equation}
 $$
@@ -68,10 +68,10 @@ We kunnen dus nu zeggen dat
 $$
 \Phi(n) = 
 \left\{
-  \begin{array}{l l}
-    |V(G)| - (|A_{m}| + |A'_{m}|)  & \text{ als } |A'_{m}| > 1 \\
-    |V(G)| - (|A_{m}| + |A'_{m}|) + 1 & \text{ als }|A'_{m}| = 1 \\
-  \end{array} \right. $$
+\begin{array}{l l}
+|V(G)| - (|A_{m}| + |A'_{m}|)  & \text{ als } |A'_{m}| > 1 \\
+|V(G)| - (|A_{m}| + |A'_{m}|) + 1 & \text{ als }|A'_{m}| = 1 \\
+\end{array} \right. $$
 We noteren de sleutel van $v_{i}$ als $s(v_{i})$. Dus:
 
 $$\forall s(v_{i}) \in V(G) | N_{G}(v_{i}) \cap N_{G}(v_{i+1}) = \emptyset \rightarrow s(v_{i})^{\Phi(s(v_{i+1}))} \equiv 1 \mod s(v_{i+1})$$
