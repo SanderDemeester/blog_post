@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
 
 # A few helpful tips about the Rules file:
 #
@@ -17,9 +18,9 @@ compile '/stylesheet/' do
   # don’t filter or layout
 end
 compile '/blog/*/' do
-	filter :kramdown
-	layout 'blog'
-	layout 'default'
+#  filter :kramdown
+  layout 'blog'
+  layout 'default'
 end
 compile '*' do
   if item.binary?
@@ -35,7 +36,7 @@ route '/stylesheet/' do
 end
 
 route 'blog/feed' do
-	'/blog/feed.xml'
+  '/blog/feed.xml'
 end
 
 route '*' do
