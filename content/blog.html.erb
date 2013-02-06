@@ -1,7 +1,9 @@
 <% (@site.sorted_articles[0..10]).each do |post| %>
-	<%= link_to(post[:title], post.path) %>
-	<%= post[:created_at] %>
-	<article>
-		<%= get_post_start(post) %>
-	</article>
-<% end %>
+<%= link_to(post[:title], post.path) %>
+<%= post[:created_at] %>
+<p>
+  <!-- <article> -->
+  <!-- 	<%= get_post_start(post) %> -->
+  <!-- </article> -->
+  <% end %>
+  

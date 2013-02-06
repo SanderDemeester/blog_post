@@ -1,8 +1,30 @@
-{:versioni:	data{"/posts/first/{:default{	:	post"�<!DOCTYPE HTML>
+{:versioni:	data{"/stylesheet/{:default{:raw"=.content {
+  width: 800px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-top: none;
+  margin: 0 auto;
+  padding: 60px 20px 0 60px;
+}
+.post aside {
+  color: #888;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #aaa;
+}
+.post article {
+  margin: 10px 0 60px 0;
+}
+#image {
+	height: 300px;
+	width: 300px;
+}
+:	last@
+:pre@
+"/blog/AES/{;{	:	post"�#<!DOCTYPE HTML>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>My blog - First post</title>
+    <title>Sander Demeester - Advanced Encryption Standard (AES)</title>
     <link rel="stylesheet" type="text/css" 
       href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
       media="screen">
@@ -12,21 +34,692 @@
     <div class='navbar'>
       <div class='navbar-inner'>
         <div class='container'>
-          <a class='brand' href='/'>My Blog</a>
+          <a class='brand' href='/'>SD</a>
           <ul class='nav'>
             <li class='active'><a href='/'>Home</a></li>
             <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
           </ul>
         </div>
       </div>
     </div>
     <section class='content'>
-      Hello world
+      
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/AES/">Advanced Encryption Standard (AES)</a></h1>
+  <aside>
+    <p>Posted at: 2012-01-07 19:59:01 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/aes.gif">
+    </div>
+    
+  </aside>
+  <article>
+    <p>Encryption with AES encryption algoritm.
+    AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de &#8220;key scheduling&#8221; hangt af van de key lengte.
+<!-- more -->
+    Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor &#8220;keying material&#8221;
+&gt;    128 bit key: 160 bytes + extra key permutation 176 bytes
+&gt;    192 bit key: 192 bytes + extra key permutation 208 bytes
+&gt;    256 bit key: 224 bytes + extra key permutation 240 bytes</p>
+
+<p>Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.</p>
+
+<p>Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.</p>
+
+<p>Om de 4 iteraties (bij een 128 bit key) wordt een transformatie toegepast, de vorige 4 bytes worden &#8220;ge-xorded&#8221;. Deze transformatie bestaat uit:</p>
+
+<blockquote>
+  <pre><code>   het roteren van een 4 byte woord.
+   de AES sbox gebruiken (subsitutie)
+   XOR met een ronde constante
+</code></pre>
+</blockquote>
+
+<pre><code>De rotatie:
+   De 1ste byte wordt overschreven door de 2de byte. De tweede met de derde, de derde met de vierde. En de vierde met de eerste.
+ 
+De subsitutie:
+   De subsitutie is het opzoeken van elke byte in de encryptie sbox, en het vervangen met de gevonden byte. De translatie tabel is een 16 bij 16 array. De rij wordt aangeduid met de 4 meest significante bits, de kolom wordt aangeduid met de 4 minst significante bits.
+   Als voorbeeld, de byte 0x1A is rij 1 met kolom 10. Volgens de specificatie van AES heeft ons dit de "affine transformation over $$GF(2^{8})\text{ van } b_{i} + b_{(i+4)\text{%}8} + b_{(i+5)\text{%}8} + b_{(i+6)\text{%}8} + b_{(i+7)\text{%}8} + c_{i}$$
+ 
+De XOR:
+   Op het einde wordt de geroteerde, gesubstitueerde waarde gexorderd met onze ronde constante. De 3 minst significante byte van de ronde constante zijn altijd 0. De meest significante byte start altijd met 0x01, deze byte wordt om de 4 iteraties 1 bit naar links geshift. In volgorde wort dit dus: 0x02 in de 8ste iteratie. 0x04 bij de twaalfde iteratie etc.
+ 
+Het is belangrijk op te merken dat voor een 128-bit key de ronde constante 10 keer moet worden naar links geshift, omdat een 128 bit key 44 iteratie's nodig heeft, maar als je een byte 8 keert shift naar links eindig je met een 0x00 byte. De specificatie eist dat, waneer er overflow optreedt bij een left shift, dat je een XOR moet uitvoeren met de byte 0x1B. Voor de "waarom" verwijst ik naar de specificatie pagina 15.
+ 
+Voor de 192-bit key scheduler is het zelfde, het verschil is dat de rotatie, subsitutie en ronde constante XOR worden toegepast bij elke 6de iteratie van het "key scheduling algoritme". Voor een 256-bit key is dit elke 8ste iteratie, omdat elke 8ste iteratie "redelijk ver" uit elkaar ligt. Wordt bij elke 4de iteratie de subsitutie gedaan, en bij elke achtste iteratie de rotatie en XOR operatie.
+</code></pre>
+
+<p>Het is belangrijk om op te merken dat het resultaat van het &#8220;key scheduling&#8221; algoritme &#8220;non-linear&#8221; is, maar wel herhaalbaar.    </p>
+
+<pre><code>AES Encryptie:
+ 
+AES werkt met blokken van 16-byte voor zijn input, onafhankelijk van de key lengte. We zien de input als een 4 bij 4 matrix, dit is natuurlijk de volledig set van hexadecimale tekens. We zullen dit de "AES state mapping initialization" noemen. We zullen tijdens het encryptie-proces permutaties, subsituties  en keying materiaal combineren met deze state om de output te produceren.
+ 
+We hebben dus de "Input Block ("State")", we doen een xor met de 1ste 16 bytes van de key en krijgen als output "Ronde 1 Input", eee AES key combination.
+Dit wordt gedaan voor elke ronde, en bestaat uit 4 stappen:
+    - Een subsitutie stap.
+    - Een row-shifting -stap.
+    - Een column-mixing step.
+    - Een key-combination stap.
+ 
+De subsitutie stap voeren we uit op elke byte individueel van de input, en komt van de zelfde matrix die we gebruiken bij het "key scheduling algoritme", nl onze sbox
+
+De rotatie stap voeren we uit op elke rij. De eerste rij roteren we 0 plaatsen. De tweede rij 1 plaats, de derde 2 plaatsen etc.
+De "column mixing"-stap. Deze stap is gedefinieerd als een matrixvermenigvuldiging met de matrix:  $$ \begin{bmatrix}   02 &amp; 03 &amp; 01 &amp; 01 \\ 01 &amp; 02 &amp; 03 &amp; 01 \\ 01 &amp; 01 &amp; 02 &amp; 03 \\ 03 &amp; 01 &amp; 01 &amp; 02 \\ \end{bmatrix} $$  
+AES herdefiniëert de matrix optelling en matrixvermenigvuldiging operaties voor zijn eigen versies van deze bewerkingen.
+    De matrix optelling operatie in AES is gedefinieerd als een XOR operatie. matrixvermenigvuldiging is meervoudig optellen maar modulo 0x1B bij overflow.
+ 
+De specificatie noemt deze operaties het inproduct. Wat opnieuw is herdefinitie. Dus, het vermenigvuldigen van 2 bytes is het bepalen van hun inproduct, in AES is dit dus een XOR operatie op 2 bytes die $n$ keer wordt uitgevoerd. N is hier de waarde van is het aantal linker shift operatie en XOR met 0x1B bij overflow neemt.
+</code></pre>
+
+<p>&#8220;Column mixing&#8221; stap, het toepassen van AES &#8220;inproduct&#8221;.</p>
+
+<p>AES Decryption:</p>
+
+<pre><code>Alle wat we hebben gedaan tijdens de encryptie fase moeten we nu terug ontdoen. We starten met de ronden van de keys in omgekeerde volgorde, daarna "unmixen" van de kolommen en un-siften van de rijen. Dit wil dus zeggen dat het decryptie proces niet bestaat uit de zelfde volgorde van operaties als bij het encryptie proces.
+</code></pre>
+
+<p>Wat opvalt is dat we voor het decryptie proces niet opniew kunnen gebruik maken van dezelfde AES sboxen omdat de subsitutie in omgekeerde volgorde moet verlopen. We hebben dus  1 sbox om te encrypteren en 1 om de decrypteren.</p>
+
+<pre><code>Het inverteren houdt in dat we de omgekeerde matrix multiplicatie moeten doen van elke kolom in onze matrix. Dit is niet enkel een multiplicatie maar een multiplicatie en een inversie die we beschouwen als een polynoom over GF(2^{8}) en vermenigvuldigd modulo $$x^{4}+1$$ met een vaste polynoom $$a^{-1}$$ gegeven door $$ a^{-1}(x) = \{0b\}x^\{3\} + \{0d\}x^\{2\} + \{09\}x + \{0e\} $$ Dit is gelijk met een matrixvermenigvuldiging met de matrix:  $$ \begin{bmatrix} 0e &amp; 0b &amp; 0d &amp; 09 \\ 09 &amp; 0e &amp; 0b &amp; 0d \\ 0d &amp; 09 &amp; 0e &amp; 0b \\ 0b &amp; 0d &amp; 09 &amp; 0e  \end{bmatrix} $$    Dit is natuurlijk met de hergedefiniëert operaties beschreven hierboven.
+</code></pre>
+
+<p>link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a></p>
+
+  </article>
+</div>
+<script type="text/javascript"
+	src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
     </section>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
   </body>
 </html>
-:raw"Hello world:	last@
-:pre"Hello world"/blog/int_fac/{;{	;"�<!DOCTYPE HTML>
+;"�Encryption with AES encryption algoritm.
+    AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de "key scheduling" hangt af van de key lengte.
+<!-- more -->
+    Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor "keying material"
+>    128 bit key: 160 bytes + extra key permutation 176 bytes
+>    192 bit key: 192 bytes + extra key permutation 208 bytes
+>    256 bit key: 224 bytes + extra key permutation 240 bytes
+
+
+Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.
+     
+Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.
+     
+Om de 4 iteraties (bij een 128 bit key) wordt een transformatie toegepast, de vorige 4 bytes worden "ge-xorded". Deze transformatie bestaat uit:
+
+>        het roteren van een 4 byte woord.
+>        de AES sbox gebruiken (subsitutie)
+>        XOR met een ronde constante
+
+     
+    De rotatie:
+       De 1ste byte wordt overschreven door de 2de byte. De tweede met de derde, de derde met de vierde. En de vierde met de eerste.
+     
+    De subsitutie:
+       De subsitutie is het opzoeken van elke byte in de encryptie sbox, en het vervangen met de gevonden byte. De translatie tabel is een 16 bij 16 array. De rij wordt aangeduid met de 4 meest significante bits, de kolom wordt aangeduid met de 4 minst significante bits.
+       Als voorbeeld, de byte 0x1A is rij 1 met kolom 10. Volgens de specificatie van AES heeft ons dit de "affine transformation over $$GF(2^{8})\text{ van } b_{i} + b_{(i+4)\text{%}8} + b_{(i+5)\text{%}8} + b_{(i+6)\text{%}8} + b_{(i+7)\text{%}8} + c_{i}$$
+     
+    De XOR:
+       Op het einde wordt de geroteerde, gesubstitueerde waarde gexorderd met onze ronde constante. De 3 minst significante byte van de ronde constante zijn altijd 0. De meest significante byte start altijd met 0x01, deze byte wordt om de 4 iteraties 1 bit naar links geshift. In volgorde wort dit dus: 0x02 in de 8ste iteratie. 0x04 bij de twaalfde iteratie etc.
+     
+    Het is belangrijk op te merken dat voor een 128-bit key de ronde constante 10 keer moet worden naar links geshift, omdat een 128 bit key 44 iteratie's nodig heeft, maar als je een byte 8 keert shift naar links eindig je met een 0x00 byte. De specificatie eist dat, waneer er overflow optreedt bij een left shift, dat je een XOR moet uitvoeren met de byte 0x1B. Voor de "waarom" verwijst ik naar de specificatie pagina 15.
+     
+    Voor de 192-bit key scheduler is het zelfde, het verschil is dat de rotatie, subsitutie en ronde constante XOR worden toegepast bij elke 6de iteratie van het "key scheduling algoritme". Voor een 256-bit key is dit elke 8ste iteratie, omdat elke 8ste iteratie "redelijk ver" uit elkaar ligt. Wordt bij elke 4de iteratie de subsitutie gedaan, en bij elke achtste iteratie de rotatie en XOR operatie.
+
+Het is belangrijk om op te merken dat het resultaat van het "key scheduling" algoritme "non-linear" is, maar wel herhaalbaar.    
+     
+    AES Encryptie:
+     
+    AES werkt met blokken van 16-byte voor zijn input, onafhankelijk van de key lengte. We zien de input als een 4 bij 4 matrix, dit is natuurlijk de volledig set van hexadecimale tekens. We zullen dit de "AES state mapping initialization" noemen. We zullen tijdens het encryptie-proces permutaties, subsituties  en keying materiaal combineren met deze state om de output te produceren.
+     
+    We hebben dus de "Input Block ("State")", we doen een xor met de 1ste 16 bytes van de key en krijgen als output "Ronde 1 Input", eee AES key combination.
+    Dit wordt gedaan voor elke ronde, en bestaat uit 4 stappen:
+        - Een subsitutie stap.
+        - Een row-shifting -stap.
+        - Een column-mixing step.
+        - Een key-combination stap.
+     
+    De subsitutie stap voeren we uit op elke byte individueel van de input, en komt van de zelfde matrix die we gebruiken bij het "key scheduling algoritme", nl onze sbox
+
+    De rotatie stap voeren we uit op elke rij. De eerste rij roteren we 0 plaatsen. De tweede rij 1 plaats, de derde 2 plaatsen etc.
+    De "column mixing"-stap. Deze stap is gedefinieerd als een matrixvermenigvuldiging met de matrix: 
+$$ \begin{bmatrix}  
+02 & 03 & 01 & 01 \\
+01 & 02 & 03 & 01 \\
+01 & 01 & 02 & 03 \\
+03 & 01 & 01 & 02 \\
+\end{bmatrix} $$  
+    AES herdefiniëert de matrix optelling en matrixvermenigvuldiging operaties voor zijn eigen versies van deze bewerkingen.
+        De matrix optelling operatie in AES is gedefinieerd als een XOR operatie. matrixvermenigvuldiging is meervoudig optellen maar modulo 0x1B bij overflow.
+     
+    De specificatie noemt deze operaties het inproduct. Wat opnieuw is herdefinitie. Dus, het vermenigvuldigen van 2 bytes is het bepalen van hun inproduct, in AES is dit dus een XOR operatie op 2 bytes die $n$ keer wordt uitgevoerd. N is hier de waarde van is het aantal linker shift operatie en XOR met 0x1B bij overflow neemt.
+     
+"Column mixing" stap, het toepassen van AES "inproduct".
+   
+AES Decryption:
+     
+    Alle wat we hebben gedaan tijdens de encryptie fase moeten we nu terug ontdoen. We starten met de ronden van de keys in omgekeerde volgorde, daarna "unmixen" van de kolommen en un-siften van de rijen. Dit wil dus zeggen dat het decryptie proces niet bestaat uit de zelfde volgorde van operaties als bij het encryptie proces.
+     
+Wat opvalt is dat we voor het decryptie proces niet opniew kunnen gebruik maken van dezelfde AES sboxen omdat de subsitutie in omgekeerde volgorde moet verlopen. We hebben dus  1 sbox om te encrypteren en 1 om de decrypteren.
+     
+    Het inverteren houdt in dat we de omgekeerde matrix multiplicatie moeten doen van elke kolom in onze matrix. Dit is niet enkel een multiplicatie maar een multiplicatie en een inversie die we beschouwen als een polynoom over GF(2^{8}) en vermenigvuldigd modulo $$x^{4}+1$$ met een vaste polynoom $$a^{-1}$$ gegeven door $$ a^{-1}(x) = \{0b\}x^\{3\} + \{0d\}x^\{2\} + \{09\}x + \{0e\} $$ Dit is gelijk met een matrixvermenigvuldiging met de matrix: 
+$$ \begin{bmatrix}
+0e & 0b & 0d & 09 \\
+09 & 0e & 0b & 0d \\
+0d & 09 & 0e & 0b \\
+0b & 0d & 09 & 0e 
+\end{bmatrix} $$  
+ Dit is natuurlijk met de hergedefiniëert operaties beschreven hierboven.
+
+link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a>;	@;
+"v<p>Encryption with AES encryption algoritm.
+    AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de &#8220;key scheduling&#8221; hangt af van de key lengte.
+<!-- more -->
+    Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor &#8220;keying material&#8221;
+&gt;    128 bit key: 160 bytes + extra key permutation 176 bytes
+&gt;    192 bit key: 192 bytes + extra key permutation 208 bytes
+&gt;    256 bit key: 224 bytes + extra key permutation 240 bytes</p>
+
+<p>Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.</p>
+
+<p>Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.</p>
+
+<p>Om de 4 iteraties (bij een 128 bit key) wordt een transformatie toegepast, de vorige 4 bytes worden &#8220;ge-xorded&#8221;. Deze transformatie bestaat uit:</p>
+
+<blockquote>
+  <pre><code>   het roteren van een 4 byte woord.
+   de AES sbox gebruiken (subsitutie)
+   XOR met een ronde constante
+</code></pre>
+</blockquote>
+
+<pre><code>De rotatie:
+   De 1ste byte wordt overschreven door de 2de byte. De tweede met de derde, de derde met de vierde. En de vierde met de eerste.
+ 
+De subsitutie:
+   De subsitutie is het opzoeken van elke byte in de encryptie sbox, en het vervangen met de gevonden byte. De translatie tabel is een 16 bij 16 array. De rij wordt aangeduid met de 4 meest significante bits, de kolom wordt aangeduid met de 4 minst significante bits.
+   Als voorbeeld, de byte 0x1A is rij 1 met kolom 10. Volgens de specificatie van AES heeft ons dit de "affine transformation over $$GF(2^{8})\text{ van } b_{i} + b_{(i+4)\text{%}8} + b_{(i+5)\text{%}8} + b_{(i+6)\text{%}8} + b_{(i+7)\text{%}8} + c_{i}$$
+ 
+De XOR:
+   Op het einde wordt de geroteerde, gesubstitueerde waarde gexorderd met onze ronde constante. De 3 minst significante byte van de ronde constante zijn altijd 0. De meest significante byte start altijd met 0x01, deze byte wordt om de 4 iteraties 1 bit naar links geshift. In volgorde wort dit dus: 0x02 in de 8ste iteratie. 0x04 bij de twaalfde iteratie etc.
+ 
+Het is belangrijk op te merken dat voor een 128-bit key de ronde constante 10 keer moet worden naar links geshift, omdat een 128 bit key 44 iteratie's nodig heeft, maar als je een byte 8 keert shift naar links eindig je met een 0x00 byte. De specificatie eist dat, waneer er overflow optreedt bij een left shift, dat je een XOR moet uitvoeren met de byte 0x1B. Voor de "waarom" verwijst ik naar de specificatie pagina 15.
+ 
+Voor de 192-bit key scheduler is het zelfde, het verschil is dat de rotatie, subsitutie en ronde constante XOR worden toegepast bij elke 6de iteratie van het "key scheduling algoritme". Voor een 256-bit key is dit elke 8ste iteratie, omdat elke 8ste iteratie "redelijk ver" uit elkaar ligt. Wordt bij elke 4de iteratie de subsitutie gedaan, en bij elke achtste iteratie de rotatie en XOR operatie.
+</code></pre>
+
+<p>Het is belangrijk om op te merken dat het resultaat van het &#8220;key scheduling&#8221; algoritme &#8220;non-linear&#8221; is, maar wel herhaalbaar.    </p>
+
+<pre><code>AES Encryptie:
+ 
+AES werkt met blokken van 16-byte voor zijn input, onafhankelijk van de key lengte. We zien de input als een 4 bij 4 matrix, dit is natuurlijk de volledig set van hexadecimale tekens. We zullen dit de "AES state mapping initialization" noemen. We zullen tijdens het encryptie-proces permutaties, subsituties  en keying materiaal combineren met deze state om de output te produceren.
+ 
+We hebben dus de "Input Block ("State")", we doen een xor met de 1ste 16 bytes van de key en krijgen als output "Ronde 1 Input", eee AES key combination.
+Dit wordt gedaan voor elke ronde, en bestaat uit 4 stappen:
+    - Een subsitutie stap.
+    - Een row-shifting -stap.
+    - Een column-mixing step.
+    - Een key-combination stap.
+ 
+De subsitutie stap voeren we uit op elke byte individueel van de input, en komt van de zelfde matrix die we gebruiken bij het "key scheduling algoritme", nl onze sbox
+
+De rotatie stap voeren we uit op elke rij. De eerste rij roteren we 0 plaatsen. De tweede rij 1 plaats, de derde 2 plaatsen etc.
+De "column mixing"-stap. Deze stap is gedefinieerd als een matrixvermenigvuldiging met de matrix:  $$ \begin{bmatrix}   02 &amp; 03 &amp; 01 &amp; 01 \\ 01 &amp; 02 &amp; 03 &amp; 01 \\ 01 &amp; 01 &amp; 02 &amp; 03 \\ 03 &amp; 01 &amp; 01 &amp; 02 \\ \end{bmatrix} $$  
+AES herdefiniëert de matrix optelling en matrixvermenigvuldiging operaties voor zijn eigen versies van deze bewerkingen.
+    De matrix optelling operatie in AES is gedefinieerd als een XOR operatie. matrixvermenigvuldiging is meervoudig optellen maar modulo 0x1B bij overflow.
+ 
+De specificatie noemt deze operaties het inproduct. Wat opnieuw is herdefinitie. Dus, het vermenigvuldigen van 2 bytes is het bepalen van hun inproduct, in AES is dit dus een XOR operatie op 2 bytes die $n$ keer wordt uitgevoerd. N is hier de waarde van is het aantal linker shift operatie en XOR met 0x1B bij overflow neemt.
+</code></pre>
+
+<p>&#8220;Column mixing&#8221; stap, het toepassen van AES &#8220;inproduct&#8221;.</p>
+
+<p>AES Decryption:</p>
+
+<pre><code>Alle wat we hebben gedaan tijdens de encryptie fase moeten we nu terug ontdoen. We starten met de ronden van de keys in omgekeerde volgorde, daarna "unmixen" van de kolommen en un-siften van de rijen. Dit wil dus zeggen dat het decryptie proces niet bestaat uit de zelfde volgorde van operaties als bij het encryptie proces.
+</code></pre>
+
+<p>Wat opvalt is dat we voor het decryptie proces niet opniew kunnen gebruik maken van dezelfde AES sboxen omdat de subsitutie in omgekeerde volgorde moet verlopen. We hebben dus  1 sbox om te encrypteren en 1 om de decrypteren.</p>
+
+<pre><code>Het inverteren houdt in dat we de omgekeerde matrix multiplicatie moeten doen van elke kolom in onze matrix. Dit is niet enkel een multiplicatie maar een multiplicatie en een inversie die we beschouwen als een polynoom over GF(2^{8}) en vermenigvuldigd modulo $$x^{4}+1$$ met een vaste polynoom $$a^{-1}$$ gegeven door $$ a^{-1}(x) = \{0b\}x^\{3\} + \{0d\}x^\{2\} + \{09\}x + \{0e\} $$ Dit is gelijk met een matrixvermenigvuldiging met de matrix:  $$ \begin{bmatrix} 0e &amp; 0b &amp; 0d &amp; 09 \\ 09 &amp; 0e &amp; 0b &amp; 0d \\ 0d &amp; 09 &amp; 0e &amp; 0b \\ 0b &amp; 0d &amp; 09 &amp; 0e  \end{bmatrix} $$    Dit is natuurlijk met de hergedefiniëert operaties beschreven hierboven.
+</code></pre>
+
+<p>link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a></p>
+"/img/aes1/{;{ "/about/{;{	;"X<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sander Demeester - A New Item</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>SD</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <section class='content'>
+      Hi, I'm a new item!
+    </section>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+  </body>
+</html>
+;"Hi, I'm a new item!;	@;
+"Hi, I'm a new item!"/blog/{;{	;"Q'<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sander Demeester - </title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>SD</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <section class='content'>
+      
+<a href="/blog/znp/">Zero Knowledge Proof</a>
+2013-04-02 10:45:51 +0000
+<p>
+  <!-- <article> -->
+  <!-- 	<p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
+
+<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.
+<div class='read-more'><a href='/blog/znp/'>Verder lezen &rsaquo;</a></div> -->
+  <!-- </article> -->
+  
+<a href="/blog/int_fac/">Visualisation of the Integer factorization process</a>
+2012-08-09 21:35:01 +0000
+<p>
+  <!-- <article> -->
+  <!-- 	<p>In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
+<div class='read-more'><a href='/blog/int_fac/'>Verder lezen &rsaquo;</a></div> -->
+  <!-- </article> -->
+  
+<a href="/blog/RSA/">Chosen Ciphertext Attack against RSA</a>
+2012-07-27 20:49:00 +0000
+<p>
+  <!-- <article> -->
+  <!-- 	<p>We onderscheiden 2 soorten problemen als we het hebben over het &#8220;aanvallen&#8221; van cryptografische protocollen. 
+Soort 1, aanvallen tegen de implementatie van het protocol. 
+Soort 2, aanvallen tegen het protocol zelf. 
+&lt;! &#8211; more &#8211;&gt;
+De volgende 3 senario&#8217;s die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.</p>
+
+<p>Zeer korte beschrijving van het RSA protocol.
+RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote getallen. De public en private key zijn functies van een paar (200 of meer digits) priem getallen. Het bekomen van de plaintext van de public key en de ciphertext is equivalent met het factoriseren van het product bestaand uit 2 priem getallen.</p>
+
+<p>Om de twee keys te maken kiezen we 2 random priem getallen van gelijk lengte, we noemen deze $p,q$. We bepalen het product.</p>
+
+<script type="math/tex; mode=display">n = pq</script>
+
+<p>We kiezen random een encryptie key $e$, zodanig dat $e$ en $(p-1)(q-1)$ relatief priem zijn. 
+Daarna gebruiken we het <a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended euclidean algoritm</a> om een decryptie key $d$ te vinden zodanig dat</p>
+
+<p><script type="math/tex">ed \equiv 1 \text{ mod } (p-1)(q-1)</script>
+Of
+<script type="math/tex">d = e^{-1} \text{ mod } ((p-1)(q-1))</script></p>
+
+<p>We merken op dat $d$ en $n$ relatief priem zijn.  De getallen $e$ en $n$ zijn de public key, $d$ is de private key. $p,q$ zijn verder niet meer nodig, maar moeten wel geheim blijven.
+Om een bericht $m$ te encrypteren delen we het eerst op in blokken smaller dan $n$, het resultaat, $e$ zal zijn bestaan uit gelijkaardige blokken die we $c_{i}$ zullen noemen.
+De encryptie formule is de volgende:
+<script type="math/tex">c_{i} = m_{i}^{e} \text{ mod n }</script>
+Decrypteren is dan logischerwijze:
+<script type="math/tex">m_{i} = c_{i}^{d} \text{mod n}</script>
+Omdat
+<script type="math/tex">c_{i}^{d}=(m_{i}^{e})^{d} = m_{i}^{ed}=m_{i}^{k(p-1)(q-1)+1} = m_{i}m_{i}^{k(p-1)(q-1)} = m_{i}*1=m_{i} \text{ alles mod n}</script>.</p>
+
+<p><a href="http://sanderdemeester.be/maple/RSA-example.mw">maple voorbeeld</a></p>
+
+<hr />
+
+<p>Samenvatting van het protocol:</p>
+<p>
+Public Key:
+n: product van 2 priem getallen, $p,q$ (beide getallen moeten geheim blijven)
+e: relatief priem met $(p-1)(q-1)$
+Private Key:
+d: $e^{-1} \text{mod } ((p-1)(q-1))$
+Encrypteren:
+c: $c=m^{e} \text{ mod n }$
+Decrypteren:
+m: $m = c^{d} \text{ mod n }$
+<hr />
+
+Nu de werking van het protocol is begrepen ga ik 3 bekende scenario's tekenen waar deze manier van werken zijn doel mist. 
+
+Scenario 1: 
+	Eve, luistert in op de communicatie van Alice en slaagt erin om een ciphertext bericht $c$ te onderscheppen, $c$ is geëncrypteerd met Alice haar public key. Eve wilt het bericht kunnen lezen. 
+	Wiskundig uitgedrukt wilt Eve het volgende doen,
+	
+	$$m = c^{d}$$
+
+	Om $m$ te herstellen kiest Eve eerst een random getal $r$, zodanig dat $r$ kleiner is dan $n$ alsook Alice haar public key $e$, die gepubliceerd is.
+	Alice voert de volgende berekeningen uit:
+	
+	$$x = r^{e} \text{ mod n}$$
+	$$y = xc \text{ mod n}$$
+	$$t = r^{-1} \text{mod n}$$
+	
+	Let op dat als $x = r^{e} \text{ mod n}$, dan $r = x^{d} \text{ mod n}$
+	Nu moet Eve Alice overtuigen om y te signeren met haar private key, m.a.w $y$ te decrypteren (Let op, Alice decrypteert het bericht, niet een hash van het bericht). Alice heeft $y$ nog nooit gezien, dus ze signed $y$
+	
+	$$u = y^{d} \text{mod n}$$
+	
+	Alice stuurt het resultaat terug door naar Eve die 
+
+	$$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n} = c^{d} \text{ mod n} = m$$
+
+	berekent, eve beschikt nu over m.
+
+Senario 2:
+	Trent is een publieke computer notaris. Als Alice een document laat notaliseren, stuurt ze het document naar Trent. Trent signeert het document een RSA digital signature en stuurt het 
+	document terug naar Alice (opnieuw wordt hier geen one-way hash function gebruikt, Trent encrypteert het volledige document met zijn private key).
+	
+	Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht $m'$.
+	Eerst, Mallory kiest een arbitrere waarde $x$ en berekent 
+	
+	$y = x^{e} \text{ mod n}$, waar $e$ Trent zijn public key is, deze moet publiek zijn anders zouden andere entiteiten zijn signature niet kunnen controleren.
+	
+	Daarna berekent Mallory,
+	
+	$$m = ym' \text{ mod n}$$
+
+	Mallory stuurt dit resultaat naar Trent, die het resultaat $m'^{d} mod \text{ } n$ terug geeft. Wat nu moet gebeuren is
+
+	$(m^{d} \text{ mod n})x^{-1} \text{ mod n}$, wat gelijk is aan $n'^{d}$ en dus de signature is van $m'$
+
+	Er zijn verschillende werkwijze's mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
+	<a href="http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf">[G.I. Davida, "Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem"] </a>
+	<a href="faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf">[D.E. Denning, "Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems"] </a>
+	<a href="http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html">[Y. Desmedt and A.M. Odlykzo, "A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems"] </a>
+	
+	De manier van werken die wordt gebruikt is het zelfde voor alle exploits, en is dat de machtsverheffing de multipliciteits structuur behoudt van zijn input:
+
+	$$(xm)^{d} \text{ mod n} = x^{d}m^{d} \text{ mod n}$$
+
+Senario 3:
+	Eve wilt dat Alice $m_{3}$ signed. Ze genereert twee berichten, $m_{1},m_{2}$ zodanig dat
+	
+	$$m_{3} \equiv m_{1}m_{2} (\text{ mod n})$$
+	
+	Als Eve instaat is om Alice $m_{1}$ en $m_{2}$ te laten signeren kan ze volgende berekening toepassen om $m_{3}$ te bekomen.
+
+	$$m_{3}^{d} = (m_{1}^{d})(m_{2}^{d} \text{ mod n})$$
+Een link naar een uitgewerkt voorbeeld met maple.
+
+Conclusie: 
+Gebruik RSA nooit om een random document te signen.
+ Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen.
+
+<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F31&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=80&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowtransparency="true"></iframe>
+</p>
+ -->
+  <!-- </article> -->
+  
+<a href="/blog/first/">First post</a>
+2012-02-10 09:00:00 +0000
+<p>
+  <!-- <article> -->
+  <!-- 	<p>Hello world
+<div class='read-more'><a href='/blog/first/'>Verder lezen &rsaquo;</a></div> -->
+  <!-- </article> -->
+  
+<a href="/blog/AES/">Advanced Encryption Standard (AES)</a>
+2012-01-07 19:59:01 +0000
+<p>
+  <!-- <article> -->
+  <!-- 	<p>Encryption with AES encryption algoritm.
+    AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de &#8220;key scheduling&#8221; hangt af van de key lengte.
+<div class='read-more'><a href='/blog/AES/'>Verder lezen &rsaquo;</a></div> -->
+  <!-- </article> -->
+  
+  
+
+    </section>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+  </body>
+</html>
+;"�<% (@site.sorted_articles[0..10]).each do |post| %>
+<%= link_to(post[:title], post.path) %>
+<%= post[:created_at] %>
+<p>
+  <!-- <article> -->
+  <!-- 	<%= get_post_start(post) %> -->
+  <!-- </article> -->
+  <% end %>
+  
+;	@;
+""
+<a href="/blog/znp/">Zero Knowledge Proof</a>
+2013-04-02 10:45:51 +0000
+<p>
+  <!-- <article> -->
+  <!-- 	<p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
+
+<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.
+<div class='read-more'><a href='/blog/znp/'>Verder lezen &rsaquo;</a></div> -->
+  <!-- </article> -->
+  
+<a href="/blog/int_fac/">Visualisation of the Integer factorization process</a>
+2012-08-09 21:35:01 +0000
+<p>
+  <!-- <article> -->
+  <!-- 	<p>In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
+<div class='read-more'><a href='/blog/int_fac/'>Verder lezen &rsaquo;</a></div> -->
+  <!-- </article> -->
+  
+<a href="/blog/RSA/">Chosen Ciphertext Attack against RSA</a>
+2012-07-27 20:49:00 +0000
+<p>
+  <!-- <article> -->
+  <!-- 	<p>We onderscheiden 2 soorten problemen als we het hebben over het &#8220;aanvallen&#8221; van cryptografische protocollen. 
+Soort 1, aanvallen tegen de implementatie van het protocol. 
+Soort 2, aanvallen tegen het protocol zelf. 
+&lt;! &#8211; more &#8211;&gt;
+De volgende 3 senario&#8217;s die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.</p>
+
+<p>Zeer korte beschrijving van het RSA protocol.
+RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote getallen. De public en private key zijn functies van een paar (200 of meer digits) priem getallen. Het bekomen van de plaintext van de public key en de ciphertext is equivalent met het factoriseren van het product bestaand uit 2 priem getallen.</p>
+
+<p>Om de twee keys te maken kiezen we 2 random priem getallen van gelijk lengte, we noemen deze $p,q$. We bepalen het product.</p>
+
+<script type="math/tex; mode=display">n = pq</script>
+
+<p>We kiezen random een encryptie key $e$, zodanig dat $e$ en $(p-1)(q-1)$ relatief priem zijn. 
+Daarna gebruiken we het <a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended euclidean algoritm</a> om een decryptie key $d$ te vinden zodanig dat</p>
+
+<p><script type="math/tex">ed \equiv 1 \text{ mod } (p-1)(q-1)</script>
+Of
+<script type="math/tex">d = e^{-1} \text{ mod } ((p-1)(q-1))</script></p>
+
+<p>We merken op dat $d$ en $n$ relatief priem zijn.  De getallen $e$ en $n$ zijn de public key, $d$ is de private key. $p,q$ zijn verder niet meer nodig, maar moeten wel geheim blijven.
+Om een bericht $m$ te encrypteren delen we het eerst op in blokken smaller dan $n$, het resultaat, $e$ zal zijn bestaan uit gelijkaardige blokken die we $c_{i}$ zullen noemen.
+De encryptie formule is de volgende:
+<script type="math/tex">c_{i} = m_{i}^{e} \text{ mod n }</script>
+Decrypteren is dan logischerwijze:
+<script type="math/tex">m_{i} = c_{i}^{d} \text{mod n}</script>
+Omdat
+<script type="math/tex">c_{i}^{d}=(m_{i}^{e})^{d} = m_{i}^{ed}=m_{i}^{k(p-1)(q-1)+1} = m_{i}m_{i}^{k(p-1)(q-1)} = m_{i}*1=m_{i} \text{ alles mod n}</script>.</p>
+
+<p><a href="http://sanderdemeester.be/maple/RSA-example.mw">maple voorbeeld</a></p>
+
+<hr />
+
+<p>Samenvatting van het protocol:</p>
+<p>
+Public Key:
+n: product van 2 priem getallen, $p,q$ (beide getallen moeten geheim blijven)
+e: relatief priem met $(p-1)(q-1)$
+Private Key:
+d: $e^{-1} \text{mod } ((p-1)(q-1))$
+Encrypteren:
+c: $c=m^{e} \text{ mod n }$
+Decrypteren:
+m: $m = c^{d} \text{ mod n }$
+<hr />
+
+Nu de werking van het protocol is begrepen ga ik 3 bekende scenario's tekenen waar deze manier van werken zijn doel mist. 
+
+Scenario 1: 
+	Eve, luistert in op de communicatie van Alice en slaagt erin om een ciphertext bericht $c$ te onderscheppen, $c$ is geëncrypteerd met Alice haar public key. Eve wilt het bericht kunnen lezen. 
+	Wiskundig uitgedrukt wilt Eve het volgende doen,
+	
+	$$m = c^{d}$$
+
+	Om $m$ te herstellen kiest Eve eerst een random getal $r$, zodanig dat $r$ kleiner is dan $n$ alsook Alice haar public key $e$, die gepubliceerd is.
+	Alice voert de volgende berekeningen uit:
+	
+	$$x = r^{e} \text{ mod n}$$
+	$$y = xc \text{ mod n}$$
+	$$t = r^{-1} \text{mod n}$$
+	
+	Let op dat als $x = r^{e} \text{ mod n}$, dan $r = x^{d} \text{ mod n}$
+	Nu moet Eve Alice overtuigen om y te signeren met haar private key, m.a.w $y$ te decrypteren (Let op, Alice decrypteert het bericht, niet een hash van het bericht). Alice heeft $y$ nog nooit gezien, dus ze signed $y$
+	
+	$$u = y^{d} \text{mod n}$$
+	
+	Alice stuurt het resultaat terug door naar Eve die 
+
+	$$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n} = c^{d} \text{ mod n} = m$$
+
+	berekent, eve beschikt nu over m.
+
+Senario 2:
+	Trent is een publieke computer notaris. Als Alice een document laat notaliseren, stuurt ze het document naar Trent. Trent signeert het document een RSA digital signature en stuurt het 
+	document terug naar Alice (opnieuw wordt hier geen one-way hash function gebruikt, Trent encrypteert het volledige document met zijn private key).
+	
+	Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht $m'$.
+	Eerst, Mallory kiest een arbitrere waarde $x$ en berekent 
+	
+	$y = x^{e} \text{ mod n}$, waar $e$ Trent zijn public key is, deze moet publiek zijn anders zouden andere entiteiten zijn signature niet kunnen controleren.
+	
+	Daarna berekent Mallory,
+	
+	$$m = ym' \text{ mod n}$$
+
+	Mallory stuurt dit resultaat naar Trent, die het resultaat $m'^{d} mod \text{ } n$ terug geeft. Wat nu moet gebeuren is
+
+	$(m^{d} \text{ mod n})x^{-1} \text{ mod n}$, wat gelijk is aan $n'^{d}$ en dus de signature is van $m'$
+
+	Er zijn verschillende werkwijze's mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
+	<a href="http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf">[G.I. Davida, "Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem"] </a>
+	<a href="faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf">[D.E. Denning, "Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems"] </a>
+	<a href="http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html">[Y. Desmedt and A.M. Odlykzo, "A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems"] </a>
+	
+	De manier van werken die wordt gebruikt is het zelfde voor alle exploits, en is dat de machtsverheffing de multipliciteits structuur behoudt van zijn input:
+
+	$$(xm)^{d} \text{ mod n} = x^{d}m^{d} \text{ mod n}$$
+
+Senario 3:
+	Eve wilt dat Alice $m_{3}$ signed. Ze genereert twee berichten, $m_{1},m_{2}$ zodanig dat
+	
+	$$m_{3} \equiv m_{1}m_{2} (\text{ mod n})$$
+	
+	Als Eve instaat is om Alice $m_{1}$ en $m_{2}$ te laten signeren kan ze volgende berekening toepassen om $m_{3}$ te bekomen.
+
+	$$m_{3}^{d} = (m_{1}^{d})(m_{2}^{d} \text{ mod n})$$
+Een link naar een uitgewerkt voorbeeld met maple.
+
+Conclusie: 
+Gebruik RSA nooit om een random document te signen.
+ Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen.
+
+<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F31&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=80&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowtransparency="true"></iframe>
+</p>
+ -->
+  <!-- </article> -->
+  
+<a href="/blog/first/">First post</a>
+2012-02-10 09:00:00 +0000
+<p>
+  <!-- <article> -->
+  <!-- 	<p>Hello world
+<div class='read-more'><a href='/blog/first/'>Verder lezen &rsaquo;</a></div> -->
+  <!-- </article> -->
+  
+<a href="/blog/AES/">Advanced Encryption Standard (AES)</a>
+2012-01-07 19:59:01 +0000
+<p>
+  <!-- <article> -->
+  <!-- 	<p>Encryption with AES encryption algoritm.
+    AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de &#8220;key scheduling&#8221; hangt af van de key lengte.
+<div class='read-more'><a href='/blog/AES/'>Verder lezen &rsaquo;</a></div> -->
+  <!-- </article> -->
+  
+  
+"/blog/int_fac/{;{	;"�<!DOCTYPE HTML>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -166,7 +859,7 @@ We noteren de sleutel van $v</em>{i}$ als $s(v_{i})$. Dus:</p>
     </script>
   </body>
 </html>
-;	"�In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
+;"�In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
 <!-- more -->
 De verzameling van natuurlijke getallen is oneindig wat impliceert dat er oneindig veel priemfactoren zijn met gevolg dat er oneindig veel priem getallen zijn (De ontbinding is uniek voor elke getal op de volgorde na). Als we zouden stellen dat dit niet zo is dan bestaat er een eindig verzameling van priemgetallen $p_{1},p_{2},\cdots,p_{n}$ waarvoor $v= \Pi^{n}_{i=1} p$ met $v+1$ die dus geen priemgetal zou zijn. Dit zou tot gevolg hebben dat $v+1$ echt delers. Noemen we $q$ de kleinste positieve deler van $v+1$. Dan is $q$ een deler en bijgevolg ook een deler van $v$. Bijgevolg is $q$ een deler van $(v+1)-v = 1$. Wat niet kan, dus er zijn <a href="http://en.wikipedia.org/wiki/Largest_known_prime_number">oneindig</a> veel priemgetallen.
 
@@ -239,8 +932,8 @@ $$\forall s(v_{i}) \in V(G) | N_{G}(v_{i}) \cap N_{G}(v_{i+1}) = \emptyset \righ
 <hr>
 <li> De code voor de visualisatie kan worden gevonden op <a href="https://gist.github.com/3691347">github</a>
 <li> Als ik ergens een fout heb gemaakt, sorry. Laat het mij <a href="twitter.com/SanderDemeester">weten</a>
-<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F32&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowTransparency="true"></iframe>;
-@;"i<p>In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
+<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F32&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowTransparency="true"></iframe>;	@#;
+"i<p>In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
 <!-- more -->
 De verzameling van natuurlijke getallen is oneindig wat impliceert dat er oneindig veel priemfactoren zijn met gevolg dat er oneindig veel priem getallen zijn (De ontbinding is uniek voor elke getal op de volgorde na). Als we zouden stellen dat dit niet zo is dan bestaat er een eindig verzameling van priemgetallen $p<em>{1},p</em>{2},\cdots,p<em>{n}$ waarvoor $v= \Pi^{n}</em>{i=1} p$ met $v+1$ die dus geen priemgetal zou zijn. Dit zou tot gevolg hebben dat $v+1$ echt delers. Noemen we $q$ de kleinste positieve deler van $v+1$. Dan is $q$ een deler en bijgevolg ook een deler van $v$. Bijgevolg is $q$ een deler van $(v+1)-v = 1$. Wat niet kan, dus er zijn <a href="http://en.wikipedia.org/wiki/Largest_known_prime_number">oneindig</a> veel priemgetallen.</p>
 
@@ -316,1544 +1009,7 @@ We noteren de sleutel van $v</em>{i}$ als $s(v_{i})$. Dus:</p>
 <li> Als ik ergens een fout heb gemaakt, sorry. Laat het mij <a href="twitter.com/SanderDemeester">weten</a>
 <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F32&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowtransparency="true"></iframe>
 </li></li>
-"/blog/{;{	;"JK<!DOCTYPE HTML>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Sander Demeester - </title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
-      media="screen">
-    <link rel="stylesheet" type="text/css" href="/style.css">
-  </head>
-  <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>SD</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <section class='content'>
-      
-	<a href="/blog/znp/">Zero Knowledge Proof</a>
-	2013-04-02 10:45:51 +0000
-	<article>
-		<p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
-
-<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.</p>
-
-<p>Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van $\frac{1}{2}$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.</p>
-
-<p>Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
-Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.</p>
-
-<li>1. Volledigheid:<p>
-   Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</p></li>
-<li>2. Correctheid:<p>
-  Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</p></li>
-<li>3. Zero-Knowledge:<p>
-   Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</p></li>
-
-<p>Basic Zero-Knowledge Protocol
-Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf">[QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children]</a></p>
-
-<p>Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. </p>
-
-<h3>Overdragen van een oplossing voor een NP-hard probleem als oplossing voor een Zero-Knowledge bewijs</h3>
-
-<p>Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.</p>
-<ul>
-<li>1. Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
-<li>2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
-<li>3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.
-<li>4. Victor vraagt Peggy om
-<ul>
-   <li>a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
-   <li>b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
-
-<li>5. Peggy doet wat haar wordt gevraagd
-<li>6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
-
-
-Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan "faken". 
-
-In de volgende sectie bespreek ik 2 voorbeelden:
-
-- "Graph Isomorphism"
-Basis voor dit protocol komt uit <a href="http://www.math.ias.edu/~avi/PUBLICATIONS/MYPAPERS/GMW86/GMW86.pdf">[Oded Goldreich,Proofs that yield nothing but their validity and a Methodology of Cryptographic Protocol Design]</a>
-We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen $G$,$H$
-$$
-\begin{equation*}
-f : V(G) \rightarrow V(H)
-\end{equation*}
-$$
-zodat elk paar bogen ${u,v}$ aangrenzend zijn in $G$ als en alleen als $f(u)$ en $f(v)$ aangrenzend zijn in $H$.
-Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
-
-We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf $G_{1}$ en $G_{2}$.
-Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
-
-<ul>
-<li>1. Peggy random permuteert $G_{1}$ om een graaf $H$ te produceren. $H$ is isomorf met $G_{1}$, omdat Peggy kennis heeft van isomorfisme tussen $H$ en $G_{1}$ heeft ze ook kennis van isomorfisme tussen $H$ en $G_{1}$. Voor alle andere is isomorfisme vinden tussen $G_{1}$ en $H$ of tussen $G_{2}$ en $H$ even moeilijk als het vinden van isomorfisme tussen $G_{1}$ en $G_{2}$.
-<li>2. Peggy zend H naar Victor.
-<li>3. Victor vraagt Peggy om:
-<ul>
-   <li>a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
-   <li>b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
-
-<li>4. Peggy doet wat haar wordt gevraagd, ofwel
-<ul>
-   <li>a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
-   <li>b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
-
-<li>5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
-
-
-Als Peggy geen kennis heeft van isomorfisme tussen $G_{1}$ en $G_{2}$ kan ze geen graaf $H$ produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel $G_{1}$ ofwel $G_{2}$. Ze heeft dus $\frac{1}{2}$ kans om te gokken. 
-Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe $H$ maakt kan hij ook geen kennis overdragen van ronde tot ronde.
-
-- "Hamiltonian Cycles"
-
-Een variant van dit protocol werd voorgesteld door <a href="http://www.mathunion.org/ICM/ICM1986.2/Main/icm1986.2.1444.1451.ocr.pdf">[Munuel Blub,How to prove a theorem so no one else can claim it]</a>.
-Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
-
-Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf $G$. Victor kent $G$ maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
-<ul>
-<li>1. Peggy random permuteert $G$. Ze verplaatst de toppen om een nieuwe graaf $H$ te maken. $G$ en $H$ zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in $G$ is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in $H$. Als ze zelf niet $H$ heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen $G$ en $H$.
-Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie methode zijn voor elke lijn in $H$, dat is een encrypted 0 of een encrypted 1 voor elke lijn in $H$).
-<li>2. Peggy geeft Victor $H'$.
-<li>3. Victor vraagt Peggy om:
-<ul>
-   <li>a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
-   <li>b. Een Hamiltoniaanse cycle tonen in $H$
-
-<li>4. Peggy doet wat haar gevraagt word.
-<ul>
-<li>   a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor $G$ of $H$
-   <li>b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
-
-<li>4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
-
-
-Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
-<hr />
-Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. <a href="https://twitter.com/SanderDemeester">@SanderDemeester</a><p>
-Dank aan <a href="https://github.com/FelixVanderJeugt">@FelixVanderJeugt</a> voor de hulp bij het maken van dit artikel.
-<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F33&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowtransparency="true"></iframe>
-</p></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></li></ul></li></li></li></li></ul>
-
-	</article>
-
-	<a href="/blog/int_fac/">Visualisation of the Integer factorization process</a>
-	2012-08-09 21:35:01 +0000
-	<article>
-		<p>In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
-<div class='read-more'><a href='/blog/int_fac/'>Verder lezen &rsaquo;</a></div>
-	</article>
-
-	<a href="/blog/RSA/">Chosen Ciphertext Attack against RSA</a>
-	2012-07-27 20:49:00 +0000
-	<article>
-		<p>We onderscheiden 2 soorten problemen als we het hebben over het &#8220;aanvallen&#8221; van cryptografische protocollen. 
-Soort 1, aanvallen tegen de implementatie van het protocol. 
-Soort 2, aanvallen tegen het protocol zelf. 
-&lt;! &#8211; more &#8211;&gt;
-De volgende 3 senario&#8217;s die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.</p>
-
-<p>Zeer korte beschrijving van het RSA protocol.
-RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote getallen. De public en private key zijn functies van een paar (200 of meer digits) priem getallen. Het bekomen van de plaintext van de public key en de ciphertext is equivalent met het factoriseren van het product bestaand uit 2 priem getallen.</p>
-
-<p>Om de twee keys te maken kiezen we 2 random priem getallen van gelijk lengte, we noemen deze $p,q$. We bepalen het product.</p>
-
-<script type="math/tex; mode=display">n = pq</script>
-
-<p>We kiezen random een encryptie key $e$, zodanig dat $e$ en $(p-1)(q-1)$ relatief priem zijn. 
-Daarna gebruiken we het <a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended euclidean algoritm</a> om een decryptie key $d$ te vinden zodanig dat</p>
-
-<p><script type="math/tex">ed \equiv 1 \text{ mod } (p-1)(q-1)</script>
-Of
-<script type="math/tex">d = e^{-1} \text{ mod } ((p-1)(q-1))</script></p>
-
-<p>We merken op dat $d$ en $n$ relatief priem zijn.  De getallen $e$ en $n$ zijn de public key, $d$ is de private key. $p,q$ zijn verder niet meer nodig, maar moeten wel geheim blijven.
-Om een bericht $m$ te encrypteren delen we het eerst op in blokken smaller dan $n$, het resultaat, $e$ zal zijn bestaan uit gelijkaardige blokken die we $c_{i}$ zullen noemen.
-De encryptie formule is de volgende:
-<script type="math/tex">c_{i} = m_{i}^{e} \text{ mod n }</script>
-Decrypteren is dan logischerwijze:
-<script type="math/tex">m_{i} = c_{i}^{d} \text{mod n}</script>
-Omdat
-<script type="math/tex">c_{i}^{d}=(m_{i}^{e})^{d} = m_{i}^{ed}=m_{i}^{k(p-1)(q-1)+1} = m_{i}m_{i}^{k(p-1)(q-1)} = m_{i}*1=m_{i} \text{ alles mod n}</script>.</p>
-
-<p><a href="http://sanderdemeester.be/maple/RSA-example.mw">maple voorbeeld</a></p>
-
-<hr />
-
-<p>Samenvatting van het protocol:</p>
-<p>
-Public Key:
-n: product van 2 priem getallen, $p,q$ (beide getallen moeten geheim blijven)
-e: relatief priem met $(p-1)(q-1)$
-Private Key:
-d: $e^{-1} \text{mod } ((p-1)(q-1))$
-Encrypteren:
-c: $c=m^{e} \text{ mod n }$
-Decrypteren:
-m: $m = c^{d} \text{ mod n }$
-<hr />
-
-Nu de werking van het protocol is begrepen ga ik 3 bekende scenario's tekenen waar deze manier van werken zijn doel mist. 
-
-Scenario 1: 
-	Eve, luistert in op de communicatie van Alice en slaagt erin om een ciphertext bericht $c$ te onderscheppen, $c$ is geëncrypteerd met Alice haar public key. Eve wilt het bericht kunnen lezen. 
-	Wiskundig uitgedrukt wilt Eve het volgende doen,
-	
-	$$m = c^{d}$$
-
-	Om $m$ te herstellen kiest Eve eerst een random getal $r$, zodanig dat $r$ kleiner is dan $n$ alsook Alice haar public key $e$, die gepubliceerd is.
-	Alice voert de volgende berekeningen uit:
-	
-	$$x = r^{e} \text{ mod n}$$
-	$$y = xc \text{ mod n}$$
-	$$t = r^{-1} \text{mod n}$$
-	
-	Let op dat als $x = r^{e} \text{ mod n}$, dan $r = x^{d} \text{ mod n}$
-	Nu moet Eve Alice overtuigen om y te signeren met haar private key, m.a.w $y$ te decrypteren (Let op, Alice decrypteert het bericht, niet een hash van het bericht). Alice heeft $y$ nog nooit gezien, dus ze signed $y$
-	
-	$$u = y^{d} \text{mod n}$$
-	
-	Alice stuurt het resultaat terug door naar Eve die 
-
-	$$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n} = c^{d} \text{ mod n} = m$$
-
-	berekent, eve beschikt nu over m.
-
-Senario 2:
-	Trent is een publieke computer notaris. Als Alice een document laat notaliseren, stuurt ze het document naar Trent. Trent signeert het document een RSA digital signature en stuurt het 
-	document terug naar Alice (opnieuw wordt hier geen one-way hash function gebruikt, Trent encrypteert het volledige document met zijn private key).
-	
-	Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht $m'$.
-	Eerst, Mallory kiest een arbitrere waarde $x$ en berekent 
-	
-	$y = x^{e} \text{ mod n}$, waar $e$ Trent zijn public key is, deze moet publiek zijn anders zouden andere entiteiten zijn signature niet kunnen controleren.
-	
-	Daarna berekent Mallory,
-	
-	$$m = ym' \text{ mod n}$$
-
-	Mallory stuurt dit resultaat naar Trent, die het resultaat $m'^{d} mod \text{ } n$ terug geeft. Wat nu moet gebeuren is
-
-	$(m^{d} \text{ mod n})x^{-1} \text{ mod n}$, wat gelijk is aan $n'^{d}$ en dus de signature is van $m'$
-
-	Er zijn verschillende werkwijze's mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
-	<a href="http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf">[G.I. Davida, "Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem"] </a>
-	<a href="faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf">[D.E. Denning, "Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems"] </a>
-	<a href="http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html">[Y. Desmedt and A.M. Odlykzo, "A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems"] </a>
-	
-	De manier van werken die wordt gebruikt is het zelfde voor alle exploits, en is dat de machtsverheffing de multipliciteits structuur behoudt van zijn input:
-
-	$$(xm)^{d} \text{ mod n} = x^{d}m^{d} \text{ mod n}$$
-
-Senario 3:
-	Eve wilt dat Alice $m_{3}$ signed. Ze genereert twee berichten, $m_{1},m_{2}$ zodanig dat
-	
-	$$m_{3} \equiv m_{1}m_{2} (\text{ mod n})$$
-	
-	Als Eve instaat is om Alice $m_{1}$ en $m_{2}$ te laten signeren kan ze volgende berekening toepassen om $m_{3}$ te bekomen.
-
-	$$m_{3}^{d} = (m_{1}^{d})(m_{2}^{d} \text{ mod n})$$
-Een link naar een uitgewerkt voorbeeld met maple.
-
-Conclusie: 
-Gebruik RSA nooit om een random document te signen.
- Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen.
-
-<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F31&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=80&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowtransparency="true"></iframe>
-</p>
-
-	</article>
-
-	<a href="/blog/first/">First post</a>
-	2012-02-10 09:00:00 +0000
-	<article>
-		<p>Hello world
-<div class='read-more'><a href='/blog/first/'>Verder lezen &rsaquo;</a></div>
-	</article>
-
-	<a href="/blog/AES/">Advanced Encryption Standard (AES)</a>
-	2012-01-07 19:59:01 +0000
-	<article>
-		<p>Encryption with AES encryption algoritm.
-    AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de &#8220;key scheduling&#8221; hangt af van de key lengte.
-<div class='read-more'><a href='/blog/AES/'>Verder lezen &rsaquo;</a></div>
-	</article>
-
-
-    </section>
-    <script type="text/javascript">
-      
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-34425622-1']);
-      _gaq.push(['_trackPageview']);
-      
-      (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-      
-    </script>
-  </body>
-</html>
-;	"�<% (@site.sorted_articles[0..10]).each do |post| %>
-	<%= link_to(post[:title], post.path) %>
-	<%= post[:created_at] %>
-	<article>
-		<%= get_post_start(post) %>
-	</article>
-<% end %>
-;
-@;"F
-	<a href="/blog/znp/">Zero Knowledge Proof</a>
-	2013-04-02 10:45:51 +0000
-	<article>
-		<p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
-
-<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.</p>
-
-<p>Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van $\frac{1}{2}$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.</p>
-
-<p>Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
-Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.</p>
-
-<li>1. Volledigheid:<p>
-   Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</p></li>
-<li>2. Correctheid:<p>
-  Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</p></li>
-<li>3. Zero-Knowledge:<p>
-   Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</p></li>
-
-<p>Basic Zero-Knowledge Protocol
-Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf">[QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children]</a></p>
-
-<p>Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. </p>
-
-<h3>Overdragen van een oplossing voor een NP-hard probleem als oplossing voor een Zero-Knowledge bewijs</h3>
-
-<p>Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.</p>
-<ul>
-<li>1. Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
-<li>2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
-<li>3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.
-<li>4. Victor vraagt Peggy om
-<ul>
-   <li>a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
-   <li>b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
-
-<li>5. Peggy doet wat haar wordt gevraagd
-<li>6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
-
-
-Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan "faken". 
-
-In de volgende sectie bespreek ik 2 voorbeelden:
-
-- "Graph Isomorphism"
-Basis voor dit protocol komt uit <a href="http://www.math.ias.edu/~avi/PUBLICATIONS/MYPAPERS/GMW86/GMW86.pdf">[Oded Goldreich,Proofs that yield nothing but their validity and a Methodology of Cryptographic Protocol Design]</a>
-We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen $G$,$H$
-$$
-\begin{equation*}
-f : V(G) \rightarrow V(H)
-\end{equation*}
-$$
-zodat elk paar bogen ${u,v}$ aangrenzend zijn in $G$ als en alleen als $f(u)$ en $f(v)$ aangrenzend zijn in $H$.
-Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
-
-We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf $G_{1}$ en $G_{2}$.
-Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
-
-<ul>
-<li>1. Peggy random permuteert $G_{1}$ om een graaf $H$ te produceren. $H$ is isomorf met $G_{1}$, omdat Peggy kennis heeft van isomorfisme tussen $H$ en $G_{1}$ heeft ze ook kennis van isomorfisme tussen $H$ en $G_{1}$. Voor alle andere is isomorfisme vinden tussen $G_{1}$ en $H$ of tussen $G_{2}$ en $H$ even moeilijk als het vinden van isomorfisme tussen $G_{1}$ en $G_{2}$.
-<li>2. Peggy zend H naar Victor.
-<li>3. Victor vraagt Peggy om:
-<ul>
-   <li>a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
-   <li>b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
-
-<li>4. Peggy doet wat haar wordt gevraagd, ofwel
-<ul>
-   <li>a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
-   <li>b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
-
-<li>5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
-
-
-Als Peggy geen kennis heeft van isomorfisme tussen $G_{1}$ en $G_{2}$ kan ze geen graaf $H$ produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel $G_{1}$ ofwel $G_{2}$. Ze heeft dus $\frac{1}{2}$ kans om te gokken. 
-Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe $H$ maakt kan hij ook geen kennis overdragen van ronde tot ronde.
-
-- "Hamiltonian Cycles"
-
-Een variant van dit protocol werd voorgesteld door <a href="http://www.mathunion.org/ICM/ICM1986.2/Main/icm1986.2.1444.1451.ocr.pdf">[Munuel Blub,How to prove a theorem so no one else can claim it]</a>.
-Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
-
-Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf $G$. Victor kent $G$ maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
-<ul>
-<li>1. Peggy random permuteert $G$. Ze verplaatst de toppen om een nieuwe graaf $H$ te maken. $G$ en $H$ zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in $G$ is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in $H$. Als ze zelf niet $H$ heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen $G$ en $H$.
-Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie methode zijn voor elke lijn in $H$, dat is een encrypted 0 of een encrypted 1 voor elke lijn in $H$).
-<li>2. Peggy geeft Victor $H'$.
-<li>3. Victor vraagt Peggy om:
-<ul>
-   <li>a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
-   <li>b. Een Hamiltoniaanse cycle tonen in $H$
-
-<li>4. Peggy doet wat haar gevraagt word.
-<ul>
-<li>   a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor $G$ of $H$
-   <li>b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
-
-<li>4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
-
-
-Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
-<hr />
-Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. <a href="https://twitter.com/SanderDemeester">@SanderDemeester</a><p>
-Dank aan <a href="https://github.com/FelixVanderJeugt">@FelixVanderJeugt</a> voor de hulp bij het maken van dit artikel.
-<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F33&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowtransparency="true"></iframe>
-</p></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></li></ul></li></li></li></li></ul>
-
-	</article>
-
-	<a href="/blog/int_fac/">Visualisation of the Integer factorization process</a>
-	2012-08-09 21:35:01 +0000
-	<article>
-		<p>In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
-<div class='read-more'><a href='/blog/int_fac/'>Verder lezen &rsaquo;</a></div>
-	</article>
-
-	<a href="/blog/RSA/">Chosen Ciphertext Attack against RSA</a>
-	2012-07-27 20:49:00 +0000
-	<article>
-		<p>We onderscheiden 2 soorten problemen als we het hebben over het &#8220;aanvallen&#8221; van cryptografische protocollen. 
-Soort 1, aanvallen tegen de implementatie van het protocol. 
-Soort 2, aanvallen tegen het protocol zelf. 
-&lt;! &#8211; more &#8211;&gt;
-De volgende 3 senario&#8217;s die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.</p>
-
-<p>Zeer korte beschrijving van het RSA protocol.
-RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote getallen. De public en private key zijn functies van een paar (200 of meer digits) priem getallen. Het bekomen van de plaintext van de public key en de ciphertext is equivalent met het factoriseren van het product bestaand uit 2 priem getallen.</p>
-
-<p>Om de twee keys te maken kiezen we 2 random priem getallen van gelijk lengte, we noemen deze $p,q$. We bepalen het product.</p>
-
-<script type="math/tex; mode=display">n = pq</script>
-
-<p>We kiezen random een encryptie key $e$, zodanig dat $e$ en $(p-1)(q-1)$ relatief priem zijn. 
-Daarna gebruiken we het <a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended euclidean algoritm</a> om een decryptie key $d$ te vinden zodanig dat</p>
-
-<p><script type="math/tex">ed \equiv 1 \text{ mod } (p-1)(q-1)</script>
-Of
-<script type="math/tex">d = e^{-1} \text{ mod } ((p-1)(q-1))</script></p>
-
-<p>We merken op dat $d$ en $n$ relatief priem zijn.  De getallen $e$ en $n$ zijn de public key, $d$ is de private key. $p,q$ zijn verder niet meer nodig, maar moeten wel geheim blijven.
-Om een bericht $m$ te encrypteren delen we het eerst op in blokken smaller dan $n$, het resultaat, $e$ zal zijn bestaan uit gelijkaardige blokken die we $c_{i}$ zullen noemen.
-De encryptie formule is de volgende:
-<script type="math/tex">c_{i} = m_{i}^{e} \text{ mod n }</script>
-Decrypteren is dan logischerwijze:
-<script type="math/tex">m_{i} = c_{i}^{d} \text{mod n}</script>
-Omdat
-<script type="math/tex">c_{i}^{d}=(m_{i}^{e})^{d} = m_{i}^{ed}=m_{i}^{k(p-1)(q-1)+1} = m_{i}m_{i}^{k(p-1)(q-1)} = m_{i}*1=m_{i} \text{ alles mod n}</script>.</p>
-
-<p><a href="http://sanderdemeester.be/maple/RSA-example.mw">maple voorbeeld</a></p>
-
-<hr />
-
-<p>Samenvatting van het protocol:</p>
-<p>
-Public Key:
-n: product van 2 priem getallen, $p,q$ (beide getallen moeten geheim blijven)
-e: relatief priem met $(p-1)(q-1)$
-Private Key:
-d: $e^{-1} \text{mod } ((p-1)(q-1))$
-Encrypteren:
-c: $c=m^{e} \text{ mod n }$
-Decrypteren:
-m: $m = c^{d} \text{ mod n }$
-<hr />
-
-Nu de werking van het protocol is begrepen ga ik 3 bekende scenario's tekenen waar deze manier van werken zijn doel mist. 
-
-Scenario 1: 
-	Eve, luistert in op de communicatie van Alice en slaagt erin om een ciphertext bericht $c$ te onderscheppen, $c$ is geëncrypteerd met Alice haar public key. Eve wilt het bericht kunnen lezen. 
-	Wiskundig uitgedrukt wilt Eve het volgende doen,
-	
-	$$m = c^{d}$$
-
-	Om $m$ te herstellen kiest Eve eerst een random getal $r$, zodanig dat $r$ kleiner is dan $n$ alsook Alice haar public key $e$, die gepubliceerd is.
-	Alice voert de volgende berekeningen uit:
-	
-	$$x = r^{e} \text{ mod n}$$
-	$$y = xc \text{ mod n}$$
-	$$t = r^{-1} \text{mod n}$$
-	
-	Let op dat als $x = r^{e} \text{ mod n}$, dan $r = x^{d} \text{ mod n}$
-	Nu moet Eve Alice overtuigen om y te signeren met haar private key, m.a.w $y$ te decrypteren (Let op, Alice decrypteert het bericht, niet een hash van het bericht). Alice heeft $y$ nog nooit gezien, dus ze signed $y$
-	
-	$$u = y^{d} \text{mod n}$$
-	
-	Alice stuurt het resultaat terug door naar Eve die 
-
-	$$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n} = c^{d} \text{ mod n} = m$$
-
-	berekent, eve beschikt nu over m.
-
-Senario 2:
-	Trent is een publieke computer notaris. Als Alice een document laat notaliseren, stuurt ze het document naar Trent. Trent signeert het document een RSA digital signature en stuurt het 
-	document terug naar Alice (opnieuw wordt hier geen one-way hash function gebruikt, Trent encrypteert het volledige document met zijn private key).
-	
-	Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht $m'$.
-	Eerst, Mallory kiest een arbitrere waarde $x$ en berekent 
-	
-	$y = x^{e} \text{ mod n}$, waar $e$ Trent zijn public key is, deze moet publiek zijn anders zouden andere entiteiten zijn signature niet kunnen controleren.
-	
-	Daarna berekent Mallory,
-	
-	$$m = ym' \text{ mod n}$$
-
-	Mallory stuurt dit resultaat naar Trent, die het resultaat $m'^{d} mod \text{ } n$ terug geeft. Wat nu moet gebeuren is
-
-	$(m^{d} \text{ mod n})x^{-1} \text{ mod n}$, wat gelijk is aan $n'^{d}$ en dus de signature is van $m'$
-
-	Er zijn verschillende werkwijze's mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
-	<a href="http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf">[G.I. Davida, "Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem"] </a>
-	<a href="faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf">[D.E. Denning, "Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems"] </a>
-	<a href="http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html">[Y. Desmedt and A.M. Odlykzo, "A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems"] </a>
-	
-	De manier van werken die wordt gebruikt is het zelfde voor alle exploits, en is dat de machtsverheffing de multipliciteits structuur behoudt van zijn input:
-
-	$$(xm)^{d} \text{ mod n} = x^{d}m^{d} \text{ mod n}$$
-
-Senario 3:
-	Eve wilt dat Alice $m_{3}$ signed. Ze genereert twee berichten, $m_{1},m_{2}$ zodanig dat
-	
-	$$m_{3} \equiv m_{1}m_{2} (\text{ mod n})$$
-	
-	Als Eve instaat is om Alice $m_{1}$ en $m_{2}$ te laten signeren kan ze volgende berekening toepassen om $m_{3}$ te bekomen.
-
-	$$m_{3}^{d} = (m_{1}^{d})(m_{2}^{d} \text{ mod n})$$
-Een link naar een uitgewerkt voorbeeld met maple.
-
-Conclusie: 
-Gebruik RSA nooit om een random document te signen.
- Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen.
-
-<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F31&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=80&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowtransparency="true"></iframe>
-</p>
-
-	</article>
-
-	<a href="/blog/first/">First post</a>
-	2012-02-10 09:00:00 +0000
-	<article>
-		<p>Hello world
-<div class='read-more'><a href='/blog/first/'>Verder lezen &rsaquo;</a></div>
-	</article>
-
-	<a href="/blog/AES/">Advanced Encryption Standard (AES)</a>
-	2012-01-07 19:59:01 +0000
-	<article>
-		<p>Encryption with AES encryption algoritm.
-    AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de &#8220;key scheduling&#8221; hangt af van de key lengte.
-<div class='read-more'><a href='/blog/AES/'>Verder lezen &rsaquo;</a></div>
-	</article>
-
-"/blog/first/{;{	;"�<!DOCTYPE HTML>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Sander Demeester - First post</title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
-      media="screen">
-    <link rel="stylesheet" type="text/css" href="/style.css">
-  </head>
-  <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>SD</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <section class='content'>
-      
-<link rel="stylesheet" type="text/css" href="/blogs.css">
-<div class='post'>
-  <h1><a href="/blog/first/">First post</a></h1>
-  <aside>
-    <p>Posted at: 2012-02-10 09:00:00 +0000</p>
-	
-	Auteur   : Sander Demeester    
-	
-    <p>Contributors: (none) </p>
-    
-    <div id="image">
-      <img src="/img/1.jpg">
-    </div>
-    
-  </aside>
-  <article>
-    <p>Hello world
-<!-- more -->
-smldfjsmldfjsmldfjsdf
-sdfkjsqfd
-kj
-sdfkjfsd
-j
-sfjdmsjf
-mksfjsmdfkj</p>
-
-  </article>
-</div>
-<script type="text/javascript"
-	src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-    </section>
-    <script type="text/javascript">
-      
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-34425622-1']);
-      _gaq.push(['_trackPageview']);
-      
-      (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-      
-    </script>
-  </body>
-</html>
-;	"aHello world
-<!-- more -->
-smldfjsmldfjsmldfjsdf
-sdfkjsqfd
-kj
-sdfkjfsd
-j
-sfjdmsjf
-mksfjsmdfkj;
-@;"i<p>Hello world
-<!-- more -->
-smldfjsmldfjsmldfjsdf
-sdfkjsqfd
-kj
-sdfkjfsd
-j
-sfjdmsjf
-mksfjsmdfkj</p>
-"/blog/AES/{;{	;"�#<!DOCTYPE HTML>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Sander Demeester - Advanced Encryption Standard (AES)</title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
-      media="screen">
-    <link rel="stylesheet" type="text/css" href="/style.css">
-  </head>
-  <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>SD</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <section class='content'>
-      
-<link rel="stylesheet" type="text/css" href="/blogs.css">
-<div class='post'>
-  <h1><a href="/blog/AES/">Advanced Encryption Standard (AES)</a></h1>
-  <aside>
-    <p>Posted at: 2012-01-07 19:59:01 +0000</p>
-	
-	Auteur   : Sander Demeester    
-	
-    <p>Contributors: (none) </p>
-    
-    <div id="image">
-      <img src="/img/aes.gif">
-    </div>
-    
-  </aside>
-  <article>
-    <p>Encryption with AES encryption algoritm.
-    AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de &#8220;key scheduling&#8221; hangt af van de key lengte.
-<!-- more -->
-    Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor &#8220;keying material&#8221;
-&gt;    128 bit key: 160 bytes + extra key permutation 176 bytes
-&gt;    192 bit key: 192 bytes + extra key permutation 208 bytes
-&gt;    256 bit key: 224 bytes + extra key permutation 240 bytes</p>
-
-<p>Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.</p>
-
-<p>Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.</p>
-
-<p>Om de 4 iteraties (bij een 128 bit key) wordt een transformatie toegepast, de vorige 4 bytes worden &#8220;ge-xorded&#8221;. Deze transformatie bestaat uit:</p>
-
-<blockquote>
-  <pre><code>   het roteren van een 4 byte woord.
-   de AES sbox gebruiken (subsitutie)
-   XOR met een ronde constante
-</code></pre>
-</blockquote>
-
-<pre><code>De rotatie:
-   De 1ste byte wordt overschreven door de 2de byte. De tweede met de derde, de derde met de vierde. En de vierde met de eerste.
- 
-De subsitutie:
-   De subsitutie is het opzoeken van elke byte in de encryptie sbox, en het vervangen met de gevonden byte. De translatie tabel is een 16 bij 16 array. De rij wordt aangeduid met de 4 meest significante bits, de kolom wordt aangeduid met de 4 minst significante bits.
-   Als voorbeeld, de byte 0x1A is rij 1 met kolom 10. Volgens de specificatie van AES heeft ons dit de "affine transformation over $$GF(2^{8})\text{ van } b_{i} + b_{(i+4)\text{%}8} + b_{(i+5)\text{%}8} + b_{(i+6)\text{%}8} + b_{(i+7)\text{%}8} + c_{i}$$
- 
-De XOR:
-   Op het einde wordt de geroteerde, gesubstitueerde waarde gexorderd met onze ronde constante. De 3 minst significante byte van de ronde constante zijn altijd 0. De meest significante byte start altijd met 0x01, deze byte wordt om de 4 iteraties 1 bit naar links geshift. In volgorde wort dit dus: 0x02 in de 8ste iteratie. 0x04 bij de twaalfde iteratie etc.
- 
-Het is belangrijk op te merken dat voor een 128-bit key de ronde constante 10 keer moet worden naar links geshift, omdat een 128 bit key 44 iteratie's nodig heeft, maar als je een byte 8 keert shift naar links eindig je met een 0x00 byte. De specificatie eist dat, waneer er overflow optreedt bij een left shift, dat je een XOR moet uitvoeren met de byte 0x1B. Voor de "waarom" verwijst ik naar de specificatie pagina 15.
- 
-Voor de 192-bit key scheduler is het zelfde, het verschil is dat de rotatie, subsitutie en ronde constante XOR worden toegepast bij elke 6de iteratie van het "key scheduling algoritme". Voor een 256-bit key is dit elke 8ste iteratie, omdat elke 8ste iteratie "redelijk ver" uit elkaar ligt. Wordt bij elke 4de iteratie de subsitutie gedaan, en bij elke achtste iteratie de rotatie en XOR operatie.
-</code></pre>
-
-<p>Het is belangrijk om op te merken dat het resultaat van het &#8220;key scheduling&#8221; algoritme &#8220;non-linear&#8221; is, maar wel herhaalbaar.    </p>
-
-<pre><code>AES Encryptie:
- 
-AES werkt met blokken van 16-byte voor zijn input, onafhankelijk van de key lengte. We zien de input als een 4 bij 4 matrix, dit is natuurlijk de volledig set van hexadecimale tekens. We zullen dit de "AES state mapping initialization" noemen. We zullen tijdens het encryptie-proces permutaties, subsituties  en keying materiaal combineren met deze state om de output te produceren.
- 
-We hebben dus de "Input Block ("State")", we doen een xor met de 1ste 16 bytes van de key en krijgen als output "Ronde 1 Input", eee AES key combination.
-Dit wordt gedaan voor elke ronde, en bestaat uit 4 stappen:
-    - Een subsitutie stap.
-    - Een row-shifting -stap.
-    - Een column-mixing step.
-    - Een key-combination stap.
- 
-De subsitutie stap voeren we uit op elke byte individueel van de input, en komt van de zelfde matrix die we gebruiken bij het "key scheduling algoritme", nl onze sbox
-
-De rotatie stap voeren we uit op elke rij. De eerste rij roteren we 0 plaatsen. De tweede rij 1 plaats, de derde 2 plaatsen etc.
-De "column mixing"-stap. Deze stap is gedefinieerd als een matrixvermenigvuldiging met de matrix:  $$ \begin{bmatrix}   02 &amp; 03 &amp; 01 &amp; 01 \\ 01 &amp; 02 &amp; 03 &amp; 01 \\ 01 &amp; 01 &amp; 02 &amp; 03 \\ 03 &amp; 01 &amp; 01 &amp; 02 \\ \end{bmatrix} $$  
-AES herdefiniëert de matrix optelling en matrixvermenigvuldiging operaties voor zijn eigen versies van deze bewerkingen.
-    De matrix optelling operatie in AES is gedefinieerd als een XOR operatie. matrixvermenigvuldiging is meervoudig optellen maar modulo 0x1B bij overflow.
- 
-De specificatie noemt deze operaties het inproduct. Wat opnieuw is herdefinitie. Dus, het vermenigvuldigen van 2 bytes is het bepalen van hun inproduct, in AES is dit dus een XOR operatie op 2 bytes die $n$ keer wordt uitgevoerd. N is hier de waarde van is het aantal linker shift operatie en XOR met 0x1B bij overflow neemt.
-</code></pre>
-
-<p>&#8220;Column mixing&#8221; stap, het toepassen van AES &#8220;inproduct&#8221;.</p>
-
-<p>AES Decryption:</p>
-
-<pre><code>Alle wat we hebben gedaan tijdens de encryptie fase moeten we nu terug ontdoen. We starten met de ronden van de keys in omgekeerde volgorde, daarna "unmixen" van de kolommen en un-siften van de rijen. Dit wil dus zeggen dat het decryptie proces niet bestaat uit de zelfde volgorde van operaties als bij het encryptie proces.
-</code></pre>
-
-<p>Wat opvalt is dat we voor het decryptie proces niet opniew kunnen gebruik maken van dezelfde AES sboxen omdat de subsitutie in omgekeerde volgorde moet verlopen. We hebben dus  1 sbox om te encrypteren en 1 om de decrypteren.</p>
-
-<pre><code>Het inverteren houdt in dat we de omgekeerde matrix multiplicatie moeten doen van elke kolom in onze matrix. Dit is niet enkel een multiplicatie maar een multiplicatie en een inversie die we beschouwen als een polynoom over GF(2^{8}) en vermenigvuldigd modulo $$x^{4}+1$$ met een vaste polynoom $$a^{-1}$$ gegeven door $$ a^{-1}(x) = \{0b\}x^\{3\} + \{0d\}x^\{2\} + \{09\}x + \{0e\} $$ Dit is gelijk met een matrixvermenigvuldiging met de matrix:  $$ \begin{bmatrix} 0e &amp; 0b &amp; 0d &amp; 09 \\ 09 &amp; 0e &amp; 0b &amp; 0d \\ 0d &amp; 09 &amp; 0e &amp; 0b \\ 0b &amp; 0d &amp; 09 &amp; 0e  \end{bmatrix} $$    Dit is natuurlijk met de hergedefiniëert operaties beschreven hierboven.
-</code></pre>
-
-<p>link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a></p>
-
-  </article>
-</div>
-<script type="text/javascript"
-	src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-    </section>
-    <script type="text/javascript">
-      
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-34425622-1']);
-      _gaq.push(['_trackPageview']);
-      
-      (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-      
-    </script>
-  </body>
-</html>
-;	"�Encryption with AES encryption algoritm.
-    AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de "key scheduling" hangt af van de key lengte.
-<!-- more -->
-    Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor "keying material"
->    128 bit key: 160 bytes + extra key permutation 176 bytes
->    192 bit key: 192 bytes + extra key permutation 208 bytes
->    256 bit key: 224 bytes + extra key permutation 240 bytes
-
-
-Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.
-     
-Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.
-     
-Om de 4 iteraties (bij een 128 bit key) wordt een transformatie toegepast, de vorige 4 bytes worden "ge-xorded". Deze transformatie bestaat uit:
-
->        het roteren van een 4 byte woord.
->        de AES sbox gebruiken (subsitutie)
->        XOR met een ronde constante
-
-     
-    De rotatie:
-       De 1ste byte wordt overschreven door de 2de byte. De tweede met de derde, de derde met de vierde. En de vierde met de eerste.
-     
-    De subsitutie:
-       De subsitutie is het opzoeken van elke byte in de encryptie sbox, en het vervangen met de gevonden byte. De translatie tabel is een 16 bij 16 array. De rij wordt aangeduid met de 4 meest significante bits, de kolom wordt aangeduid met de 4 minst significante bits.
-       Als voorbeeld, de byte 0x1A is rij 1 met kolom 10. Volgens de specificatie van AES heeft ons dit de "affine transformation over $$GF(2^{8})\text{ van } b_{i} + b_{(i+4)\text{%}8} + b_{(i+5)\text{%}8} + b_{(i+6)\text{%}8} + b_{(i+7)\text{%}8} + c_{i}$$
-     
-    De XOR:
-       Op het einde wordt de geroteerde, gesubstitueerde waarde gexorderd met onze ronde constante. De 3 minst significante byte van de ronde constante zijn altijd 0. De meest significante byte start altijd met 0x01, deze byte wordt om de 4 iteraties 1 bit naar links geshift. In volgorde wort dit dus: 0x02 in de 8ste iteratie. 0x04 bij de twaalfde iteratie etc.
-     
-    Het is belangrijk op te merken dat voor een 128-bit key de ronde constante 10 keer moet worden naar links geshift, omdat een 128 bit key 44 iteratie's nodig heeft, maar als je een byte 8 keert shift naar links eindig je met een 0x00 byte. De specificatie eist dat, waneer er overflow optreedt bij een left shift, dat je een XOR moet uitvoeren met de byte 0x1B. Voor de "waarom" verwijst ik naar de specificatie pagina 15.
-     
-    Voor de 192-bit key scheduler is het zelfde, het verschil is dat de rotatie, subsitutie en ronde constante XOR worden toegepast bij elke 6de iteratie van het "key scheduling algoritme". Voor een 256-bit key is dit elke 8ste iteratie, omdat elke 8ste iteratie "redelijk ver" uit elkaar ligt. Wordt bij elke 4de iteratie de subsitutie gedaan, en bij elke achtste iteratie de rotatie en XOR operatie.
-
-Het is belangrijk om op te merken dat het resultaat van het "key scheduling" algoritme "non-linear" is, maar wel herhaalbaar.    
-     
-    AES Encryptie:
-     
-    AES werkt met blokken van 16-byte voor zijn input, onafhankelijk van de key lengte. We zien de input als een 4 bij 4 matrix, dit is natuurlijk de volledig set van hexadecimale tekens. We zullen dit de "AES state mapping initialization" noemen. We zullen tijdens het encryptie-proces permutaties, subsituties  en keying materiaal combineren met deze state om de output te produceren.
-     
-    We hebben dus de "Input Block ("State")", we doen een xor met de 1ste 16 bytes van de key en krijgen als output "Ronde 1 Input", eee AES key combination.
-    Dit wordt gedaan voor elke ronde, en bestaat uit 4 stappen:
-        - Een subsitutie stap.
-        - Een row-shifting -stap.
-        - Een column-mixing step.
-        - Een key-combination stap.
-     
-    De subsitutie stap voeren we uit op elke byte individueel van de input, en komt van de zelfde matrix die we gebruiken bij het "key scheduling algoritme", nl onze sbox
-
-    De rotatie stap voeren we uit op elke rij. De eerste rij roteren we 0 plaatsen. De tweede rij 1 plaats, de derde 2 plaatsen etc.
-    De "column mixing"-stap. Deze stap is gedefinieerd als een matrixvermenigvuldiging met de matrix: 
-$$ \begin{bmatrix}  
-02 & 03 & 01 & 01 \\
-01 & 02 & 03 & 01 \\
-01 & 01 & 02 & 03 \\
-03 & 01 & 01 & 02 \\
-\end{bmatrix} $$  
-    AES herdefiniëert de matrix optelling en matrixvermenigvuldiging operaties voor zijn eigen versies van deze bewerkingen.
-        De matrix optelling operatie in AES is gedefinieerd als een XOR operatie. matrixvermenigvuldiging is meervoudig optellen maar modulo 0x1B bij overflow.
-     
-    De specificatie noemt deze operaties het inproduct. Wat opnieuw is herdefinitie. Dus, het vermenigvuldigen van 2 bytes is het bepalen van hun inproduct, in AES is dit dus een XOR operatie op 2 bytes die $n$ keer wordt uitgevoerd. N is hier de waarde van is het aantal linker shift operatie en XOR met 0x1B bij overflow neemt.
-     
-"Column mixing" stap, het toepassen van AES "inproduct".
-   
-AES Decryption:
-     
-    Alle wat we hebben gedaan tijdens de encryptie fase moeten we nu terug ontdoen. We starten met de ronden van de keys in omgekeerde volgorde, daarna "unmixen" van de kolommen en un-siften van de rijen. Dit wil dus zeggen dat het decryptie proces niet bestaat uit de zelfde volgorde van operaties als bij het encryptie proces.
-     
-Wat opvalt is dat we voor het decryptie proces niet opniew kunnen gebruik maken van dezelfde AES sboxen omdat de subsitutie in omgekeerde volgorde moet verlopen. We hebben dus  1 sbox om te encrypteren en 1 om de decrypteren.
-     
-    Het inverteren houdt in dat we de omgekeerde matrix multiplicatie moeten doen van elke kolom in onze matrix. Dit is niet enkel een multiplicatie maar een multiplicatie en een inversie die we beschouwen als een polynoom over GF(2^{8}) en vermenigvuldigd modulo $$x^{4}+1$$ met een vaste polynoom $$a^{-1}$$ gegeven door $$ a^{-1}(x) = \{0b\}x^\{3\} + \{0d\}x^\{2\} + \{09\}x + \{0e\} $$ Dit is gelijk met een matrixvermenigvuldiging met de matrix: 
-$$ \begin{bmatrix}
-0e & 0b & 0d & 09 \\
-09 & 0e & 0b & 0d \\
-0d & 09 & 0e & 0b \\
-0b & 0d & 09 & 0e 
-\end{bmatrix} $$  
- Dit is natuurlijk met de hergedefiniëert operaties beschreven hierboven.
-
-link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a>;
-@";"v<p>Encryption with AES encryption algoritm.
-    AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de &#8220;key scheduling&#8221; hangt af van de key lengte.
-<!-- more -->
-    Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor &#8220;keying material&#8221;
-&gt;    128 bit key: 160 bytes + extra key permutation 176 bytes
-&gt;    192 bit key: 192 bytes + extra key permutation 208 bytes
-&gt;    256 bit key: 224 bytes + extra key permutation 240 bytes</p>
-
-<p>Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.</p>
-
-<p>Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.</p>
-
-<p>Om de 4 iteraties (bij een 128 bit key) wordt een transformatie toegepast, de vorige 4 bytes worden &#8220;ge-xorded&#8221;. Deze transformatie bestaat uit:</p>
-
-<blockquote>
-  <pre><code>   het roteren van een 4 byte woord.
-   de AES sbox gebruiken (subsitutie)
-   XOR met een ronde constante
-</code></pre>
-</blockquote>
-
-<pre><code>De rotatie:
-   De 1ste byte wordt overschreven door de 2de byte. De tweede met de derde, de derde met de vierde. En de vierde met de eerste.
- 
-De subsitutie:
-   De subsitutie is het opzoeken van elke byte in de encryptie sbox, en het vervangen met de gevonden byte. De translatie tabel is een 16 bij 16 array. De rij wordt aangeduid met de 4 meest significante bits, de kolom wordt aangeduid met de 4 minst significante bits.
-   Als voorbeeld, de byte 0x1A is rij 1 met kolom 10. Volgens de specificatie van AES heeft ons dit de "affine transformation over $$GF(2^{8})\text{ van } b_{i} + b_{(i+4)\text{%}8} + b_{(i+5)\text{%}8} + b_{(i+6)\text{%}8} + b_{(i+7)\text{%}8} + c_{i}$$
- 
-De XOR:
-   Op het einde wordt de geroteerde, gesubstitueerde waarde gexorderd met onze ronde constante. De 3 minst significante byte van de ronde constante zijn altijd 0. De meest significante byte start altijd met 0x01, deze byte wordt om de 4 iteraties 1 bit naar links geshift. In volgorde wort dit dus: 0x02 in de 8ste iteratie. 0x04 bij de twaalfde iteratie etc.
- 
-Het is belangrijk op te merken dat voor een 128-bit key de ronde constante 10 keer moet worden naar links geshift, omdat een 128 bit key 44 iteratie's nodig heeft, maar als je een byte 8 keert shift naar links eindig je met een 0x00 byte. De specificatie eist dat, waneer er overflow optreedt bij een left shift, dat je een XOR moet uitvoeren met de byte 0x1B. Voor de "waarom" verwijst ik naar de specificatie pagina 15.
- 
-Voor de 192-bit key scheduler is het zelfde, het verschil is dat de rotatie, subsitutie en ronde constante XOR worden toegepast bij elke 6de iteratie van het "key scheduling algoritme". Voor een 256-bit key is dit elke 8ste iteratie, omdat elke 8ste iteratie "redelijk ver" uit elkaar ligt. Wordt bij elke 4de iteratie de subsitutie gedaan, en bij elke achtste iteratie de rotatie en XOR operatie.
-</code></pre>
-
-<p>Het is belangrijk om op te merken dat het resultaat van het &#8220;key scheduling&#8221; algoritme &#8220;non-linear&#8221; is, maar wel herhaalbaar.    </p>
-
-<pre><code>AES Encryptie:
- 
-AES werkt met blokken van 16-byte voor zijn input, onafhankelijk van de key lengte. We zien de input als een 4 bij 4 matrix, dit is natuurlijk de volledig set van hexadecimale tekens. We zullen dit de "AES state mapping initialization" noemen. We zullen tijdens het encryptie-proces permutaties, subsituties  en keying materiaal combineren met deze state om de output te produceren.
- 
-We hebben dus de "Input Block ("State")", we doen een xor met de 1ste 16 bytes van de key en krijgen als output "Ronde 1 Input", eee AES key combination.
-Dit wordt gedaan voor elke ronde, en bestaat uit 4 stappen:
-    - Een subsitutie stap.
-    - Een row-shifting -stap.
-    - Een column-mixing step.
-    - Een key-combination stap.
- 
-De subsitutie stap voeren we uit op elke byte individueel van de input, en komt van de zelfde matrix die we gebruiken bij het "key scheduling algoritme", nl onze sbox
-
-De rotatie stap voeren we uit op elke rij. De eerste rij roteren we 0 plaatsen. De tweede rij 1 plaats, de derde 2 plaatsen etc.
-De "column mixing"-stap. Deze stap is gedefinieerd als een matrixvermenigvuldiging met de matrix:  $$ \begin{bmatrix}   02 &amp; 03 &amp; 01 &amp; 01 \\ 01 &amp; 02 &amp; 03 &amp; 01 \\ 01 &amp; 01 &amp; 02 &amp; 03 \\ 03 &amp; 01 &amp; 01 &amp; 02 \\ \end{bmatrix} $$  
-AES herdefiniëert de matrix optelling en matrixvermenigvuldiging operaties voor zijn eigen versies van deze bewerkingen.
-    De matrix optelling operatie in AES is gedefinieerd als een XOR operatie. matrixvermenigvuldiging is meervoudig optellen maar modulo 0x1B bij overflow.
- 
-De specificatie noemt deze operaties het inproduct. Wat opnieuw is herdefinitie. Dus, het vermenigvuldigen van 2 bytes is het bepalen van hun inproduct, in AES is dit dus een XOR operatie op 2 bytes die $n$ keer wordt uitgevoerd. N is hier de waarde van is het aantal linker shift operatie en XOR met 0x1B bij overflow neemt.
-</code></pre>
-
-<p>&#8220;Column mixing&#8221; stap, het toepassen van AES &#8220;inproduct&#8221;.</p>
-
-<p>AES Decryption:</p>
-
-<pre><code>Alle wat we hebben gedaan tijdens de encryptie fase moeten we nu terug ontdoen. We starten met de ronden van de keys in omgekeerde volgorde, daarna "unmixen" van de kolommen en un-siften van de rijen. Dit wil dus zeggen dat het decryptie proces niet bestaat uit de zelfde volgorde van operaties als bij het encryptie proces.
-</code></pre>
-
-<p>Wat opvalt is dat we voor het decryptie proces niet opniew kunnen gebruik maken van dezelfde AES sboxen omdat de subsitutie in omgekeerde volgorde moet verlopen. We hebben dus  1 sbox om te encrypteren en 1 om de decrypteren.</p>
-
-<pre><code>Het inverteren houdt in dat we de omgekeerde matrix multiplicatie moeten doen van elke kolom in onze matrix. Dit is niet enkel een multiplicatie maar een multiplicatie en een inversie die we beschouwen als een polynoom over GF(2^{8}) en vermenigvuldigd modulo $$x^{4}+1$$ met een vaste polynoom $$a^{-1}$$ gegeven door $$ a^{-1}(x) = \{0b\}x^\{3\} + \{0d\}x^\{2\} + \{09\}x + \{0e\} $$ Dit is gelijk met een matrixvermenigvuldiging met de matrix:  $$ \begin{bmatrix} 0e &amp; 0b &amp; 0d &amp; 09 \\ 09 &amp; 0e &amp; 0b &amp; 0d \\ 0d &amp; 09 &amp; 0e &amp; 0b \\ 0b &amp; 0d &amp; 09 &amp; 0e  \end{bmatrix} $$    Dit is natuurlijk met de hergedefiniëert operaties beschreven hierboven.
-</code></pre>
-
-<p>link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a></p>
-"/projects/{;{	;"X<!DOCTYPE HTML>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Sander Demeester - A New Item</title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
-      media="screen">
-    <link rel="stylesheet" type="text/css" href="/style.css">
-  </head>
-  <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>SD</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <section class='content'>
-      Hi, I'm a new item!
-    </section>
-    <script type="text/javascript">
-      
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-34425622-1']);
-      _gaq.push(['_trackPageview']);
-      
-      (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-      
-    </script>
-  </body>
-</html>
-;	"Hi, I'm a new item!;
-@(;"Hi, I'm a new item!" /img/black-white-abstract1/{;{ "/blogs/{;{	;"0<!DOCTYPE HTML>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Sander Demeester - </title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
-      media="screen">
-    <link rel="stylesheet" type="text/css" href="/style.css">
-  </head>
-  <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>SD</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <section class='content'>
-      #image {
-	height: 300px;
-	width: 100px;
-}
-
-    </section>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-34425622-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-  </body>
-</html>
-;	"/#image {
-	height: 300px;
-	width: 100px;
-}
-;
-@1;"/#image {
-	height: 300px;
-	width: 100px;
-}
-"/about/{;{	;"X<!DOCTYPE HTML>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Sander Demeester - A New Item</title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
-      media="screen">
-    <link rel="stylesheet" type="text/css" href="/style.css">
-  </head>
-  <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>SD</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <section class='content'>
-      Hi, I'm a new item!
-    </section>
-    <script type="text/javascript">
-      
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-34425622-1']);
-      _gaq.push(['_trackPageview']);
-      
-      (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-      
-    </script>
-  </body>
-</html>
-;	"Hi, I'm a new item!;
-@7;"Hi, I'm a new item!"/img/aes1/{;{ "/stylesheet/{;{;	"=.content {
-  width: 800px;
-  background: #f5f5f5;
-  border: 1px solid #ddd;
-  border-top: none;
-  margin: 0 auto;
-  padding: 60px 20px 0 60px;
-}
-.post aside {
-  color: #888;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #aaa;
-}
-.post article {
-  margin: 10px 0 60px 0;
-}
-#image {
-	height: 300px;
-	width: 300px;
-}
-;
-@@;@@"/img/1/{;{ "/blog/znp/{;{	;"}.<!DOCTYPE HTML>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Sander Demeester - Zero Knowledge Proof</title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
-      media="screen">
-    <link rel="stylesheet" type="text/css" href="/style.css">
-  </head>
-  <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>SD</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <section class='content'>
-      
-<link rel="stylesheet" type="text/css" href="/blogs.css">
-<div class='post'>
-  <h1><a href="/blog/znp/">Zero Knowledge Proof</a></h1>
-  <aside>
-    <p>Posted at: 2013-04-02 10:45:51 +0000</p>
-	
-	Auteur   : Sander Demeester    
-	
-    <p>Contributors: (none) </p>
-    
-    <div id="image">
-      <img src="/img/1.jpg">
-    </div>
-    
-  </aside>
-  <article>
-    <p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
-
-<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.</p>
-
-<p>Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van $\frac{1}{2}$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.</p>
-
-<p>Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
-Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.</p>
-
-<li>1. Volledigheid:<p>
-   Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</p></li>
-<li>2. Correctheid:<p>
-  Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</p></li>
-<li>3. Zero-Knowledge:<p>
-   Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</p></li>
-
-<p>Basic Zero-Knowledge Protocol
-Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf">[QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children]</a></p>
-
-<p>Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. </p>
-
-<h3>Overdragen van een oplossing voor een NP-hard probleem als oplossing voor een Zero-Knowledge bewijs</h3>
-
-<p>Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.</p>
-<ul>
-<li>1. Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
-<li>2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
-<li>3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.
-<li>4. Victor vraagt Peggy om
-<ul>
-   <li>a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
-   <li>b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
-
-<li>5. Peggy doet wat haar wordt gevraagd
-<li>6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
-
-
-Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan "faken". 
-
-In de volgende sectie bespreek ik 2 voorbeelden:
-
-- "Graph Isomorphism"
-Basis voor dit protocol komt uit <a href="http://www.math.ias.edu/~avi/PUBLICATIONS/MYPAPERS/GMW86/GMW86.pdf">[Oded Goldreich,Proofs that yield nothing but their validity and a Methodology of Cryptographic Protocol Design]</a>
-We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen $G$,$H$
-$$
-\begin{equation*}
-f : V(G) \rightarrow V(H)
-\end{equation*}
-$$
-zodat elk paar bogen ${u,v}$ aangrenzend zijn in $G$ als en alleen als $f(u)$ en $f(v)$ aangrenzend zijn in $H$.
-Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
-
-We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf $G_{1}$ en $G_{2}$.
-Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
-
-<ul>
-<li>1. Peggy random permuteert $G_{1}$ om een graaf $H$ te produceren. $H$ is isomorf met $G_{1}$, omdat Peggy kennis heeft van isomorfisme tussen $H$ en $G_{1}$ heeft ze ook kennis van isomorfisme tussen $H$ en $G_{1}$. Voor alle andere is isomorfisme vinden tussen $G_{1}$ en $H$ of tussen $G_{2}$ en $H$ even moeilijk als het vinden van isomorfisme tussen $G_{1}$ en $G_{2}$.
-<li>2. Peggy zend H naar Victor.
-<li>3. Victor vraagt Peggy om:
-<ul>
-   <li>a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
-   <li>b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
-
-<li>4. Peggy doet wat haar wordt gevraagd, ofwel
-<ul>
-   <li>a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
-   <li>b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
-
-<li>5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
-
-
-Als Peggy geen kennis heeft van isomorfisme tussen $G_{1}$ en $G_{2}$ kan ze geen graaf $H$ produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel $G_{1}$ ofwel $G_{2}$. Ze heeft dus $\frac{1}{2}$ kans om te gokken. 
-Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe $H$ maakt kan hij ook geen kennis overdragen van ronde tot ronde.
-
-- "Hamiltonian Cycles"
-
-Een variant van dit protocol werd voorgesteld door <a href="http://www.mathunion.org/ICM/ICM1986.2/Main/icm1986.2.1444.1451.ocr.pdf">[Munuel Blub,How to prove a theorem so no one else can claim it]</a>.
-Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
-
-Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf $G$. Victor kent $G$ maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
-<ul>
-<li>1. Peggy random permuteert $G$. Ze verplaatst de toppen om een nieuwe graaf $H$ te maken. $G$ en $H$ zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in $G$ is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in $H$. Als ze zelf niet $H$ heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen $G$ en $H$.
-Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie methode zijn voor elke lijn in $H$, dat is een encrypted 0 of een encrypted 1 voor elke lijn in $H$).
-<li>2. Peggy geeft Victor $H'$.
-<li>3. Victor vraagt Peggy om:
-<ul>
-   <li>a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
-   <li>b. Een Hamiltoniaanse cycle tonen in $H$
-
-<li>4. Peggy doet wat haar gevraagt word.
-<ul>
-<li>   a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor $G$ of $H$
-   <li>b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
-
-<li>4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
-
-
-Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
-<hr />
-Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. <a href="https://twitter.com/SanderDemeester">@SanderDemeester</a><p>
-Dank aan <a href="https://github.com/FelixVanderJeugt">@FelixVanderJeugt</a> voor de hulp bij het maken van dit artikel.
-<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F33&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowtransparency="true"></iframe>
-</p></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></li></ul></li></li></li></li></ul>
-
-  </article>
-</div>
-<script type="text/javascript"
-	src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-    </section>
-    <script type="text/javascript">
-      
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-34425622-1']);
-      _gaq.push(['_trackPageview']);
-      
-      (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-      
-    </script>
-  </body>
-</html>
-;	"G&De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat "iets" willen bewijzen aan Bob zonder dat "iets" te moeten onthullen.
-
-Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de "prover", en Victor, die de rol zal spelen van de "verifierer".
-
-Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van $\frac{1}{2}$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.
-
-Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
-Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.
-
-<li>1. Volledigheid:<p>
-   Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</p></li>
-<li>2. Correctheid:<p>
-  Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</p></li>
-<li>3. Zero-Knowledge:<p>
-   Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</p></li>
-
-Basic Zero-Knowledge Protocol
-Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf">[QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children]</a>
-
-Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. 
-
-<h3>Overdragen van een oplossing voor een NP-hard probleem als oplossing voor een Zero-Knowledge bewijs</h3>
-
-Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.
-<ul>
-<li>1. Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
-<li>2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
-<li>3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.
-<li>4. Victor vraagt Peggy om
-<ul>
-   <li>a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
-   <li>b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
-</ul>
-<li>5. Peggy doet wat haar wordt gevraagd
-<li>6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
-</ul>
-
-Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan "faken". 
-
-In de volgende sectie bespreek ik 2 voorbeelden:
-
-- "Graph Isomorphism"
-Basis voor dit protocol komt uit <a href="http://www.math.ias.edu/~avi/PUBLICATIONS/MYPAPERS/GMW86/GMW86.pdf">[Oded Goldreich,Proofs that yield nothing but their validity and a Methodology of Cryptographic Protocol Design]</a>
-We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen $G$,$H$
-$$
-\begin{equation*}
-f : V(G) \rightarrow V(H)
-\end{equation*}
-$$
-zodat elk paar bogen ${u,v}$ aangrenzend zijn in $G$ als en alleen als $f(u)$ en $f(v)$ aangrenzend zijn in $H$.
-Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
-
-We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf $G_{1}$ en $G_{2}$.
-Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
-
-<ul>
-<li>1. Peggy random permuteert $G_{1}$ om een graaf $H$ te produceren. $H$ is isomorf met $G_{1}$, omdat Peggy kennis heeft van isomorfisme tussen $H$ en $G_{1}$ heeft ze ook kennis van isomorfisme tussen $H$ en $G_{1}$. Voor alle andere is isomorfisme vinden tussen $G_{1}$ en $H$ of tussen $G_{2}$ en $H$ even moeilijk als het vinden van isomorfisme tussen $G_{1}$ en $G_{2}$.
-<li>2. Peggy zend H naar Victor.
-<li>3. Victor vraagt Peggy om:
-<ul>
-   <li>a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
-   <li>b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
-</ul>
-<li>4. Peggy doet wat haar wordt gevraagd, ofwel
-<ul>
-   <li>a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
-   <li>b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
-</ul>
-<li>5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
-</ul>
-
-Als Peggy geen kennis heeft van isomorfisme tussen $G_{1}$ en $G_{2}$ kan ze geen graaf $H$ produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel $G_{1}$ ofwel $G_{2}$. Ze heeft dus $\frac{1}{2}$ kans om te gokken. 
-Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe $H$ maakt kan hij ook geen kennis overdragen van ronde tot ronde.
-
-- "Hamiltonian Cycles"
-
-Een variant van dit protocol werd voorgesteld door <a href="http://www.mathunion.org/ICM/ICM1986.2/Main/icm1986.2.1444.1451.ocr.pdf">[Munuel Blub,How to prove a theorem so no one else can claim it]</a>.
-Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
-
-Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf $G$. Victor kent $G$ maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
-<ul>
-<li>1. Peggy random permuteert $G$. Ze verplaatst de toppen om een nieuwe graaf $H$ te maken. $G$ en $H$ zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in $G$ is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in $H$. Als ze zelf niet $H$ heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen $G$ en $H$.
-Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie methode zijn voor elke lijn in $H$, dat is een encrypted 0 of een encrypted 1 voor elke lijn in $H$).
-<li>2. Peggy geeft Victor $H'$.
-<li>3. Victor vraagt Peggy om:
-<ul>
-   <li>a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
-   <li>b. Een Hamiltoniaanse cycle tonen in $H$
-</ul>
-<li>4. Peggy doet wat haar gevraagt word.
-<ul>
-<li>   a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor $G$ of $H$
-   <li>b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
-</ul>
-<li>4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
-</ul>
-
-Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
-<hr>
-Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. <a href="https://twitter.com/SanderDemeester">@SanderDemeester</a><p>
-Dank aan <a href="https://github.com/FelixVanderJeugt">@FelixVanderJeugt</a> voor de hulp bij het maken van dit artikel.
-<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F33&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowTransparency="true"></iframe>;
-@G;"2'<p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
-
-<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.</p>
-
-<p>Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van $\frac{1}{2}$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.</p>
-
-<p>Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
-Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.</p>
-
-<li>1. Volledigheid:<p>
-   Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</p></li>
-<li>2. Correctheid:<p>
-  Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</p></li>
-<li>3. Zero-Knowledge:<p>
-   Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</p></li>
-
-<p>Basic Zero-Knowledge Protocol
-Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf">[QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children]</a></p>
-
-<p>Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. </p>
-
-<h3>Overdragen van een oplossing voor een NP-hard probleem als oplossing voor een Zero-Knowledge bewijs</h3>
-
-<p>Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.</p>
-<ul>
-<li>1. Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
-<li>2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
-<li>3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.
-<li>4. Victor vraagt Peggy om
-<ul>
-   <li>a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
-   <li>b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
-
-<li>5. Peggy doet wat haar wordt gevraagd
-<li>6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
-
-
-Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan "faken". 
-
-In de volgende sectie bespreek ik 2 voorbeelden:
-
-- "Graph Isomorphism"
-Basis voor dit protocol komt uit <a href="http://www.math.ias.edu/~avi/PUBLICATIONS/MYPAPERS/GMW86/GMW86.pdf">[Oded Goldreich,Proofs that yield nothing but their validity and a Methodology of Cryptographic Protocol Design]</a>
-We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen $G$,$H$
-$$
-\begin{equation*}
-f : V(G) \rightarrow V(H)
-\end{equation*}
-$$
-zodat elk paar bogen ${u,v}$ aangrenzend zijn in $G$ als en alleen als $f(u)$ en $f(v)$ aangrenzend zijn in $H$.
-Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
-
-We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf $G_{1}$ en $G_{2}$.
-Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
-
-<ul>
-<li>1. Peggy random permuteert $G_{1}$ om een graaf $H$ te produceren. $H$ is isomorf met $G_{1}$, omdat Peggy kennis heeft van isomorfisme tussen $H$ en $G_{1}$ heeft ze ook kennis van isomorfisme tussen $H$ en $G_{1}$. Voor alle andere is isomorfisme vinden tussen $G_{1}$ en $H$ of tussen $G_{2}$ en $H$ even moeilijk als het vinden van isomorfisme tussen $G_{1}$ en $G_{2}$.
-<li>2. Peggy zend H naar Victor.
-<li>3. Victor vraagt Peggy om:
-<ul>
-   <li>a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
-   <li>b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
-
-<li>4. Peggy doet wat haar wordt gevraagd, ofwel
-<ul>
-   <li>a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
-   <li>b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
-
-<li>5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
-
-
-Als Peggy geen kennis heeft van isomorfisme tussen $G_{1}$ en $G_{2}$ kan ze geen graaf $H$ produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel $G_{1}$ ofwel $G_{2}$. Ze heeft dus $\frac{1}{2}$ kans om te gokken. 
-Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe $H$ maakt kan hij ook geen kennis overdragen van ronde tot ronde.
-
-- "Hamiltonian Cycles"
-
-Een variant van dit protocol werd voorgesteld door <a href="http://www.mathunion.org/ICM/ICM1986.2/Main/icm1986.2.1444.1451.ocr.pdf">[Munuel Blub,How to prove a theorem so no one else can claim it]</a>.
-Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
-
-Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf $G$. Victor kent $G$ maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
-<ul>
-<li>1. Peggy random permuteert $G$. Ze verplaatst de toppen om een nieuwe graaf $H$ te maken. $G$ en $H$ zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in $G$ is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in $H$. Als ze zelf niet $H$ heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen $G$ en $H$.
-Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie methode zijn voor elke lijn in $H$, dat is een encrypted 0 of een encrypted 1 voor elke lijn in $H$).
-<li>2. Peggy geeft Victor $H'$.
-<li>3. Victor vraagt Peggy om:
-<ul>
-   <li>a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
-   <li>b. Een Hamiltoniaanse cycle tonen in $H$
-
-<li>4. Peggy doet wat haar gevraagt word.
-<ul>
-<li>   a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor $G$ of $H$
-   <li>b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
-
-<li>4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
-
-
-Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
-<hr />
-Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. <a href="https://twitter.com/SanderDemeester">@SanderDemeester</a><p>
-Dank aan <a href="https://github.com/FelixVanderJeugt">@FelixVanderJeugt</a> voor de hulp bij het maken van dit artikel.
-<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F33&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowtransparency="true"></iframe>
-</p></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></li></ul></li></li></li></li></ul>
-"3/img/salkauskas-henry-black-on-white-abstract/{;{ "/{;{	;"�<!DOCTYPE HTML>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Sander Demeester - Home</title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
-      media="screen">
-    <link rel="stylesheet" type="text/css" href="/style.css">
-  </head>
-  <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>SD</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <section class='content'>
-      <h1>Sander Demeester Blog</h1>
-
-<p>Blog over CS, Cryptografie, wiskunde en al de rest van dingen die mij interseren, wie is "mij"? Ik ben Sander Demeester, een 23jarige student aan de universiteit van Gent, meer over "mij" is te vinden in de about sectie</p>
-
-<ul>
-  <li><p><strong>Blog</strong> by editing the “index.html” file in the “content” directory. This is the actual page content, and therefore doesn’t include the header, sidebar or style information (those are part of the layout).</p></li>
-  <li><p><strong>Projecten</strong>, which is the “default.html” file in the “layouts” directory, and create something unique (and hopefully less bland).</p></li>
-</ul>
-
-<p>If you need any help with customizing your nanoc web site, be sure to check out the documentation (see sidebar), and be sure to subscribe to the discussion group (also see sidebar). Enjoy!</p>
-    </section>
-    <script type="text/javascript">
-      
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-34425622-1']);
-      _gaq.push(['_trackPageview']);
-      
-      (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-      
-    </script>
-  </body>
-</html>
-;	"u<h1>Sander Demeester Blog</h1>
-
-<p>Blog over CS, Cryptografie, wiskunde en al de rest van dingen die mij interseren, wie is "mij"? Ik ben Sander Demeester, een 23jarige student aan de universiteit van Gent, meer over "mij" is te vinden in de about sectie</p>
-
-<ul>
-  <li><p><strong>Blog</strong> by editing the “index.html” file in the “content” directory. This is the actual page content, and therefore doesn’t include the header, sidebar or style information (those are part of the layout).</p></li>
-  <li><p><strong>Projecten</strong>, which is the “default.html” file in the “layouts” directory, and create something unique (and hopefully less bland).</p></li>
-</ul>
-
-<p>If you need any help with customizing your nanoc web site, be sure to check out the documentation (see sidebar), and be sure to subscribe to the discussion group (also see sidebar). Enjoy!</p>;
-@P;"u<h1>Sander Demeester Blog</h1>
-
-<p>Blog over CS, Cryptografie, wiskunde en al de rest van dingen die mij interseren, wie is "mij"? Ik ben Sander Demeester, een 23jarige student aan de universiteit van Gent, meer over "mij" is te vinden in de about sectie</p>
-
-<ul>
-  <li><p><strong>Blog</strong> by editing the “index.html” file in the “content” directory. This is the actual page content, and therefore doesn’t include the header, sidebar or style information (those are part of the layout).</p></li>
-  <li><p><strong>Projecten</strong>, which is the “default.html” file in the “layouts” directory, and create something unique (and hopefully less bland).</p></li>
-</ul>
-
-<p>If you need any help with customizing your nanoc web site, be sure to check out the documentation (see sidebar), and be sure to subscribe to the discussion group (also see sidebar). Enjoy!</p>"/blog/RSA/{;{	;"c!<!DOCTYPE HTML>
+"/blog/RSA/{;{	;"c!<!DOCTYPE HTML>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -2031,7 +1187,7 @@ Gebruik RSA nooit om een random document te signen.
     </script>
   </body>
 </html>
-;	"�We onderscheiden 2 soorten problemen als we het hebben over het "aanvallen" van cryptografische protocollen. 
+;"�We onderscheiden 2 soorten problemen als we het hebben over het "aanvallen" van cryptografische protocollen. 
 Soort 1, aanvallen tegen de implementatie van het protocol. 
 Soort 2, aanvallen tegen het protocol zelf. 
 <! -- more -->
@@ -2142,8 +1298,8 @@ Conclusie:
 Gebruik RSA nooit om een random document te signen.
  Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen.
 
-<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F31&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=80&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>;
-@V;"�<p>We onderscheiden 2 soorten problemen als we het hebben over het &#8220;aanvallen&#8221; van cryptografische protocollen. 
+<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F31&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=80&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe>;	@);
+"�<p>We onderscheiden 2 soorten problemen als we het hebben over het &#8220;aanvallen&#8221; van cryptografische protocollen. 
 Soort 1, aanvallen tegen de implementatie van het protocol. 
 Soort 2, aanvallen tegen het protocol zelf. 
 &lt;! &#8211; more &#8211;&gt;
@@ -2257,3 +1413,663 @@ Gebruik RSA nooit om een random document te signen.
 
 <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F31&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=80&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowtransparency="true"></iframe>
 </p>
+"3/img/salkauskas-henry-black-on-white-abstract/{;{ " /img/black-white-abstract1/{;{ "/blogs/{;{	;"0<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sander Demeester - </title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>SD</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <section class='content'>
+      #image {
+	height: 300px;
+	width: 100px;
+}
+
+    </section>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-34425622-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>
+;"/#image {
+	height: 300px;
+	width: 100px;
+}
+;	@5;
+"/#image {
+	height: 300px;
+	width: 100px;
+}
+"/{;{	;"�<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sander Demeester - Home</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>SD</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <section class='content'>
+      <h1>Sander Demeester Blog</h1>
+
+<p>Blog over CS, Cryptografie, wiskunde en al de rest van dingen die mij interseren, wie is "mij"? Ik ben Sander Demeester, een 23jarige student aan de universiteit van Gent, meer over "mij" is te vinden in de about sectie</p>
+
+<ul>
+  <li><p><strong>Blog</strong> by editing the “index.html” file in the “content” directory. This is the actual page content, and therefore doesn’t include the header, sidebar or style information (those are part of the layout).</p></li>
+  <li><p><strong>Projecten</strong>, which is the “default.html” file in the “layouts” directory, and create something unique (and hopefully less bland).</p></li>
+</ul>
+
+<p>If you need any help with customizing your nanoc web site, be sure to check out the documentation (see sidebar), and be sure to subscribe to the discussion group (also see sidebar). Enjoy!</p>
+    </section>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+  </body>
+</html>
+;"u<h1>Sander Demeester Blog</h1>
+
+<p>Blog over CS, Cryptografie, wiskunde en al de rest van dingen die mij interseren, wie is "mij"? Ik ben Sander Demeester, een 23jarige student aan de universiteit van Gent, meer over "mij" is te vinden in de about sectie</p>
+
+<ul>
+  <li><p><strong>Blog</strong> by editing the “index.html” file in the “content” directory. This is the actual page content, and therefore doesn’t include the header, sidebar or style information (those are part of the layout).</p></li>
+  <li><p><strong>Projecten</strong>, which is the “default.html” file in the “layouts” directory, and create something unique (and hopefully less bland).</p></li>
+</ul>
+
+<p>If you need any help with customizing your nanoc web site, be sure to check out the documentation (see sidebar), and be sure to subscribe to the discussion group (also see sidebar). Enjoy!</p>;	@;;
+"u<h1>Sander Demeester Blog</h1>
+
+<p>Blog over CS, Cryptografie, wiskunde en al de rest van dingen die mij interseren, wie is "mij"? Ik ben Sander Demeester, een 23jarige student aan de universiteit van Gent, meer over "mij" is te vinden in de about sectie</p>
+
+<ul>
+  <li><p><strong>Blog</strong> by editing the “index.html” file in the “content” directory. This is the actual page content, and therefore doesn’t include the header, sidebar or style information (those are part of the layout).</p></li>
+  <li><p><strong>Projecten</strong>, which is the “default.html” file in the “layouts” directory, and create something unique (and hopefully less bland).</p></li>
+</ul>
+
+<p>If you need any help with customizing your nanoc web site, be sure to check out the documentation (see sidebar), and be sure to subscribe to the discussion group (also see sidebar). Enjoy!</p>"/posts/first/{;{	;"�<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>My blog - First post</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>My Blog</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <section class='content'>
+      Hello world
+    </section>
+  </body>
+</html>
+;"Hello world;	@A;
+"Hello world"/blog/znp/{;{	;"�.<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sander Demeester - Zero Knowledge Proof</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>SD</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <section class='content'>
+      
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/znp/">Zero Knowledge Proof</a></h1>
+  <aside>
+    <p>Posted at: 2013-04-02 10:45:51 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/1.jpg">
+    </div>
+    
+  </aside>
+  <article>
+    <p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
+
+<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.
+<!-- more -->
+Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van $\frac{1}{2}$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.</p>
+
+<p>Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
+Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.</p>
+
+<li>1. Volledigheid:<p>
+   Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</p></li>
+<li>2. Correctheid:<p>
+  Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</p></li>
+<li>3. Zero-Knowledge:<p>
+   Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</p></li>
+
+<p>Basic Zero-Knowledge Protocol
+Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf">[QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children]</a></p>
+
+<p>Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. </p>
+
+<h3>Overdragen van een oplossing voor een NP-hard probleem als oplossing voor een Zero-Knowledge bewijs</h3>
+
+<p>Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.</p>
+<ul>
+<li>1. Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
+<li>2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
+<li>3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.
+<li>4. Victor vraagt Peggy om
+<ul>
+   <li>a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
+   <li>b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
+
+<li>5. Peggy doet wat haar wordt gevraagd
+<li>6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
+
+
+Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan "faken". 
+
+In de volgende sectie bespreek ik 2 voorbeelden:
+
+- "Graph Isomorphism"
+Basis voor dit protocol komt uit <a href="http://www.math.ias.edu/~avi/PUBLICATIONS/MYPAPERS/GMW86/GMW86.pdf">[Oded Goldreich,Proofs that yield nothing but their validity and a Methodology of Cryptographic Protocol Design]</a>
+We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen $G$,$H$
+$$
+\begin{equation*}
+f : V(G) \rightarrow V(H)
+\end{equation*}
+$$
+zodat elk paar bogen ${u,v}$ aangrenzend zijn in $G$ als en alleen als $f(u)$ en $f(v)$ aangrenzend zijn in $H$.
+Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
+
+We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf $G_{1}$ en $G_{2}$.
+Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
+
+<ul>
+<li>1. Peggy random permuteert $G_{1}$ om een graaf $H$ te produceren. $H$ is isomorf met $G_{1}$, omdat Peggy kennis heeft van isomorfisme tussen $H$ en $G_{1}$ heeft ze ook kennis van isomorfisme tussen $H$ en $G_{1}$. Voor alle andere is isomorfisme vinden tussen $G_{1}$ en $H$ of tussen $G_{2}$ en $H$ even moeilijk als het vinden van isomorfisme tussen $G_{1}$ en $G_{2}$.
+<li>2. Peggy zend H naar Victor.
+<li>3. Victor vraagt Peggy om:
+<ul>
+   <li>a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
+   <li>b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
+
+<li>4. Peggy doet wat haar wordt gevraagd, ofwel
+<ul>
+   <li>a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
+   <li>b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
+
+<li>5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
+
+
+Als Peggy geen kennis heeft van isomorfisme tussen $G_{1}$ en $G_{2}$ kan ze geen graaf $H$ produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel $G_{1}$ ofwel $G_{2}$. Ze heeft dus $\frac{1}{2}$ kans om te gokken. 
+Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe $H$ maakt kan hij ook geen kennis overdragen van ronde tot ronde.
+
+- "Hamiltonian Cycles"
+
+Een variant van dit protocol werd voorgesteld door <a href="http://www.mathunion.org/ICM/ICM1986.2/Main/icm1986.2.1444.1451.ocr.pdf">[Munuel Blub,How to prove a theorem so no one else can claim it]</a>.
+Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
+
+Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf $G$. Victor kent $G$ maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
+<ul>
+<li>1. Peggy random permuteert $G$. Ze verplaatst de toppen om een nieuwe graaf $H$ te maken. $G$ en $H$ zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in $G$ is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in $H$. Als ze zelf niet $H$ heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen $G$ en $H$.
+Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie methode zijn voor elke lijn in $H$, dat is een encrypted 0 of een encrypted 1 voor elke lijn in $H$).
+<li>2. Peggy geeft Victor $H'$.
+<li>3. Victor vraagt Peggy om:
+<ul>
+   <li>a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
+   <li>b. Een Hamiltoniaanse cycle tonen in $H$
+
+<li>4. Peggy doet wat haar gevraagt word.
+<ul>
+<li>   a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor $G$ of $H$
+   <li>b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
+
+<li>4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
+
+
+Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
+<hr />
+Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. <a href="https://twitter.com/SanderDemeester">@SanderDemeester</a><p>
+Dank aan <a href="https://github.com/FelixVanderJeugt">@FelixVanderJeugt</a> voor de hulp bij het maken van dit artikel.
+<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F33&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowtransparency="true"></iframe>
+</p></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></li></ul></li></li></li></li></ul>
+
+  </article>
+</div>
+<script type="text/javascript"
+	src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    </section>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+  </body>
+</html>
+;"T&De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat "iets" willen bewijzen aan Bob zonder dat "iets" te moeten onthullen.
+
+Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de "prover", en Victor, die de rol zal spelen van de "verifierer".
+<!-- more -->
+Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van $\frac{1}{2}$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.
+
+Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
+Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.
+
+<li>1. Volledigheid:<p>
+   Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</p></li>
+<li>2. Correctheid:<p>
+  Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</p></li>
+<li>3. Zero-Knowledge:<p>
+   Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</p></li>
+
+Basic Zero-Knowledge Protocol
+Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf">[QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children]</a>
+
+Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. 
+
+<h3>Overdragen van een oplossing voor een NP-hard probleem als oplossing voor een Zero-Knowledge bewijs</h3>
+
+Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.
+<ul>
+<li>1. Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
+<li>2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
+<li>3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.
+<li>4. Victor vraagt Peggy om
+<ul>
+   <li>a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
+   <li>b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
+</ul>
+<li>5. Peggy doet wat haar wordt gevraagd
+<li>6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
+</ul>
+
+Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan "faken". 
+
+In de volgende sectie bespreek ik 2 voorbeelden:
+
+- "Graph Isomorphism"
+Basis voor dit protocol komt uit <a href="http://www.math.ias.edu/~avi/PUBLICATIONS/MYPAPERS/GMW86/GMW86.pdf">[Oded Goldreich,Proofs that yield nothing but their validity and a Methodology of Cryptographic Protocol Design]</a>
+We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen $G$,$H$
+$$
+\begin{equation*}
+f : V(G) \rightarrow V(H)
+\end{equation*}
+$$
+zodat elk paar bogen ${u,v}$ aangrenzend zijn in $G$ als en alleen als $f(u)$ en $f(v)$ aangrenzend zijn in $H$.
+Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
+
+We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf $G_{1}$ en $G_{2}$.
+Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
+
+<ul>
+<li>1. Peggy random permuteert $G_{1}$ om een graaf $H$ te produceren. $H$ is isomorf met $G_{1}$, omdat Peggy kennis heeft van isomorfisme tussen $H$ en $G_{1}$ heeft ze ook kennis van isomorfisme tussen $H$ en $G_{1}$. Voor alle andere is isomorfisme vinden tussen $G_{1}$ en $H$ of tussen $G_{2}$ en $H$ even moeilijk als het vinden van isomorfisme tussen $G_{1}$ en $G_{2}$.
+<li>2. Peggy zend H naar Victor.
+<li>3. Victor vraagt Peggy om:
+<ul>
+   <li>a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
+   <li>b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
+</ul>
+<li>4. Peggy doet wat haar wordt gevraagd, ofwel
+<ul>
+   <li>a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
+   <li>b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
+</ul>
+<li>5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
+</ul>
+
+Als Peggy geen kennis heeft van isomorfisme tussen $G_{1}$ en $G_{2}$ kan ze geen graaf $H$ produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel $G_{1}$ ofwel $G_{2}$. Ze heeft dus $\frac{1}{2}$ kans om te gokken. 
+Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe $H$ maakt kan hij ook geen kennis overdragen van ronde tot ronde.
+
+- "Hamiltonian Cycles"
+
+Een variant van dit protocol werd voorgesteld door <a href="http://www.mathunion.org/ICM/ICM1986.2/Main/icm1986.2.1444.1451.ocr.pdf">[Munuel Blub,How to prove a theorem so no one else can claim it]</a>.
+Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
+
+Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf $G$. Victor kent $G$ maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
+<ul>
+<li>1. Peggy random permuteert $G$. Ze verplaatst de toppen om een nieuwe graaf $H$ te maken. $G$ en $H$ zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in $G$ is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in $H$. Als ze zelf niet $H$ heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen $G$ en $H$.
+Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie methode zijn voor elke lijn in $H$, dat is een encrypted 0 of een encrypted 1 voor elke lijn in $H$).
+<li>2. Peggy geeft Victor $H'$.
+<li>3. Victor vraagt Peggy om:
+<ul>
+   <li>a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
+   <li>b. Een Hamiltoniaanse cycle tonen in $H$
+</ul>
+<li>4. Peggy doet wat haar gevraagt word.
+<ul>
+<li>   a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor $G$ of $H$
+   <li>b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
+</ul>
+<li>4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
+</ul>
+
+Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
+<hr>
+Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. <a href="https://twitter.com/SanderDemeester">@SanderDemeester</a><p>
+Dank aan <a href="https://github.com/FelixVanderJeugt">@FelixVanderJeugt</a> voor de hulp bij het maken van dit artikel.
+<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F33&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowTransparency="true"></iframe>;	@G;
+"8'<p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
+
+<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.
+<!-- more -->
+Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van $\frac{1}{2}$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.</p>
+
+<p>Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
+Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.</p>
+
+<li>1. Volledigheid:<p>
+   Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</p></li>
+<li>2. Correctheid:<p>
+  Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</p></li>
+<li>3. Zero-Knowledge:<p>
+   Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</p></li>
+
+<p>Basic Zero-Knowledge Protocol
+Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf">[QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children]</a></p>
+
+<p>Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. </p>
+
+<h3>Overdragen van een oplossing voor een NP-hard probleem als oplossing voor een Zero-Knowledge bewijs</h3>
+
+<p>Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.</p>
+<ul>
+<li>1. Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
+<li>2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
+<li>3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.
+<li>4. Victor vraagt Peggy om
+<ul>
+   <li>a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
+   <li>b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
+
+<li>5. Peggy doet wat haar wordt gevraagd
+<li>6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
+
+
+Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan "faken". 
+
+In de volgende sectie bespreek ik 2 voorbeelden:
+
+- "Graph Isomorphism"
+Basis voor dit protocol komt uit <a href="http://www.math.ias.edu/~avi/PUBLICATIONS/MYPAPERS/GMW86/GMW86.pdf">[Oded Goldreich,Proofs that yield nothing but their validity and a Methodology of Cryptographic Protocol Design]</a>
+We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen $G$,$H$
+$$
+\begin{equation*}
+f : V(G) \rightarrow V(H)
+\end{equation*}
+$$
+zodat elk paar bogen ${u,v}$ aangrenzend zijn in $G$ als en alleen als $f(u)$ en $f(v)$ aangrenzend zijn in $H$.
+Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
+
+We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf $G_{1}$ en $G_{2}$.
+Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
+
+<ul>
+<li>1. Peggy random permuteert $G_{1}$ om een graaf $H$ te produceren. $H$ is isomorf met $G_{1}$, omdat Peggy kennis heeft van isomorfisme tussen $H$ en $G_{1}$ heeft ze ook kennis van isomorfisme tussen $H$ en $G_{1}$. Voor alle andere is isomorfisme vinden tussen $G_{1}$ en $H$ of tussen $G_{2}$ en $H$ even moeilijk als het vinden van isomorfisme tussen $G_{1}$ en $G_{2}$.
+<li>2. Peggy zend H naar Victor.
+<li>3. Victor vraagt Peggy om:
+<ul>
+   <li>a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
+   <li>b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
+
+<li>4. Peggy doet wat haar wordt gevraagd, ofwel
+<ul>
+   <li>a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
+   <li>b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
+
+<li>5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
+
+
+Als Peggy geen kennis heeft van isomorfisme tussen $G_{1}$ en $G_{2}$ kan ze geen graaf $H$ produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel $G_{1}$ ofwel $G_{2}$. Ze heeft dus $\frac{1}{2}$ kans om te gokken. 
+Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe $H$ maakt kan hij ook geen kennis overdragen van ronde tot ronde.
+
+- "Hamiltonian Cycles"
+
+Een variant van dit protocol werd voorgesteld door <a href="http://www.mathunion.org/ICM/ICM1986.2/Main/icm1986.2.1444.1451.ocr.pdf">[Munuel Blub,How to prove a theorem so no one else can claim it]</a>.
+Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
+
+Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf $G$. Victor kent $G$ maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
+<ul>
+<li>1. Peggy random permuteert $G$. Ze verplaatst de toppen om een nieuwe graaf $H$ te maken. $G$ en $H$ zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in $G$ is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in $H$. Als ze zelf niet $H$ heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen $G$ en $H$.
+Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie methode zijn voor elke lijn in $H$, dat is een encrypted 0 of een encrypted 1 voor elke lijn in $H$).
+<li>2. Peggy geeft Victor $H'$.
+<li>3. Victor vraagt Peggy om:
+<ul>
+   <li>a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
+   <li>b. Een Hamiltoniaanse cycle tonen in $H$
+
+<li>4. Peggy doet wat haar gevraagt word.
+<ul>
+<li>   a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor $G$ of $H$
+   <li>b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
+
+<li>4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
+
+
+Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
+<hr />
+Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. <a href="https://twitter.com/SanderDemeester">@SanderDemeester</a><p>
+Dank aan <a href="https://github.com/FelixVanderJeugt">@FelixVanderJeugt</a> voor de hulp bij het maken van dit artikel.
+<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F33&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowtransparency="true"></iframe>
+</p></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></li></ul></li></li></li></li></ul>
+"/blog/first/{;{	;"�<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sander Demeester - First post</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>SD</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <section class='content'>
+      
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/first/">First post</a></h1>
+  <aside>
+    <p>Posted at: 2012-02-10 09:00:00 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/1.jpg">
+    </div>
+    
+  </aside>
+  <article>
+    <p>Hello world
+<!-- more -->
+smldfjsmldfjsmldfjsdf
+sdfkjsqfd
+kj
+sdfkjfsd
+j
+sfjdmsjf
+mksfjsmdfkj</p>
+
+  </article>
+</div>
+<script type="text/javascript"
+	src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    </section>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+  </body>
+</html>
+;"aHello world
+<!-- more -->
+smldfjsmldfjsmldfjsdf
+sdfkjsqfd
+kj
+sdfkjfsd
+j
+sfjdmsjf
+mksfjsmdfkj;	@M;
+"i<p>Hello world
+<!-- more -->
+smldfjsmldfjsmldfjsdf
+sdfkjsqfd
+kj
+sdfkjfsd
+j
+sfjdmsjf
+mksfjsmdfkj</p>
+"/projects/{;{	;"X<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sander Demeester - A New Item</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>SD</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <section class='content'>
+      Hi, I'm a new item!
+    </section>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+  </body>
+</html>
+;"Hi, I'm a new item!;	@S;
+"Hi, I'm a new item!"/img/1/{;{ 
