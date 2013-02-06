@@ -1,0 +1,22 @@
+
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+<h1><%= link_to(@item[:title], @item.path) %></h1>
+	<aside>
+		<p>Posted at: <%= item[:created_at] %></p>
+	<% if @item[:auteur] %>
+		Auteur   : <%= item[:auteur] %>    
+	<% end %>
+	<p>Contributors: <%= contributors %> </p>
+	<% if @item[:img] %>
+	<div id="image">
+	<img src="<%= @item[:img] %>">
+	</div>
+	<% end %>
+	</aside>
+	<article>
+		<%= yield %>
+	</article>
+	</div>
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>

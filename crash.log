@@ -1,0 +1,135 @@
+Crashlog created at Wed Feb 06 21:53:35 +0100 2013
+
+===== MESSAGE:
+
+ArgumentError: argument out of range
+
+===== COMPILATION STACK:
+
+  - [item]   /blog/ (rep default)
+
+===== STACK TRACE:
+
+  0. /usr/lib/ruby/1.8/time.rb:180:in `utc'
+  1. /usr/lib/ruby/1.8/time.rb:180:in `make_time'
+  2. /usr/lib/ruby/1.8/time.rb:243:in `parse'
+  3. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/helpers/blogging.rb:375:in `attribute_to_time'
+  4. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/helpers/blogging.rb:41:in `sorted_articles'
+  5. item /blog/ (rep default):8:in `sort_by'
+  6. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/helpers/blogging.rb:40:in `each'
+  7. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/helpers/blogging.rb:40:in `sort_by'
+  8. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/helpers/blogging.rb:40:in `sorted_articles'
+  9. item /blog/ (rep default):1:in `get_binding'
+  10. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/context.rb:43:in `get_binding'
+  11. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/filters/erb.rb:27:in `run'
+  12. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/result_data/item_rep.rb:336:in `filter'
+  13. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/compilation/item_rep_proxy.rb:47:in `filter'
+  14. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/compilation/rule_context.rb:55:in `filter'
+  15. ./Rules:28:in `load'
+  16. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/compilation/rule.rb:68:in `instance_eval'
+  17. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/compilation/rule.rb:68:in `apply_to'
+  18. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/compilation/compiler.rb:383:in `compile_rep'
+  19. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/compilation/compiler.rb:339:in `compile_reps'
+  20. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/compilation/compiler.rb:332:in `loop'
+  21. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/compilation/compiler.rb:332:in `compile_reps'
+  22. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/compilation/compiler.rb:89:in `run'
+  23. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/base/source_data/site.rb:58:in `compile'
+  24. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/cli/commands/compile.rb:325:in `run'
+  25. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/cli/command_runner.rb:14:in `call'
+  26. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/cli/error_handler.rb:70:in `handle_while'
+  27. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/cli/error_handler.rb:26:in `handle_while'
+  28. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/cli/command_runner.rb:13:in `call'
+  29. /var/lib/gems/1.8/gems/cri-2.3.0/lib/cri/command_dsl.rb:185:in `runner'
+  30. /var/lib/gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:296:in `call'
+  31. /var/lib/gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:296:in `run_this'
+  32. /var/lib/gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:249:in `run'
+  33. /var/lib/gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:262:in `run'
+  34. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/cli.rb:52:in `run'
+  35. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/cli/error_handler.rb:70:in `handle_while'
+  36. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/cli/error_handler.rb:26:in `handle_while'
+  37. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib/nanoc/cli.rb:50:in `run'
+  38. /var/lib/gems/1.8/gems/nanoc-3.5.0/bin/nanoc:19
+  39. /usr/local/bin/nanoc:19:in `load'
+  ... 42 more lines omitted. See full crash log for details.
+
+===== VERSION INFORMATION:
+
+nanoc 3.5.0 © 2007-2013 Denis Defreyne.
+Running ruby 1.8.7 (2011-06-30) on x86_64-linux with RubyGems 1.8.15.
+
+===== SYSTEM INFORMATION:
+
+Linux sander-desktop 3.2.0-37-generic #58-Ubuntu SMP Thu Jan 24 15:28:10 UTC 2013 x86_64 x86_64 x86_64 GNU/Linux
+
+===== INSTALLED GEMS:
+
+  adsf 1.1.1
+  colored 1.2
+  nanoc 3.5.0
+  rack 1.5.1
+  kramdown 0.14.2
+  cri 2.3.0
+
+===== ENVIRONMENT:
+
+DBUS_SESSION_BUS_ADDRESS => "unix:abstract=/tmp/dbus-mMiiumWPOr,guid=1d8d0a11d136a064240f6ca400000052"
+DEFAULTS_PATH => "/usr/share/gconf/gnome-shell.default.path"
+DESKTOP_SESSION => "gnome-shell"
+DISPLAY => ":0"
+GDMSESSION => "gnome-shell"
+GDM_LANG => "nl_NL"
+GJS_DEBUG_OUTPUT => "stderr"
+GJS_DEBUG_TOPICS => "JS ERROR;JS LOG"
+GNOME_DESKTOP_SESSION_ID => "this-is-deprecated"
+GNOME_KEYRING_CONTROL => "/tmp/keyring-2kpcOI"
+GNOME_KEYRING_PID => "2643"
+GPG_AGENT_INFO => "/tmp/keyring-2kpcOI/gpg:0:1"
+GREP_COLOR => "1;32"
+GREP_OPTIONS => "--color=auto"
+HOME => "/home/test"
+LANG => "nl_NL.UTF-8"
+LANGUAGE => "nl_NL:en"
+LC_CTYPE => "nl_NL.UTF-8"
+LESS => "-R"
+LIBGL_DRIVERS_PATH => "/usr/lib/fglrx/dri:/usr/lib32/fglrx/dri"
+LOGNAME => "test"
+LSCOLORS => "Gxfxcxdxbxegedabagacad"
+MAIL => "/var/mail/test"
+MANDATORY_PATH => "/usr/share/gconf/gnome-shell.mandatory.path"
+OLDPWD => "/home/test/programming/nanoc-website/blog/content"
+PAGER => "less"
+PATH => "/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/home/sander/programming/bake_ip/arm-2008q3/bin:/home/test/android-sdks/tools"
+PWD => "/home/test/programming/nanoc-website/blog"
+SESSION_MANAGER => "local/sander-desktop:@/tmp/.ICE-unix/2660,unix/sander-desktop:/tmp/.ICE-unix/2660"
+SHELL => "/bin/zsh"
+SHLVL => "3"
+SSH_AGENT_PID => "2705"
+SSH_AUTH_SOCK => "/tmp/keyring-2kpcOI/ssh"
+TERM => "xterm-256color"
+UBUNTU_MENUPROXY => "libappmenu.so"
+USER => "test"
+USERNAME => "test"
+WINDOWPATH => "7"
+XAUTHORITY => "/var/run/gdm/auth-for-test-pMoWyp/database"
+XDG_CONFIG_DIRS => "/etc/xdg/xdg-gnome-shell:/etc/xdg"
+XDG_CURRENT_DESKTOP => "GNOME"
+XDG_DATA_DIRS => "/usr/share/gnome-shell:/usr/share/gnome:/usr/local/share/:/usr/share/"
+XDG_SESSION_COOKIE => "41b11c5093b07fac28f623fe0000000b-1360175818.278840-1714537417"
+_ => "/usr/local/bin/nanoc"
+
+===== LOAD PATHS:
+
+  0. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib
+  1. /var/lib/gems/1.8/gems/colored-1.2/lib
+  2. /var/lib/gems/1.8/gems/cri-2.3.0/lib
+  3. /var/lib/gems/1.8/gems/nanoc-3.5.0/lib
+  4. /var/lib/gems/1.8/gems/kramdown-0.14.2/lib
+  5. /usr/local/lib/site_ruby/1.8
+  6. /usr/local/lib/site_ruby/1.8/x86_64-linux
+  7. /usr/local/lib/site_ruby
+  8. /usr/lib/ruby/vendor_ruby/1.8
+  9. /usr/lib/ruby/vendor_ruby/1.8/x86_64-linux
+  10. /usr/lib/ruby/vendor_ruby
+  11. /usr/lib/ruby/1.8
+  12. /usr/lib/ruby/1.8/x86_64-linux
+  13. .

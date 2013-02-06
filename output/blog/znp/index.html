@@ -1,11 +1,53 @@
-De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat "iets" willen bewijzen aan Bob zonder dat "iets" te moeten onthullen.
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sander Demeester - Zero Knowledge Proof</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>SD</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <section class='content'>
+      
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+<h1><a href="/blog/znp/">Zero Knowledge Proof</a></h1>
+	<aside>
+		<p>Posted at: 2013-04-02 10:45:51 +0000</p>
+	
+		Auteur   : Sander Demeester    
+	
+	<p>Contributors: (none) </p>
+	
+	<div id="image">
+	<img src="/img/1.jpg">
+	</div>
+	
+	</aside>
+	<article>
+		<p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
 
-Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de "prover", en Victor, die de rol zal spelen van de "verifierer".
+<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.</p>
 
-Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van $\frac{1}{2}$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.
+<p>Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van $\frac{1}{2}$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.</p>
 
-Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
-Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.
+<p>Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
+Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.</p>
 
 <li>1. Volledigheid:<p>
    Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</p></li>
@@ -14,14 +56,14 @@ Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.
 <li>3. Zero-Knowledge:<p>
    Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</p></li>
 
-Basic Zero-Knowledge Protocol
-Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf">[QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children]</a>
+<p>Basic Zero-Knowledge Protocol
+Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf">[QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children]</a></p>
 
-Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. 
+<p>Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. </p>
 
 <h3>Overdragen van een oplossing voor een NP-hard probleem als oplossing voor een Zero-Knowledge bewijs</h3>
 
-Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.
+<p>Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.</p>
 <ul>
 <li>1. Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
 <li>2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
@@ -30,10 +72,10 @@ Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossin
 <ul>
    <li>a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
    <li>b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
-</ul>
+
 <li>5. Peggy doet wat haar wordt gevraagd
 <li>6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
-</ul>
+
 
 Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan "faken". 
 
@@ -60,14 +102,14 @@ Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
 <ul>
    <li>a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
    <li>b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
-</ul>
+
 <li>4. Peggy doet wat haar wordt gevraagd, ofwel
 <ul>
    <li>a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
    <li>b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
-</ul>
+
 <li>5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
-</ul>
+
 
 Als Peggy geen kennis heeft van isomorfisme tussen $G_{1}$ en $G_{2}$ kan ze geen graaf $H$ produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel $G_{1}$ ofwel $G_{2}$. Ze heeft dus $\frac{1}{2}$ kans om te gokken. 
 Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe $H$ maakt kan hij ook geen kennis overdragen van ronde tot ronde.
@@ -86,18 +128,40 @@ Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie 
 <ul>
    <li>a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
    <li>b. Een Hamiltoniaanse cycle tonen in $H$
-</ul>
+
 <li>4. Peggy doet wat haar gevraagt word.
 <ul>
 <li>   a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor $G$ of $H$
    <li>b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
-</ul>
+
 <li>4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
-</ul>
+
 
 Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
-<hr>
-Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. <a href="https://twitter.com/SanderDemeester>@SanderDemeester</a>
+<hr />
+Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. <a href="https://twitter.com/SanderDemeester">@SanderDemeester</a><p>
 Dank aan <a href="https://github.com/FelixVanderJeugt">@FelixVanderJeugt</a> voor de hulp bij het maken van dit artikel.
-<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F33&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowTransparency="true"></iframe>
+<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.sanderdemeester.be%2Fd%2Fnode%2F33&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=207404839325473" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:35px;" allowtransparency="true"></iframe>
+</p></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></ul></li></li></li></li></ul></li></li></li></li></ul>
 
+	</article>
+	</div>
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    </section>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-34425622-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>
