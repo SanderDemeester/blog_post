@@ -1,14 +1,14 @@
 ---
 title: "Chosen Ciphertext Attack against RSA"
-created_at: 2012-22-07 20:49:00 +0000
+created_at: 2012-07-27 20:49:00 +0000
 auteur: "Sander Demeester"
 kind: article
 img: "/img/1.jpg"
 ---
 We onderscheiden 2 soorten problemen als we het hebben over het "aanvallen" van cryptografische protocollen. 
-<li>Soort 1, aanvallen tegen de implementatie van het protocol. 
-<li>Soort 2, aanvallen tegen het protocol zelf. 
-
+Soort 1, aanvallen tegen de implementatie van het protocol. 
+Soort 2, aanvallen tegen het protocol zelf. 
+<! -- more -->
 De volgende 3 senario's die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.
 
 Zeer korte beschrijving van het RSA protocol.

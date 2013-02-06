@@ -5,7 +5,9 @@ auteur: "Sander Demeester"
 kind: article
 img: "/img/1.jpg"
 ---
-In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. De verzameling van natuurlijke getallen is oneindig wat impliceert dat er oneindig veel priemfactoren zijn met gevolg dat er oneindig veel priem getallen zijn (De ontbinding is uniek voor elke getal op de volgorde na). Als we zouden stellen dat dit niet zo is dan bestaat er een eindig verzameling van priemgetallen $p_{1},p_{2},\cdots,p_{n}$ waarvoor $v= \Pi^{n}_{i=1} p$ met $v+1$ die dus geen priemgetal zou zijn. Dit zou tot gevolg hebben dat $v+1$ echt delers. Noemen we $q$ de kleinste positieve deler van $v+1$. Dan is $q$ een deler en bijgevolg ook een deler van $v$. Bijgevolg is $q$ een deler van $(v+1)-v = 1$. Wat niet kan, dus er zijn <a href="http://en.wikipedia.org/wiki/Largest_known_prime_number">oneindig</a> veel priemgetallen.
+In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
+<!-- more -->
+De verzameling van natuurlijke getallen is oneindig wat impliceert dat er oneindig veel priemfactoren zijn met gevolg dat er oneindig veel priem getallen zijn (De ontbinding is uniek voor elke getal op de volgorde na). Als we zouden stellen dat dit niet zo is dan bestaat er een eindig verzameling van priemgetallen $p_{1},p_{2},\cdots,p_{n}$ waarvoor $v= \Pi^{n}_{i=1} p$ met $v+1$ die dus geen priemgetal zou zijn. Dit zou tot gevolg hebben dat $v+1$ echt delers. Noemen we $q$ de kleinste positieve deler van $v+1$. Dan is $q$ een deler en bijgevolg ook een deler van $v$. Bijgevolg is $q$ een deler van $(v+1)-v = 1$. Wat niet kan, dus er zijn <a href="http://en.wikipedia.org/wiki/Largest_known_prime_number">oneindig</a> veel priemgetallen.
 
 Er bestaan <a href="http://en.wikipedia.org/wiki/Integer_factorization#Factoring_algorithms">veel</a> algoritmes om getallen te ontbinden in hun priemfactoren.
 

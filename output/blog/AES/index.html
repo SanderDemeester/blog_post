@@ -26,25 +26,27 @@
       
 <link rel="stylesheet" type="text/css" href="/blogs.css">
 <div class='post'>
-<h1><a href="/blog/AES/">Advanced Encryption Standard (AES)</a></h1>
-	<aside>
-		<p>Posted at: 2012-01-07 19:59:01 +0000</p>
+  <h1><a href="/blog/AES/">Advanced Encryption Standard (AES)</a></h1>
+  <aside>
+    <p>Posted at: 2012-01-07 19:59:01 +0000</p>
 	
-		Auteur   : Sander Demeester    
+	Auteur   : Sander Demeester    
 	
-	<p>Contributors: (none) </p>
-	
-	<div id="image">
-	<img src="/img/aes.gif">
-	</div>
-	
-	</aside>
-	<article>
-		<h1 id="encryption-with-aes-encryption-algoritm">Encryption with AES encryption algoritm.</h1>
-<pre><code>AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de "key scheduling" hangt af van de key lengte.
-
-Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor "keying material" &gt;    128 bit key: 160 bytes + extra key permutation 176 bytes &gt;    192 bit key: 192 bytes + extra key permutation 208 bytes &gt;    256 bit key: 224 bytes + extra key permutation 240 bytes
-</code></pre>
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/aes.gif">
+    </div>
+    
+  </aside>
+  <article>
+    <p>Encryption with AES encryption algoritm.
+    AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de &#8220;key scheduling&#8221; hangt af van de key lengte.
+<!-- more -->
+    Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor &#8220;keying material&#8221;
+&gt;    128 bit key: 160 bytes + extra key permutation 176 bytes
+&gt;    192 bit key: 192 bytes + extra key permutation 208 bytes
+&gt;    256 bit key: 224 bytes + extra key permutation 240 bytes</p>
 
 <p>Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.</p>
 
@@ -111,24 +113,24 @@ De specificatie noemt deze operaties het inproduct. Wat opnieuw is herdefinitie.
 
 <p>link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a></p>
 
-	</article>
-	</div>
+  </article>
+</div>
 <script type="text/javascript"
-   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
     </section>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-34425622-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
   </body>
 </html>

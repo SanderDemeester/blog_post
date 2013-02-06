@@ -5,17 +5,15 @@ auteur: "Sander Demeester"
 kind: article
 img: "/img/aes.gif"
 ---
-
 Encryption with AES encryption algoritm.
-=====================================     
     AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de "key scheduling" hangt af van de key lengte.
-
+<!-- more -->
     Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor "keying material"
 >    128 bit key: 160 bytes + extra key permutation 176 bytes
 >    192 bit key: 192 bytes + extra key permutation 208 bytes
 >    256 bit key: 224 bytes + extra key permutation 240 bytes
 
-<!-- more -->
+
 Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.
      
 Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.
