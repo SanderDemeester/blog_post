@@ -49,34 +49,38 @@ In de volgende sectie bespreek ik 2 voorbeelden:
 - "Graph Isomorphism"
 Basis voor dit protocol komt uit 
 We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen \\(G\\),\\(H\\)
+
+<notextile>
 $$
 \begin{equation*}
 f : V(G) \rightarrow V(H)
 \end{equation*}
 $$
+</notextile>
+
 zodat elk paar bogen \\({u,v}\\) aangrenzend zijn in \\(G\\) als en alleen als \\(f(u)\\) en \\(f(v)\\) aangrenzend zijn in \\(H\\).
 Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
 
-We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf \\(G_{1}\\) en \\(G_{2}\\).
+We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf \\(G\_{1}\\) en \\(G\_{2}\\).
 Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
 
 
-1. Peggy random permuteert \\(G_{1}\\) om een graaf \\(H\\) te produceren. \\(H\\) is isomorf met \\(G_{1}\\), omdat Peggy kennis heeft van isomorfisme tussen \\(H\\) en \\(G_{1}\\) heeft ze ook kennis van isomorfisme tussen \\(H\\) en \\(G_{1}\\). Voor alle andere is isomorfisme vinden tussen \\(G_{1}\\) en \\(H\\) of tussen \\(G_{2}\\) en \\(H\\) even moeilijk als het vinden van isomorfisme tussen \\(G_{1}\\) en \\(G_{2}\\).
+1. Peggy random permuteert \\(G\_{1}\\) om een graaf \\(H\\) te produceren. \\(H\\) is isomorf met \\(G\_{1}\\), omdat Peggy kennis heeft van isomorfisme tussen \\(H\\) en \\(G\_{1}\\) heeft ze ook kennis van isomorfisme tussen \\(H\\) en \\(G\_{1}\\). Voor alle andere is isomorfisme vinden tussen \\(G\_{1}\\) en \\(H\\) of tussen \\(G\_{2}\\) en \\(H\\) even moeilijk als het vinden van isomorfisme tussen \\(G\_{1}\\) en \\(G\_{2}\\).
 2. Peggy zend H naar Victor.
 3. Victor vraagt Peggy om:
 
-a. Te bewijzen dan H en \\(G_{1}\\) isomorf zijn 
-b. Te bewijzen dat H en \\(G_{2}\\) isomorf zijn.
+a. Te bewijzen dan H en \\(G\_{1}\\) isomorf zijn 
+b. Te bewijzen dat H en \\(G\_{2}\\) isomorf zijn.
 
 4. Peggy doet wat haar wordt gevraagd, ofwel
 
-a. Bewijst ze dat \\(H\\) en \\(G_{1}\\) isomorf zijn, zonder te bewijzen dat \\(H\\) en \\(G_{2}\\) isomorf zijn.
-b. Bewijst ze dat \\(H\\) en \\(G_{2}\\) isomorf zijn, zonder te bewijzen dat \\(H\\) en \\(G_{1}\\) isomorf zijn.
+a. Bewijst ze dat \\(H\\) en \\(G\_{1}\\) isomorf zijn, zonder te bewijzen dat \\(H\\) en \\(G\_{2}\\) isomorf zijn.
+b. Bewijst ze dat \\(H\\) en \\(G\_{2}\\) isomorf zijn, zonder te bewijzen dat \\(H\\) en \\(G\_{1}\\) isomorf zijn.
 
 5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
 
 
-Als Peggy geen kennis heeft van isomorfisme tussen \\(G_{1}\\) en \\(G_{2}\\) kan ze geen graaf \\(H\\) produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel \\(G_{1}\\) ofwel \\(G_{2}\\). Ze heeft dus \\(\frac{1}{2}\\) kans om te gokken. 
+Als Peggy geen kennis heeft van isomorfisme tussen \\(G\_{1}\\) en \\(G\_{2}\\) kan ze geen graaf \\(H\\) produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel \\(G\_{1}\\) ofwel \\(G\_{2}\\). Ze heeft dus \\(\frac{1}{2}\\) kans om te gokken. 
 Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe \\(H\\) maakt kan hij ook geen kennis overdragen van ronde tot ronde.
 
 - "Hamiltonian Cycles"
