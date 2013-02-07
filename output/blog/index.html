@@ -24,253 +24,20 @@
     </div>
     <section class='content'>
       
-<a href="/blog/znp/">Zero Knowledge Proof</a>
-2013-04-02 10:45:51 +0000
-<p>
-  <!-- <article> -->
-  <!-- 	De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat "iets" willen bewijzen aan Bob zonder dat "iets" te moeten onthullen.
-
-Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de "prover", en Victor, die de rol zal spelen van de "verifierer".
-
-Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van \(\frac{1}{2}\) om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.
-
-Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
-Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.
-
-1. Volledigheid:
-Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.
-2. Correctheid:
-Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.
-3. Zero-Knowledge:
-Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.
-
-Basic Zero-Knowledge Protocol
-Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op 
-
-Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. 
-
-
-
-Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.
-
-1. Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
-2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
-3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.
-4. Victor vraagt Peggy om
-
-a. Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
-b. De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
-
-5. Peggy doet wat haar wordt gevraagd
-6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
-
-
-Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan "faken". 
-
-In de volgende sectie bespreek ik 2 voorbeelden:
-
-- "Graph Isomorphism"
-Basis voor dit protocol komt uit 
-We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen \(G\),\(H\)
-$$
-\begin{equation*}
-f : V(G) \rightarrow V(H)
-\end{equation*}
-$$
-zodat elk paar bogen \({u,v}\) aangrenzend zijn in \(G\) als en alleen als \(f(u)\) en \(f(v)\) aangrenzend zijn in \(H\).
-Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
-
-We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf \(G_{1}\) en \(G_{2}\).
-Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
-
-
-1. Peggy random permuteert \(G_{1}\) om een graaf \(H\) te produceren. \(H\) is isomorf met \(G_{1}\), omdat Peggy kennis heeft van isomorfisme tussen \(H\) en \(G_{1}\) heeft ze ook kennis van isomorfisme tussen \(H\) en \(G_{1}\). Voor alle andere is isomorfisme vinden tussen \(G_{1}\) en \(H\) of tussen \(G_{2}\) en \(H\) even moeilijk als het vinden van isomorfisme tussen \(G_{1}\) en \(G_{2}\).
-2. Peggy zend H naar Victor.
-3. Victor vraagt Peggy om:
-
-a. Te bewijzen dan H en \(G_{1}\) isomorf zijn 
-b. Te bewijzen dat H en \(G_{2}\) isomorf zijn.
-
-4. Peggy doet wat haar wordt gevraagd, ofwel
-
-a. Bewijst ze dat \(H\) en \(G_{1}\) isomorf zijn, zonder te bewijzen dat \(H\) en \(G_{2}\) isomorf zijn.
-b. Bewijst ze dat \(H\) en \(G_{2}\) isomorf zijn, zonder te bewijzen dat \(H\) en \(G_{1}\) isomorf zijn.
-
-5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
-
-
-Als Peggy geen kennis heeft van isomorfisme tussen \(G_{1}\) en \(G_{2}\) kan ze geen graaf \(H\) produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel \(G_{1}\) ofwel \(G_{2}\). Ze heeft dus \(\frac{1}{2}\) kans om te gokken. 
-Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe \(H\) maakt kan hij ook geen kennis overdragen van ronde tot ronde.
-
-- "Hamiltonian Cycles"
-
-Een variant van dit protocol werd voorgesteld door .
-Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
-
-Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf \(G\). Victor kent \(G\) maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
-
-1. Peggy random permuteert \(G\). Ze verplaatst de toppen om een nieuwe graaf \(H\) te maken. \(G\) en \(H\) zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in \(G\) is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in \(H\). Als ze zelf niet \(H\) heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen \(G\) en \(H\).
-Daarna encrypteert Peggy \(H\) naar \(H'\) (dit moet een probabilistische encryptie methode zijn voor elke lijn in \(H\), dat is een encrypted 0 of een encrypted 1 voor elke lijn in \(H\)).
-2. Peggy geeft Victor \(H'\).
-3. Victor vraagt Peggy om:
-
-a. Te bewijzen dat \(H'\) een geencrypteerde isomorfe kopie van \(G\) is.
-b. Een Hamiltoniaanse cycle tonen in \(H\)
-
-4. Peggy doet wat haar gevraagt word.
-
-   a. Bewijs dat \(H'\) een geencrypteerde isomorfe kopie is van \(G\) door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor \(G\) of \(H\)
-b. Ze toont een Hamiltoniaanse cycle voor \(H\) door enkel de lijnen de decrypteren in \(H'\) die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat \(G\) en \(H\) topologisch isomorf zijn.
-
-4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
-
-
-Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor \(G\) is het voor haar onmogelijk een geencrypteerde \(H'\) te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met \(G\) of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van \(\frac{1}{2}\) om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor \(G\).
-
-Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. 
-Dank aan  voor de hulp bij het maken van dit artikel. -->
-  <!-- </article> -->
+<p><a href="/blog/znp/">Zero Knowledge Proof</a>
+2013-04-02 10:45:51 +0000</p>
   
-<a href="/blog/int_fac/">Visualisation of the Integer factorization process</a>
-2012-08-09 21:35:01 +0000
-<p>
-  <!-- <article> -->
-  <!-- 	In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
-<div class='read-more'><a href='/blog/int_fac/'>Verder lezen &rsaquo;</a></div> -->
-  <!-- </article> -->
+<p><a href="/blog/int_fac/">Visualisation of the Integer factorization process</a>
+2012-08-09 21:35:01 +0000</p>
   
-<a href="/blog/RSA/">Chosen Ciphertext Attack against RSA</a>
-2012-07-27 20:49:00 +0000
-<p>
-  <!-- <article> -->
-  <!-- 	We onderscheiden 2 soorten problemen als we het hebben over het "aanvallen" van cryptografische protocollen. 
-Soort 1, aanvallen tegen de implementatie van het protocol. 
-Soort 2, aanvallen tegen het protocol zelf. 
-<! -- more -->
-De volgende 3 senario's die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.
-
-Zeer korte beschrijving van het RSA protocol.
-RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote getallen. De public en private key zijn functies van een paar (200 of meer digits) priem getallen. Het bekomen van de plaintext van de public key en de ciphertext is equivalent met het factoriseren van het product bestaand uit 2 priem getallen.
-
-Om de twee keys te maken kiezen we 2 random priem getallen van gelijk lengte, we noemen deze \(p,q\). We bepalen het product.
-
-$$n = pq$$
-
-We kiezen random een encryptie key \(e\), zodanig dat \(e\) en \((p-1)(q-1)\) relatief priem zijn. 
-Daarna gebruiken we het <a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended euclidean algoritm</a> om een decryptie key \(d\) te vinden zodanig dat
-
-$$ed \equiv 1 \text{ mod } (p-1)(q-1)$$
-Of
-$$d = e^{-1} \text{ mod } ((p-1)(q-1))$$
-
-We merken op dat \(d\) en \(n\) relatief priem zijn.  De getallen \(e\) en \(n\) zijn de public key, \(d\) is de private key. \(p,q\) zijn verder niet meer nodig, maar moeten wel geheim blijven.
-Om een bericht \(m\) te encrypteren delen we het eerst op in blokken smaller dan \(n\), het resultaat, \(e\) zal zijn bestaan uit gelijkaardige blokken die we \(c_{i}\) zullen noemen.
-De encryptie formule is de volgende:
-$$c_{i} = m_{i}^{e} \text{ mod n }$$
-Decrypteren is dan logischerwijze:
-$$m_{i} = c_{i}^{d} \text{mod n}$$
-Omdat
-$$c_{i}^{d}=(m_{i}^{e})^{d} = m_{i}^{ed}=m_{i}^{k(p-1)(q-1)+1} = m_{i}m_{i}^{k(p-1)(q-1)} = m_{i}*1=m_{i} \text{ alles mod n}$$.
-
-<a href="http://sanderdemeester.be/maple/RSA-example.mw">maple voorbeeld</a>
-
-<hr>
-Samenvatting van het protocol:
-<p>
-Public Key:
-n: product van 2 priem getallen, \(p,q\) (beide getallen moeten geheim blijven)
-e: relatief priem met \((p-1)(q-1)\)
-Private Key:
-d: \(e^{-1} \text{mod } ((p-1)(q-1))\)
-Encrypteren:
-c: \(c=m^{e} \text{ mod n }\)
-Decrypteren:
-m: \(m = c^{d} \text{ mod n }\)
-<hr>
-
-Nu de werking van het protocol is begrepen ga ik 3 bekende scenario's tekenen waar deze manier van werken zijn doel mist. 
-
-Scenario 1: 
-Eve, luistert in op de communicatie van Alice en slaagt erin om een ciphertext bericht \(c\) te onderscheppen, \(c\) is geëncrypteerd met Alice haar public key. Eve wilt het bericht kunnen lezen. 
-Wiskundig uitgedrukt wilt Eve het volgende doen,
-
-$$m = c^{d}$$
-
-Om \(m\) te herstellen kiest Eve eerst een random getal \(r\), zodanig dat \(r\) kleiner is dan \(n\) alsook Alice haar public key \(e\), die gepubliceerd is.
-Alice voert de volgende berekeningen uit:
-
-$$x = r^{e} \text{ mod n}$$
-$$y = xc \text{ mod n}$$
-$$t = r^{-1} \text{mod n}$$
-
-Let op dat als \(x = r^{e} \text{ mod n}\), dan \(r = x^{d} \text{ mod n}\)
-Nu moet Eve Alice overtuigen om y te signeren met haar private key, m.a.w \(y\) te decrypteren (Let op, Alice decrypteert het bericht, niet een hash van het bericht). Alice heeft \(y\) nog nooit gezien, dus ze signed \(y\)
-
-$$u = y^{d} \text{mod n}$$
-
-Alice stuurt het resultaat terug door naar Eve die 
-
-$$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n} = c^{d} \text{ mod n} = m$$
-
-berekent, eve beschikt nu over m.
-
-Senario 2:
-Trent is een publieke computer notaris. Als Alice een document laat notaliseren, stuurt ze het document naar Trent. Trent signeert het document een RSA digital signature en stuurt het 
-document terug naar Alice (opnieuw wordt hier geen one-way hash function gebruikt, Trent encrypteert het volledige document met zijn private key).
-
-Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht \(m'\).
-Eerst, Mallory kiest een arbitrere waarde \(x\) en berekent 
-
-\(y = x^{e} \text{ mod n}\), waar \(e\) Trent zijn public key is, deze moet publiek zijn anders zouden andere entiteiten zijn signature niet kunnen controleren.
-
-Daarna berekent Mallory,
-
-$$m = ym' \text{ mod n}$$
-
-Mallory stuurt dit resultaat naar Trent, die het resultaat \(m'^{d} mod \text{ } n\) terug geeft. Wat nu moet gebeuren is
-
-\((m^{d} \text{ mod n})x^{-1} \text{ mod n}\), wat gelijk is aan \(n'^{d}\) en dus de signature is van \(m'\)
-
-Er zijn verschillende werkwijze's mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
-<a href="http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf">[G.I. Davida, "Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem"] </a>
-<a href="faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf">[D.E. Denning, "Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems"] </a>
-<a href="http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html">[Y. Desmedt and A.M. Odlykzo, "A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems"] </a>
-
-De manier van werken die wordt gebruikt is het zelfde voor alle exploits, en is dat de machtsverheffing de multipliciteits structuur behoudt van zijn input:
-
-$$(xm)^{d} \text{ mod n} = x^{d}m^{d} \text{ mod n}$$
-
-Senario 3:
-Eve wilt dat Alice \(m_{3}\) signed. Ze genereert twee berichten, \(m_{1},m_{2}\) zodanig dat
-
-$$m_{3} \equiv m_{1}m_{2} (\text{ mod n})$$
-
-Als Eve instaat is om Alice \(m_{1}\) en \(m_{2}\) te laten signeren kan ze volgende berekening toepassen om \(m_{3}\) te bekomen.
-
-$$m_{3}^{d} = (m_{1}^{d})(m_{2}^{d} \text{ mod n})$$
-Een link naar een uitgewerkt voorbeeld met maple.
-
-Conclusie: 
-Gebruik RSA nooit om een random document te signen.
-Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen. -->
-  <!-- </article> -->
+<p><a href="/blog/RSA/">Chosen Ciphertext Attack against RSA</a>
+2012-07-27 20:49:00 +0000</p>
   
-<a href="/blog/first/">First post</a>
-2012-02-10 09:00:00 +0000
-<p>
-  <!-- <article> -->
-  <!-- 	Hello world
-<div class='read-more'><a href='/blog/first/'>Verder lezen &rsaquo;</a></div> -->
-  <!-- </article> -->
+<p><a href="/blog/first/">First post</a>
+2012-02-10 09:00:00 +0000</p>
   
-<a href="/blog/AES/">Advanced Encryption Standard (AES)</a>
-2012-01-07 19:59:01 +0000
-<p>
-  <!-- <article> -->
-  <!-- 	Encryption with AES encryption algoritm.
-AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de "key scheduling" hangt af van de key lengte.
-<div class='read-more'><a href='/blog/AES/'>Verder lezen &rsaquo;</a></div> -->
-  <!-- </article> -->
+<p><a href="/blog/AES/">Advanced Encryption Standard (AES)</a>
+2012-01-07 19:59:01 +0000</p>
   
   
 
@@ -288,5 +55,7 @@ AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-le
       })();
       
     </script>
+    <script type="text/javascript"
+	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   </body>
 </html>
