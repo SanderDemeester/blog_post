@@ -59,8 +59,8 @@ $$
 \end{eqnarray}
 $$
 </notextile>
-waar \(P^{e\_{i}}\_{i}\)  de bijhorende sleutel waarde is voor elke top \(t\in N\_{G}(v)|s(v)=n\)
-Nu het leuke gedeelte. Euler's theorem vertelt ons dat
+waar \\(P^{e\_{i}}\_{i}\\) de bijhorende sleutel waarde is voor elke top \\(t\in N\_{G}(v)|s(v)=n\\).
+Nu het leuke gedeelte, euler's theorem vertelt ons dat
 <notextile>
 $$
 a^{\Phi(n)} \equiv 1 \mod(n)
