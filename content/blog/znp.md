@@ -9,7 +9,7 @@ De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vert
 
 Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de "prover", en Victor, die de rol zal spelen van de "verifierer".
 
-Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van $\frac{1}{2}$ om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.
+Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van \(\frac{1}{2}\) om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.
 
 Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
 Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.
@@ -48,61 +48,61 @@ In de volgende sectie bespreek ik 2 voorbeelden:
 
 - "Graph Isomorphism"
 Basis voor dit protocol komt uit 
-We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen $G$,$H$
+We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen \(G\),\(H\)
 $$
 \begin{equation*}
 f : V(G) \rightarrow V(H)
 \end{equation*}
 $$
-zodat elk paar bogen ${u,v}$ aangrenzend zijn in $G$ als en alleen als $f(u)$ en $f(v)$ aangrenzend zijn in $H$.
+zodat elk paar bogen \({u,v}\) aangrenzend zijn in \(G\) als en alleen als \(f(u)\) en \(f(v)\) aangrenzend zijn in \(H\).
 Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
 
-We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf $G_{1}$ en $G_{2}$.
+We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf \(G_{1}\) en \(G_{2}\).
 Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
 
 
-1. Peggy random permuteert $G_{1}$ om een graaf $H$ te produceren. $H$ is isomorf met $G_{1}$, omdat Peggy kennis heeft van isomorfisme tussen $H$ en $G_{1}$ heeft ze ook kennis van isomorfisme tussen $H$ en $G_{1}$. Voor alle andere is isomorfisme vinden tussen $G_{1}$ en $H$ of tussen $G_{2}$ en $H$ even moeilijk als het vinden van isomorfisme tussen $G_{1}$ en $G_{2}$.
+1. Peggy random permuteert \(G_{1}\) om een graaf \(H\) te produceren. \(H\) is isomorf met \(G_{1}\), omdat Peggy kennis heeft van isomorfisme tussen \(H\) en \(G_{1}\) heeft ze ook kennis van isomorfisme tussen \(H\) en \(G_{1}\). Voor alle andere is isomorfisme vinden tussen \(G_{1}\) en \(H\) of tussen \(G_{2}\) en \(H\) even moeilijk als het vinden van isomorfisme tussen \(G_{1}\) en \(G_{2}\).
 2. Peggy zend H naar Victor.
 3. Victor vraagt Peggy om:
 
-a. Te bewijzen dan H en $G_{1}$ isomorf zijn 
-b. Te bewijzen dat H en $G_{2}$ isomorf zijn.
+a. Te bewijzen dan H en \(G_{1}\) isomorf zijn 
+b. Te bewijzen dat H en \(G_{2}\) isomorf zijn.
 
 4. Peggy doet wat haar wordt gevraagd, ofwel
 
-a. Bewijst ze dat $H$ en $G_{1}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{2}$ isomorf zijn.
-b. Bewijst ze dat $H$ en $G_{2}$ isomorf zijn, zonder te bewijzen dat $H$ en $G_{1}$ isomorf zijn.
+a. Bewijst ze dat \(H\) en \(G_{1}\) isomorf zijn, zonder te bewijzen dat \(H\) en \(G_{2}\) isomorf zijn.
+b. Bewijst ze dat \(H\) en \(G_{2}\) isomorf zijn, zonder te bewijzen dat \(H\) en \(G_{1}\) isomorf zijn.
 
 5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
 
 
-Als Peggy geen kennis heeft van isomorfisme tussen $G_{1}$ en $G_{2}$ kan ze geen graaf $H$ produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel $G_{1}$ ofwel $G_{2}$. Ze heeft dus $\frac{1}{2}$ kans om te gokken. 
-Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe $H$ maakt kan hij ook geen kennis overdragen van ronde tot ronde.
+Als Peggy geen kennis heeft van isomorfisme tussen \(G_{1}\) en \(G_{2}\) kan ze geen graaf \(H\) produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel \(G_{1}\) ofwel \(G_{2}\). Ze heeft dus \(\frac{1}{2}\) kans om te gokken. 
+Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe \(H\) maakt kan hij ook geen kennis overdragen van ronde tot ronde.
 
 - "Hamiltonian Cycles"
 
 Een variant van dit protocol werd voorgesteld door .
 Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
 
-Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf $G$. Victor kent $G$ maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
+Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf \(G\). Victor kent \(G\) maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
 
-1. Peggy random permuteert $G$. Ze verplaatst de toppen om een nieuwe graaf $H$ te maken. $G$ en $H$ zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in $G$ is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in $H$. Als ze zelf niet $H$ heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen $G$ en $H$.
-Daarna encrypteert Peggy $H$ naar $H'$ (dit moet een probabilistische encryptie methode zijn voor elke lijn in $H$, dat is een encrypted 0 of een encrypted 1 voor elke lijn in $H$).
-2. Peggy geeft Victor $H'$.
+1. Peggy random permuteert \(G\). Ze verplaatst de toppen om een nieuwe graaf \(H\) te maken. \(G\) en \(H\) zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in \(G\) is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in \(H\). Als ze zelf niet \(H\) heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen \(G\) en \(H\).
+Daarna encrypteert Peggy \(H\) naar \(H'\) (dit moet een probabilistische encryptie methode zijn voor elke lijn in \(H\), dat is een encrypted 0 of een encrypted 1 voor elke lijn in \(H\)).
+2. Peggy geeft Victor \(H'\).
 3. Victor vraagt Peggy om:
 
-a. Te bewijzen dat $H'$ een geencrypteerde isomorfe kopie van $G$ is.
-b. Een Hamiltoniaanse cycle tonen in $H$
+a. Te bewijzen dat \(H'\) een geencrypteerde isomorfe kopie van \(G\) is.
+b. Een Hamiltoniaanse cycle tonen in \(H\)
 
 4. Peggy doet wat haar gevraagt word.
 
-   a. Bewijs dat $H'$ een geencrypteerde isomorfe kopie is van $G$ door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor $G$ of $H$
-b. Ze toont een Hamiltoniaanse cycle voor $H$ door enkel de lijnen de decrypteren in $H'$ die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat $G$ en $H$ topologisch isomorf zijn.
+   a. Bewijs dat \(H'\) een geencrypteerde isomorfe kopie is van \(G\) door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor \(G\) of \(H\)
+b. Ze toont een Hamiltoniaanse cycle voor \(H\) door enkel de lijnen de decrypteren in \(H'\) die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat \(G\) en \(H\) topologisch isomorf zijn.
 
 4. Peggy en Victor herhalen stappen 1 temp 4 n keer.
 
 
-Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor $G$ is het voor haar onmogelijk een geencrypteerde $H'$ te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met $G$ of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van $\frac{1}{2}$ om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor $G$.
+Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor \(G\) is het voor haar onmogelijk een geencrypteerde \(H'\) te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met \(G\) of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van \(\frac{1}{2}\) om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor \(G\).
 
 Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten. 
 Dank aan  voor de hulp bij het maken van dit artikel.
