@@ -17,7 +17,6 @@ RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote 
 Om de twee keys te maken kiezen we 2 random priem getallen van gelijk lengte, we noemen deze \(p,q\). We bepalen het product.
 
 $$n = pq$$
-
 We kiezen random een encryptie key \(e\), zodanig dat \(e\) en \((p-1)(q-1)\) relatief priem zijn. 
 Daarna gebruiken we het <a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended euclidean algoritm</a> om een decryptie key \(d\) te vinden zodanig dat
 

@@ -40,39 +40,39 @@
     
   </aside>
   <article>
-    We onderscheiden 2 soorten problemen als we het hebben over het "aanvallen" van cryptografische protocollen. 
+    <p>We onderscheiden 2 soorten problemen als we het hebben over het &#8220;aanvallen&#8221; van cryptografische protocollen. 
 Soort 1, aanvallen tegen de implementatie van het protocol. 
 Soort 2, aanvallen tegen het protocol zelf. 
-<! -- more -->
-De volgende 3 senario's die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.
+&lt;! &#8211; more &#8211;&gt;
+De volgende 3 senario&#8217;s die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.</p>
 
-Zeer korte beschrijving van het RSA protocol.
-RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote getallen. De public en private key zijn functies van een paar (200 of meer digits) priem getallen. Het bekomen van de plaintext van de public key en de ciphertext is equivalent met het factoriseren van het product bestaand uit 2 priem getallen.
+<p>Zeer korte beschrijving van het RSA protocol.
+RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote getallen. De public en private key zijn functies van een paar (200 of meer digits) priem getallen. Het bekomen van de plaintext van de public key en de ciphertext is equivalent met het factoriseren van het product bestaand uit 2 priem getallen.</p>
 
-Om de twee keys te maken kiezen we 2 random priem getallen van gelijk lengte, we noemen deze \(p,q\). We bepalen het product.
+<p>Om de twee keys te maken kiezen we 2 random priem getallen van gelijk lengte, we noemen deze (p,q). We bepalen het product.</p>
 
-$$n = pq$$
+<p><script type="math/tex">n = pq</script>
+We kiezen random een encryptie key (e), zodanig dat (e) en ((p-1)(q-1)) relatief priem zijn. 
+Daarna gebruiken we het <a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended euclidean algoritm</a> om een decryptie key (d) te vinden zodanig dat</p>
 
-We kiezen random een encryptie key \(e\), zodanig dat \(e\) en \((p-1)(q-1)\) relatief priem zijn. 
-Daarna gebruiken we het <a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended euclidean algoritm</a> om een decryptie key \(d\) te vinden zodanig dat
-
-$$ed \equiv 1 \text{ mod } (p-1)(q-1)$$
+<p><script type="math/tex">ed \equiv 1 \text{ mod } (p-1)(q-1)</script>
 Of
-$$d = e^{-1} \text{ mod } ((p-1)(q-1))$$
+<script type="math/tex">d = e^{-1} \text{ mod } ((p-1)(q-1))</script></p>
 
-We merken op dat \(d\) en \(n\) relatief priem zijn.  De getallen \(e\) en \(n\) zijn de public key, \(d\) is de private key. \(p,q\) zijn verder niet meer nodig, maar moeten wel geheim blijven.
-Om een bericht \(m\) te encrypteren delen we het eerst op in blokken smaller dan \(n\), het resultaat, \(e\) zal zijn bestaan uit gelijkaardige blokken die we \(c_{i}\) zullen noemen.
+<p>We merken op dat (d) en (n) relatief priem zijn.  De getallen (e) en (n) zijn de public key, (d) is de private key. (p,q) zijn verder niet meer nodig, maar moeten wel geheim blijven.
+Om een bericht (m) te encrypteren delen we het eerst op in blokken smaller dan (n), het resultaat, (e) zal zijn bestaan uit gelijkaardige blokken die we (c_{i}) zullen noemen.
 De encryptie formule is de volgende:
-$$c_{i} = m_{i}^{e} \text{ mod n }$$
+<script type="math/tex">c_{i} = m_{i}^{e} \text{ mod n }</script>
 Decrypteren is dan logischerwijze:
-$$m_{i} = c_{i}^{d} \text{mod n}$$
+<script type="math/tex">m_{i} = c_{i}^{d} \text{mod n}</script>
 Omdat
-$$c_{i}^{d}=(m_{i}^{e})^{d} = m_{i}^{ed}=m_{i}^{k(p-1)(q-1)+1} = m_{i}m_{i}^{k(p-1)(q-1)} = m_{i}*1=m_{i} \text{ alles mod n}$$.
+<script type="math/tex">c_{i}^{d}=(m_{i}^{e})^{d} = m_{i}^{ed}=m_{i}^{k(p-1)(q-1)+1} = m_{i}m_{i}^{k(p-1)(q-1)} = m_{i}*1=m_{i} \text{ alles mod n}</script>.</p>
 
-<a href="http://sanderdemeester.be/maple/RSA-example.mw">maple voorbeeld</a>
+<p><a href="http://sanderdemeester.be/maple/RSA-example.mw">maple voorbeeld</a></p>
 
-<hr>
-Samenvatting van het protocol:
+<hr />
+
+<p>Samenvatting van het protocol:</p>
 <p>
 Public Key:
 n: product van 2 priem getallen, \(p,q\) (beide getallen moeten geheim blijven)
@@ -83,7 +83,7 @@ Encrypteren:
 c: \(c=m^{e} \text{ mod n }\)
 Decrypteren:
 m: \(m = c^{d} \text{ mod n }\)
-<hr>
+<hr />
 
 Nu de werking van het protocol is begrepen ga ik 3 bekende scenario's tekenen waar deze manier van werken zijn doel mist. 
 
@@ -150,6 +150,8 @@ Een link naar een uitgewerkt voorbeeld met maple.
 Conclusie: 
 Gebruik RSA nooit om een random document te signen.
 Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen.
+</p>
+
   </article>
 </div>
 
