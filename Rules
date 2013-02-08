@@ -22,6 +22,10 @@ compile '/blog/*/' do
   layout 'blog'
   layout 'default'
 end
+compile '/projects/' do
+  layout 'project'
+end
+
 compile '*' do
   if item.binary?
     # don’t filter binary items

@@ -103,7 +103,7 @@ Mallory stuurt dit resultaat naar Trent, die het resultaat \\(m'^{d} mod \text{ 
 Er zijn verschillende werkwijze's mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
 [G.I. Davida, "Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem"](http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf)
 
-[D.E. Denning, "Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems"](faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf)
+[D.E. Denning, "Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems"](http://faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf)
 
 [Y. Desmedt and A.M. Odlykzo, "A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems"](http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html)
 

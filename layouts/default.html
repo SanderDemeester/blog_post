@@ -2,6 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
     <title>Sander Demeester - <%= @item[:title] %></title>
     <link rel="stylesheet" type="text/css" 
       href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" 
@@ -22,9 +24,6 @@
         </div>
       </div>
     </div>
-    <section class='content'>
-      <%= yield %>
-    </section>
     <script type="text/javascript">
       
       var _gaq = _gaq || [];
@@ -38,7 +37,10 @@
       })();
       
     </script>
-    <script type="text/javascript"
-	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <%= yield %>
+    </section>
   </body>
 </html>
