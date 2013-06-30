@@ -55,9 +55,8 @@ De mogelijkheid om dit bericht terug de decrypteren is om <notextile>$x_{0}$</no
 
 HIER KOMT HOE JE VAN XT NAAR X0 KAN
 
+Zodra je kennis hebt van <notextile>$x_{0}$</notextile> is het decryptie proces vrij eenvoudig. Configureer de BBS generator met de juiste seed en XOR de output met de ciphertext.
 
+Je kan dit algoritme sneller maken door alle gekende veilige bits van BBS te gebruiken. Met deze verbetering is de Blum-Goldwasser probabilistic encryption sneller dan RSA terwijl er geen informatie verlies is. De moelijkheid om dit schema te breken is equivalent met het factoriseren van <notextile>$n$</notextile>.
 
-
-
-
-
+Aan de andere kant is het belangrijk om te zien dat dit schema volledig breekt bij een chosen-ciphertext aanval. Van de minst significante bits van het rechterer kwadratische residu is het mogelijk om de vierkantswortel te berekenen van elke kwadratische  residu. Als je dit kan doen kan je de rest ook factoriseren.
