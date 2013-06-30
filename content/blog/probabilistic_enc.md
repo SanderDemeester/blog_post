@@ -50,6 +50,12 @@ C = M_{1} \oplus b_{1}, M_{2} \oplus b_{2}, M_{3} \oplus b_{3},\cdots,M_{t} \opl
 $$
 </notextile>
 waar <notextile>$t$</notextile> de lengte is van het plaintext bericht <notextile>$M$</notextile>
+Voeg de laatst berekende waarde van <notextile>$x_{t}$</notextile> toe aan het einde van het bericht.
+De mogelijkheid om dit bericht terug de decrypteren is om <notextile>$x_{0}$</notextile> terug te vinden en de zelfde BBS generator sequentie te gebruiken om te XOR-en met de ciphertext. Omdat de BBS generator veilig is naar richting links, de waarde <notextile>$x_{t}$</notextile> is van geen nut voor Carol. Enkel de persoon met kennis van <notextile>$p,q$</notextile> kan het bericht decrypteren.
+
+HIER KOMT HOE JE VAN XT NAAR X0 KAN
+
+
 
 
 
