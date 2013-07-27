@@ -5,15 +5,17 @@ auteur: "Sander Demeester"
 img: "/img/1.jpg"
 ---
 
-Het idee van "probabilistic encryption" is uitgevonden door ["Shafi Goldwasser en Silvio Micali"](http://people.csail.mit.edu/joanne/shafi-pubs.html) en is in theorie het veiligste cryptosysteem uitvonden. De eerste implementaties waren helaas niet praktisch. Dit is "recent" geëvolueerd naar meer praktische implementaties.
+Het idee van "probabilistic encryption" is uitgevonden door ["Shafi Goldwasser en Silvio Micali"](http://people.csail.mit.edu/joanne/shafi-pubs.html) en is in theorie het veiligste cryptosysteem uitgevonden. De eerste implementaties waren helaas niet praktisch. Dit is recent geëvolueerd naar meer praktische implementaties.
 
-Het idee achter probabilistic encryption is om eventuele lekken van informatie te elimineren die voorkomen bij public-key cryptografie. Het is altijd mogelijk om random geencrypteerd bericht te decrypteren met de public-key.
+Het idee achter probabilistic encryption is om eventuele informatie lekken te elimineren die voorkomen bij public-key cryptografie. Het is altijd mogelijk om een random bericht te encrypteren met de public-key.
 
 Stel dat Carol een bericht <notextile>$$C = E_{K}(M)$$</notextile> heeft en probeerd het plaintext bericht <notextile>$$M$$</notextile> te achterhalen. Ze kan een random bericht <notextile>$$M'$$</notextile> maken en het encrypteren <notextile>$$C' = E_{K}(M')$$</notextile>, als <notextile>$$C = C'$$</notextile> dan kent Carol origineel bericht <notextile>$$M$$</notextile> door te gokken. Als het fout is kan ze gewoon verder proberen.
 
-Er bestaan verschillende soorten aanvallen op RSA, soms kan het mogelijk zijn door de XOR te te doen van bepaalde bits dat er een zeker patroon is te vinden. Met probabilistic encryption is dit niet het geval. Een iet-wat filosofisch idee is dat elke keer Carol een random bericht encrypteerd met een public-key zal er wat informatie worden gelekt, niemand weet hoeveel, maar informatie gaat verloren.
+Er bestaan verschillende soorten aanvallen op RSA, soms kan het mogelijk zijn door een XOR te doen van bepaalde bits in het bericht om een zeker patroon te vinden. Met probabilistic encryption is dit niet het geval. Een iet-wat filosofisch idee is dat elke keer Carol een random bericht encrypteerd met een public-key is er wat informatie dat word gelekt, niemand weet hoeveel, maar informatie gaat verloren. 
 
-Probabilistic encryption probeerdt dit verlies van informatie te elimineren. Ons doel hier is om te voorkomen dat elke soort berekening op de ciphertext, of proberen te achterhalen van de plaintext door random berichten te encrypteren informatie heeft aan Carol over de originele plaintext. Bij  probabilistic encryption, het encryptie algoritme zal probabilistische zijn ipv deterministisch. Dus een grote verzameling van ciphertexts zal decrypteren tot een gegeven plaintext, en de originele ciphertext zal random worden gekozen.
+Probabilistic encryption probeerdt dit verlies van informatie te elimineren. Ons doel hier is om te voorkomen dat elke soort berekening op de ciphertext niet resulteert in verlies van informatie. Het mag niet meer mogelijk zijn om random berichten te maken en deze te encrypteren met de public-key om te proberen de originele plaintext te achterhalen.
+
+Bij probabilistic encryption zal het encryptie algoritme probabilistische zijn ipv deterministisch. Dus een grote verzameling van ciphertexts zal decrypteren tot een gegeven plaintext en de originele ciphertext zal random worden gekozen.
 
 <notextfile>$$
 C_{1} = E_{K}(M), C_{2} = E_{K}(M),\cdots, C_{i} = E_{K}(M)
@@ -53,6 +55,18 @@ waar <notextile>$t$</notextile> de lengte is van het plaintext bericht <notextil
 Voeg de laatst berekende waarde van <notextile>$x_{t}$</notextile> toe aan het einde van het bericht.
 De mogelijkheid om dit bericht terug de decrypteren is om <notextile>$x_{0}$</notextile> terug te vinden en de zelfde BBS generator sequentie te gebruiken om te XOR-en met de ciphertext. Omdat de BBS generator veilig is naar richting links, de waarde <notextile>$x_{t}$</notextile> is van geen nut voor Carol. Enkel de persoon met kennis van <notextile>$p,q$</notextile> kan het bericht decrypteren.
 
+<code>
+	int xt_to_x0(int p, int q, int n, int t, int xt){
+	    int a,b,u,w,z;
+	    // gcd(p,q) = 1
+	    ext_euclid(p,q,&a,&b);
+	    u = modexp((p+1)/4, t, p-1);
+	    v = modexp((q+1)/4, t, q-1);
+	    w = modexp(xt % p, u, p);
+	    z = modexp(xt % q, v, q);
+	    return (b*q*w + a*p*z) % n;
+	    }	   
+</code>
 HIER KOMT HOE JE VAN XT NAAR X0 KAN
 
 Zodra je kennis hebt van <notextile>$x_{0}$</notextile> is het decryptie proces vrij eenvoudig. Configureer de BBS generator met de juiste seed en XOR de output met de ciphertext.
