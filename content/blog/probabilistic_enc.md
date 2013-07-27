@@ -23,7 +23,7 @@ C_{1} = E_{K}(M), C_{2} = E_{K}(M),\cdots, C_{i} = E_{K}(M)
 $$<notextile>
 <notextile>$$
 M = D_{K}(C_{1}) = D_{K}(C_{2}) = D_{K}(C_{3}) = \cdots = D_{K}(C_{i})
-$$<notextile>
+$$</notextile>
 
 Deze eigenschap maakt het onmogelijk om random berichten <notextile>$M'$</notextile> te maken en te encrypteren om te zien of er een gelijkenis is.
 Stel dat Carol beschikt over ciphertext \\(C_{i} = E_{K}(M)\\). Carol \\(M\\) correct kan raden en de ciphertext \\(E_{K}(M)\\) zal het resultaat toch volledig verschillend zijn. Ze zal niet instaat zijn om \\(C_{i},C_{j}\\) te vergelijken en een gelijkenis te observeren.
