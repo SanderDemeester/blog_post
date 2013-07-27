@@ -20,7 +20,7 @@ Bij probabilistic encryption zal het encryptie algoritme probabilistische zijn i
 
 <notextfile>$$
 C_{1} = E_{K}(M), C_{2} = E_{K}(M),\cdots, C_{i} = E_{K}(M)
-$$<notextile>
+$$</notextile>
 <notextile>$$
 M = D_{K}(C_{1}) = D_{K}(C_{2}) = D_{K}(C_{3}) = \cdots = D_{K}(C_{i})
 $$</notextile>
