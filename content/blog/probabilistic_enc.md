@@ -76,3 +76,5 @@ Zodra je kennis hebt van \\(x\_{0}\\) is het decryptie proces vrij eenvoudig. Co
 Je kan dit algoritme sneller maken door alle gekende veilige bits van BBS te gebruiken. Met deze verbetering is de Blum-Goldwasser probabilistic encryption sneller dan RSA terwijl er geen informatie verlies is. De moeilijkheid om dit schema te breken is equivalent met het factoriseren van \\(n\\)).
 
 Aan de andere kant is het belangrijk om te zien dat dit schema volledig breekt bij een chosen-ciphertext aanval. Van de minst significante bits van het rechter kwadratische residu is het mogelijk om de vierkantswortel te berekenen van elke kwadratische residu. Als je dit kan doen kan je de rest ook factoriseren.
+
+Gelieve bij fouten iets te laten weten.
