@@ -6,13 +6,13 @@ kind: article
 img: "/img/1.jpg"
 ---
 De notie van "blind signatures" is uitgevonden door David Chaum. 
-[D. Chaum, "Blind Signatures for Untracable Payments"](http://sce.uhcl.edu/yang/teaching/csci5234WebSecurityFall2011/Chaum-blind-signatures.PDF)
+[D. Chaum, "Blind Signatures for Untracable Payments"](http://sce.uhcl.edu/yang/teaching/csci5234WebSecurityFall2011/Chaum-blind-signatures.PDF)<br>
 [D. Chaum, "Blind Signature System Patent"](http://www.google.com/patents/US4759063)
 Het maakt gebruik van het RSA Algoritme.
 
-Bob heeft een publieke sleutel \\(e\\), een private sleutel \\(d\\) en een publieke modulus \\(n\\). Alice wilt dat Bob een "blind signature" plaats om bericht \\(m)\\
+Bob heeft een publieke sleutel \\(e\\), een private sleutel \\(d\\) en een publieke modulus \\(n\\). Alice wilt dat Bob een "blind signature" plaats om bericht \\(m\\) .
 
-- Alice kiest een random waarde \\(k)\\ tussen \\(1)\\ en \\(n)\\.
+- Alice kiest een random waarde \\(k\\) tussen \\(1\\) en \\(n\\) .
   Ze blindeerd \\(m\\) door de volgende berekening:
 <notextile>
 	$$
