@@ -1,0 +1,2740 @@
+{:versioni:	data{"/blog/{:default{	:	post"`	<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - </title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      
+<p><a href="/blog/DH_math/">Groups and Subgroups while using DH</a>
+2013-09-01 09:35:01 +0000</p>
+  
+<p><a href="/blog/blind_sig/">RSA Blind Signature</a>
+2013-09-01 09:35:01 +0000</p>
+  
+<p><a href="/blog/probabilistic_enc/">Probabilistic Encryption</a>
+2013-06-30 13:33:21 +0000</p>
+  
+<p><a href="/blog/znp/">Zero Knowledge Proof</a>
+2013-04-02 10:45:51 +0000</p>
+  
+<p><a href="/blog/int_fac/">Visualisation of the Integer factorization process</a>
+2012-08-09 21:35:01 +0000</p>
+  
+<p><a href="/blog/RSA/">Chosen Ciphertext Attack against RSA</a>
+2012-07-27 20:49:00 +0000</p>
+  
+<p><a href="/blog/AES/">Advanced Encryption Standard (AES)</a>
+2012-01-07 19:59:01 +0000</p>
+  
+  
+
+    </section>
+  </body>
+</html>
+:	last@
+:pre"¬
+<p><a href="/blog/DH_math/">Groups and Subgroups while using DH</a>
+2013-09-01 09:35:01 +0000</p>
+  
+<p><a href="/blog/blind_sig/">RSA Blind Signature</a>
+2013-09-01 09:35:01 +0000</p>
+  
+<p><a href="/blog/probabilistic_enc/">Probabilistic Encryption</a>
+2013-06-30 13:33:21 +0000</p>
+  
+<p><a href="/blog/znp/">Zero Knowledge Proof</a>
+2013-04-02 10:45:51 +0000</p>
+  
+<p><a href="/blog/int_fac/">Visualisation of the Integer factorization process</a>
+2012-08-09 21:35:01 +0000</p>
+  
+<p><a href="/blog/RSA/">Chosen Ciphertext Attack against RSA</a>
+2012-07-27 20:49:00 +0000</p>
+  
+<p><a href="/blog/AES/">Advanced Encryption Standard (AES)</a>
+2012-01-07 19:59:01 +0000</p>
+  
+  
+:raw"‹<% (@site.sorted_articles[0..10]).each do |post| %>
+<p><%= link_to(post[:title], post.path) %>
+<%= post[:created_at] %></p>
+  <% end %>
+  
+"/blog/blind_sig/{;{	;"0<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - RSA Blind Signature</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/blind_sig/">RSA Blind Signature</a></h1>
+  <aside>
+    <p>Posted at: 2013-09-01 09:35:01 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/4.jpg">
+    </div>
+    
+  </aside>
+  <article>
+    <p>De notie van &#8220;blind signatures&#8221; is uitgevonden door David Chaum. <br />
+<a href="http://sce.uhcl.edu/yang/teaching/csci5234WebSecurityFall2011/Chaum-blind-signatures.PDF">D. Chaum, &#8220;Blind Signatures for Untracable Payments&#8221;</a> <br />
+<a href="http://www.google.com/patents/US4759063">D. Chaum, &#8220;Blind Signature System Patent&#8221;</a> <br />
+Het maakt gebruik van het RSA Algoritme. Voor meer informatie over RSA kan je terug kijken naar een vorige <a href="/blog/RSA/">blog post</a></p>
+
+<p>Bob heeft een publieke sleutel \(e\), een private sleutel \(d\) en een publieke modulus \(n\). Alice wilt dat Bob een &#8220;blind signature&#8221; plaatst op bericht \(m\) .</p>
+
+<ul>
+  <li>Alice kiest een random waarde \(k\) tussen \(1\) en \(n\) .
+Ze blindeerd \(m\) door de volgende berekening:</li>
+</ul>
+<notextile>
+	$$
+	t = mk^{e} \text{mod } n
+	$$
+</notextile>
+<ul>
+  <li>Bob tekent \(t\):</li>
+</ul>
+<notextile>
+	$$
+	t^{d} = (mk^{e})^{d} \text{mod } n
+	$$
+</notextile>
+<ul>
+  <li>Alice on-blindeerd \(t^d\) door de volgende berekening:</li>
+</ul>
+<notextile>
+	$$
+	s = \frac{t^{d}}{k} \text{mod } n
+	$$
+</notextile>
+<ul>
+  <li>Het resultaat is:</li>
+</ul>
+<notextile>
+	$$
+	s = m^{d} \text{mod } n
+	$$		
+</notextile>
+<p>Dit is eenvoudig aan te tonen:</p>
+<notextile>
+	$$
+	t^{d} \equiv (mk^{e})^{d} \equiv m^{d}k(\text{mod }n)
+	$$		
+</notextile>
+<p>Dus:</p>
+<notextile>
+	$$
+	\frac{t^{d}}{k} = \frac{m^{d}k}{k} \equiv m^{d} (\text{mod }n)
+	$$		
+</notextile>
+
+<p>Ter illustratie vind je <a href="http://sage.ugent.be/home/pub/59/">hier</a> een sage voorbeeld.</p>
+
+  </article>
+</div>
+
+    </section>
+  </body>
+</html>
+;	@;
+";<p>De notie van &#8220;blind signatures&#8221; is uitgevonden door David Chaum. <br />
+<a href="http://sce.uhcl.edu/yang/teaching/csci5234WebSecurityFall2011/Chaum-blind-signatures.PDF">D. Chaum, &#8220;Blind Signatures for Untracable Payments&#8221;</a> <br />
+<a href="http://www.google.com/patents/US4759063">D. Chaum, &#8220;Blind Signature System Patent&#8221;</a> <br />
+Het maakt gebruik van het RSA Algoritme. Voor meer informatie over RSA kan je terug kijken naar een vorige <a href="/blog/RSA/">blog post</a></p>
+
+<p>Bob heeft een publieke sleutel \(e\), een private sleutel \(d\) en een publieke modulus \(n\). Alice wilt dat Bob een &#8220;blind signature&#8221; plaatst op bericht \(m\) .</p>
+
+<ul>
+  <li>Alice kiest een random waarde \(k\) tussen \(1\) en \(n\) .
+Ze blindeerd \(m\) door de volgende berekening:</li>
+</ul>
+<notextile>
+	$$
+	t = mk^{e} \text{mod } n
+	$$
+</notextile>
+<ul>
+  <li>Bob tekent \(t\):</li>
+</ul>
+<notextile>
+	$$
+	t^{d} = (mk^{e})^{d} \text{mod } n
+	$$
+</notextile>
+<ul>
+  <li>Alice on-blindeerd \(t^d\) door de volgende berekening:</li>
+</ul>
+<notextile>
+	$$
+	s = \frac{t^{d}}{k} \text{mod } n
+	$$
+</notextile>
+<ul>
+  <li>Het resultaat is:</li>
+</ul>
+<notextile>
+	$$
+	s = m^{d} \text{mod } n
+	$$		
+</notextile>
+<p>Dit is eenvoudig aan te tonen:</p>
+<notextile>
+	$$
+	t^{d} \equiv (mk^{e})^{d} \equiv m^{d}k(\text{mod }n)
+	$$		
+</notextile>
+<p>Dus:</p>
+<notextile>
+	$$
+	\frac{t^{d}}{k} = \frac{m^{d}k}{k} \equiv m^{d} (\text{mod }n)
+	$$		
+</notextile>
+
+<p>Ter illustratie vind je <a href="http://sage.ugent.be/home/pub/59/">hier</a> een sage voorbeeld.</p>
+;"…De notie van "blind signatures" is uitgevonden door David Chaum. <br>
+[D. Chaum, "Blind Signatures for Untracable Payments"](http://sce.uhcl.edu/yang/teaching/csci5234WebSecurityFall2011/Chaum-blind-signatures.PDF) <br>
+[D. Chaum, "Blind Signature System Patent"](http://www.google.com/patents/US4759063) <br>
+Het maakt gebruik van het RSA Algoritme. Voor meer informatie over RSA kan je terug kijken naar een vorige [blog post](/blog/RSA/)
+
+Bob heeft een publieke sleutel \\(e\\), een private sleutel \\(d\\) en een publieke modulus \\(n\\). Alice wilt dat Bob een "blind signature" plaatst op bericht \\(m\\) .
+
+- Alice kiest een random waarde \\(k\\) tussen \\(1\\) en \\(n\\) .
+  Ze blindeerd \\(m\\) door de volgende berekening:
+<notextile>
+	$$
+	t = mk^{e} \text{mod } n
+	$$
+</notextile>
+- Bob tekent \\(t\\):
+<notextile>
+	$$
+	t^{d} = (mk^{e})^{d} \text{mod } n
+	$$
+</notextile>  
+- Alice on-blindeerd \\(t^d\\) door de volgende berekening:
+<notextile>
+	$$
+	s = \frac{t^{d}}{k} \text{mod } n
+	$$
+</notextile>  
+- Het resultaat is:
+<notextile>
+	$$
+	s = m^{d} \text{mod } n
+	$$		
+</notextile>  
+Dit is eenvoudig aan te tonen:
+<notextile>
+	$$
+	t^{d} \equiv (mk^{e})^{d} \equiv m^{d}k(\text{mod }n)
+	$$		
+</notextile>  
+Dus:
+<notextile>
+	$$
+	\frac{t^{d}}{k} = \frac{m^{d}k}{k} \equiv m^{d} (\text{mod }n)
+	$$		
+</notextile>  
+
+Ter illustratie vind je [hier](http://sage.ugent.be/home/pub/59/) een sage voorbeeld."/img/3/{;{ "/blog/probabilistic_enc/{;{	;"u <!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - Probabilistic Encryption</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/probabilistic_enc/">Probabilistic Encryption</a></h1>
+  <aside>
+    <p>Posted at: 2013-06-30 13:33:21 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/3.jpg">
+    </div>
+    
+  </aside>
+  <article>
+    <p>Het idee van &#8220;probabilistic encryption&#8221; is uitgevonden door <a href="http://people.csail.mit.edu/joanne/shafi-pubs.html">&#8220;Shafi Goldwasser en Silvio Micali&#8221;</a> en is in theorie het veiligste cryptosysteem uitgevonden. De eerste implementaties waren helaas niet praktisch. Dit is recent geÃ«volueerd naar meer praktische implementaties.</p>
+
+<p>Het idee achter probabilistic encryption is om eventuele informatie lekken te elimineren die voorkomen bij public-key cryptografie. Het is altijd mogelijk om een random bericht te encrypteren met de public-key.</p>
+
+<p>Stel dat Carol een bericht <notextile>$$C = E_{K}(M)$$</notextile> heeft en probeert het plaintext bericht \(M\) te achterhalen. Ze kan een random bericht \(M'\) maken en het encrypteren <notextile>$$C' = E_{K}(M')$$</notextile> als \(C = C'\) dan kent Carol origineel bericht \(M\) door te gokken. Als het fout is kan ze gewoon verder proberen.</p>
+
+<p>Er bestaan verschillende soorten aanvallen op RSA, soms kan het mogelijk zijn door een XOR te doen van bepaalde bits in het bericht om een zeker patroon te vinden. Met probabilistic encryption is dit niet het geval. Een iet-wat filosofisch idee is dat elke keer Carol een random bericht encrypteert met een public-key is er wat informatie dat word gelekt, niemand weet hoeveel, maar informatie gaat verloren. </p>
+
+<p>Probabilistic encryption probeert dit verlies van informatie te elimineren. Ons doel hier is om te voorkomen dat elke soort berekening op de ciphertext niet resulteert in verlies van informatie. Het mag niet meer mogelijk zijn om random berichten te maken en deze te encrypteren met de public-key om te proberen de originele plaintext te achterhalen.</p>
+
+<p>Bij probabilistic encryption zal het encryptie algoritme probabilistische zijn ipv deterministisch. Dus een grote verzameling van ciphertexts zal decrypteren tot een gegeven plaintext en de originele ciphertext zal random worden gekozen.</p>
+
+<notextile>$$
+C_{1} = E_{K}(M), C_{2} = E_{K}(M),\cdots, C_{i} = E_{K}(M)
+$$</notextile>
+<notextile>$$
+M = D_{K}(C_{1}) = D_{K}(C_{2}) = D_{K}(C_{3}) = \cdots = D_{K}(C_{i})
+$$</notextile>
+
+<p>Deze eigenschap maakt het onmogelijk om random berichten \(M'\) te maken en te encrypteren om te zien of er een gelijkenis is.
+Stel dat Carol beschikt over ciphertext \(C_{i} = E_{K}(M) \). Als Carol \(M\) correct heeft geraden en de ciphertext \(E_{K}(M)\) heeft berekend dan nog zal  het resultaat toch volledig verschillend zijn. Ze zal niet instaat zijn om \(C_{i},C_{j}\) te vergelijken en een gelijkenis te observeren.</p>
+
+<p>Als Carol beschikt over de correcte plaintext, de ciphertext en de public key kan ze nog niet bewijzen ciphertext het resultaat is van het encryptie proces met de publieke sleutel van de correcte plaintext, zelfs niet met een &#8220;exhaustive search&#8221;. Ze kan enkel beweren dat elke mogelijke plaintext de ciphertext kan zijn.</p>
+
+<p>Het is duidelijk dat als we bovenstaande werkwijze toepassen de ciphertext altijd groter zal zijn dan de corresponderende plaintext. De eerste implementatie had het probleem dat de ciphertext zo groot was dat ze onbruikbaar was. Er bestaat nu een efficiente implementatie van probabilistic encryption gebruik makend van de <a href="https://dl.acm.org/citation.cfm?id=19501">Blub Blub Shub (BBS) random-bit generator</a>. De BBS generator maakt gebruik van kwadratische residuen.</p>
+
+<p>Er zijn 2 priemgetallen \(p,q\) die congruent 3 modulo 4 zijn. Dit is de private-key. De public-key is hun product \(n = pq\) (Het is belangrijk om \(p,q\) goed te kiezen. De sterkte van dit algoritme berust op de moeilijkheid om \(n\) te factoriseren).</p>
+
+<p>Om een bericht \(M\) te encrypteren kiezen we eerst een random \(x\) zodat \(x \perp n\).
+dan</p>
+<notextile>
+$$
+x_{0} = x^{2} \text{ mod n }
+$$
+</notextile>
+
+<p>Gebruik \(x_{0}\) als de seed voor de BBS pseudo-random bit generator en gebruik de output van de generator als &#8220;stream cipher&#8221;.
+XOR \(M\) , bit per bit met de output van de generator. De generator heeft als output \(b_{i}\) bits (de minst significante bit van \(x_{i}\), waar \(x_{i} = x_{i-1}^2 \text{ mod n}\)), dus:</p>
+<notextile>
+$$
+M = M_{1}, M_{2}, M_{3},\cdots,M_{t}
+$$
+$$
+C = M_{1} \oplus b_{1}, M_{2} \oplus b_{2}, M_{3} \oplus b_{3},\cdots,M_{t} \oplus b_{t}
+$$
+</notextile>
+<p>waar \(t\) de lengte is van het plaintext bericht \(M\).
+Voeg de laatst berekende waarde van \(x_{t}\) toe aan het einde van het bericht.
+De mogelijkheid om dit bericht terug de decrypteren is om \(x_{0}\) terug te vinden en de zelfde BBS generator sequentie te gebruiken om te XOR-en met de ciphertext. Omdat de BBS generator veilig is naar richting links, de waarde \(x_{t}\) is van geen nut voor Carol. Enkel de persoon met kennis van \(p,q\) kan het bericht decrypteren.</p>
+
+<pre>
+<code>
+	int xt_to_x0(int p, int q, int n, int t, int xt){
+	    int a,b,u,w,z;
+	    // gcd(p,q) = 1
+	    ext_euclid(p,q,&amp;a,&amp;b);
+	    u = modexp((p+1)/4, t, p-1);
+	    v = modexp((q+1)/4, t, q-1);
+	    w = modexp(xt % p, u, p);
+	    z = modexp(xt % q, v, q);
+	    return (b*q*w + a*p*z) % n;
+	    }	   
+</code>
+</pre>
+
+<p>Zodra je kennis hebt van \(x_{0}\) is het decryptie proces vrij eenvoudig. Configureer de BBS generator met de juiste seed en XOR de output met de ciphertext.</p>
+
+<p>Je kan dit algoritme sneller maken door alle gekende veilige bits van BBS te gebruiken. Met deze verbetering is de Blum-Goldwasser probabilistic encryption sneller dan RSA terwijl er geen informatie verlies is. De moeilijkheid om dit schema te breken is equivalent met het factoriseren van \(n\)).</p>
+
+<p>Aan de andere kant is het belangrijk om te zien dat dit schema volledig breekt bij een chosen-ciphertext aanval. Van de minst significante bits van het rechter kwadratische residu is het mogelijk om de vierkantswortel te berekenen van elke kwadratische residu. Als je dit kan doen kan je de rest ook factoriseren.</p>
+
+<p>Gelieve bij fouten iets te laten weten.</p>
+
+  </article>
+</div>
+
+    </section>
+  </body>
+</html>
+;	@;
+"n<p>Het idee van &#8220;probabilistic encryption&#8221; is uitgevonden door <a href="http://people.csail.mit.edu/joanne/shafi-pubs.html">&#8220;Shafi Goldwasser en Silvio Micali&#8221;</a> en is in theorie het veiligste cryptosysteem uitgevonden. De eerste implementaties waren helaas niet praktisch. Dit is recent geÃ«volueerd naar meer praktische implementaties.</p>
+
+<p>Het idee achter probabilistic encryption is om eventuele informatie lekken te elimineren die voorkomen bij public-key cryptografie. Het is altijd mogelijk om een random bericht te encrypteren met de public-key.</p>
+
+<p>Stel dat Carol een bericht <notextile>$$C = E_{K}(M)$$</notextile> heeft en probeert het plaintext bericht \(M\) te achterhalen. Ze kan een random bericht \(M'\) maken en het encrypteren <notextile>$$C' = E_{K}(M')$$</notextile> als \(C = C'\) dan kent Carol origineel bericht \(M\) door te gokken. Als het fout is kan ze gewoon verder proberen.</p>
+
+<p>Er bestaan verschillende soorten aanvallen op RSA, soms kan het mogelijk zijn door een XOR te doen van bepaalde bits in het bericht om een zeker patroon te vinden. Met probabilistic encryption is dit niet het geval. Een iet-wat filosofisch idee is dat elke keer Carol een random bericht encrypteert met een public-key is er wat informatie dat word gelekt, niemand weet hoeveel, maar informatie gaat verloren. </p>
+
+<p>Probabilistic encryption probeert dit verlies van informatie te elimineren. Ons doel hier is om te voorkomen dat elke soort berekening op de ciphertext niet resulteert in verlies van informatie. Het mag niet meer mogelijk zijn om random berichten te maken en deze te encrypteren met de public-key om te proberen de originele plaintext te achterhalen.</p>
+
+<p>Bij probabilistic encryption zal het encryptie algoritme probabilistische zijn ipv deterministisch. Dus een grote verzameling van ciphertexts zal decrypteren tot een gegeven plaintext en de originele ciphertext zal random worden gekozen.</p>
+
+<notextile>$$
+C_{1} = E_{K}(M), C_{2} = E_{K}(M),\cdots, C_{i} = E_{K}(M)
+$$</notextile>
+<notextile>$$
+M = D_{K}(C_{1}) = D_{K}(C_{2}) = D_{K}(C_{3}) = \cdots = D_{K}(C_{i})
+$$</notextile>
+
+<p>Deze eigenschap maakt het onmogelijk om random berichten \(M'\) te maken en te encrypteren om te zien of er een gelijkenis is.
+Stel dat Carol beschikt over ciphertext \(C_{i} = E_{K}(M) \). Als Carol \(M\) correct heeft geraden en de ciphertext \(E_{K}(M)\) heeft berekend dan nog zal  het resultaat toch volledig verschillend zijn. Ze zal niet instaat zijn om \(C_{i},C_{j}\) te vergelijken en een gelijkenis te observeren.</p>
+
+<p>Als Carol beschikt over de correcte plaintext, de ciphertext en de public key kan ze nog niet bewijzen ciphertext het resultaat is van het encryptie proces met de publieke sleutel van de correcte plaintext, zelfs niet met een &#8220;exhaustive search&#8221;. Ze kan enkel beweren dat elke mogelijke plaintext de ciphertext kan zijn.</p>
+
+<p>Het is duidelijk dat als we bovenstaande werkwijze toepassen de ciphertext altijd groter zal zijn dan de corresponderende plaintext. De eerste implementatie had het probleem dat de ciphertext zo groot was dat ze onbruikbaar was. Er bestaat nu een efficiente implementatie van probabilistic encryption gebruik makend van de <a href="https://dl.acm.org/citation.cfm?id=19501">Blub Blub Shub (BBS) random-bit generator</a>. De BBS generator maakt gebruik van kwadratische residuen.</p>
+
+<p>Er zijn 2 priemgetallen \(p,q\) die congruent 3 modulo 4 zijn. Dit is de private-key. De public-key is hun product \(n = pq\) (Het is belangrijk om \(p,q\) goed te kiezen. De sterkte van dit algoritme berust op de moeilijkheid om \(n\) te factoriseren).</p>
+
+<p>Om een bericht \(M\) te encrypteren kiezen we eerst een random \(x\) zodat \(x \perp n\).
+dan</p>
+<notextile>
+$$
+x_{0} = x^{2} \text{ mod n }
+$$
+</notextile>
+
+<p>Gebruik \(x_{0}\) als de seed voor de BBS pseudo-random bit generator en gebruik de output van de generator als &#8220;stream cipher&#8221;.
+XOR \(M\) , bit per bit met de output van de generator. De generator heeft als output \(b_{i}\) bits (de minst significante bit van \(x_{i}\), waar \(x_{i} = x_{i-1}^2 \text{ mod n}\)), dus:</p>
+<notextile>
+$$
+M = M_{1}, M_{2}, M_{3},\cdots,M_{t}
+$$
+$$
+C = M_{1} \oplus b_{1}, M_{2} \oplus b_{2}, M_{3} \oplus b_{3},\cdots,M_{t} \oplus b_{t}
+$$
+</notextile>
+<p>waar \(t\) de lengte is van het plaintext bericht \(M\).
+Voeg de laatst berekende waarde van \(x_{t}\) toe aan het einde van het bericht.
+De mogelijkheid om dit bericht terug de decrypteren is om \(x_{0}\) terug te vinden en de zelfde BBS generator sequentie te gebruiken om te XOR-en met de ciphertext. Omdat de BBS generator veilig is naar richting links, de waarde \(x_{t}\) is van geen nut voor Carol. Enkel de persoon met kennis van \(p,q\) kan het bericht decrypteren.</p>
+
+<pre>
+<code>
+	int xt_to_x0(int p, int q, int n, int t, int xt){
+	    int a,b,u,w,z;
+	    // gcd(p,q) = 1
+	    ext_euclid(p,q,&amp;a,&amp;b);
+	    u = modexp((p+1)/4, t, p-1);
+	    v = modexp((q+1)/4, t, q-1);
+	    w = modexp(xt % p, u, p);
+	    z = modexp(xt % q, v, q);
+	    return (b*q*w + a*p*z) % n;
+	    }	   
+</code>
+</pre>
+
+<p>Zodra je kennis hebt van \(x_{0}\) is het decryptie proces vrij eenvoudig. Configureer de BBS generator met de juiste seed en XOR de output met de ciphertext.</p>
+
+<p>Je kan dit algoritme sneller maken door alle gekende veilige bits van BBS te gebruiken. Met deze verbetering is de Blum-Goldwasser probabilistic encryption sneller dan RSA terwijl er geen informatie verlies is. De moeilijkheid om dit schema te breken is equivalent met het factoriseren van \(n\)).</p>
+
+<p>Aan de andere kant is het belangrijk om te zien dat dit schema volledig breekt bij een chosen-ciphertext aanval. Van de minst significante bits van het rechter kwadratische residu is het mogelijk om de vierkantswortel te berekenen van elke kwadratische residu. Als je dit kan doen kan je de rest ook factoriseren.</p>
+
+<p>Gelieve bij fouten iets te laten weten.</p>
+;"óHet idee van "probabilistic encryption" is uitgevonden door ["Shafi Goldwasser en Silvio Micali"](http://people.csail.mit.edu/joanne/shafi-pubs.html) en is in theorie het veiligste cryptosysteem uitgevonden. De eerste implementaties waren helaas niet praktisch. Dit is recent geÃ«volueerd naar meer praktische implementaties.
+
+Het idee achter probabilistic encryption is om eventuele informatie lekken te elimineren die voorkomen bij public-key cryptografie. Het is altijd mogelijk om een random bericht te encrypteren met de public-key.
+
+Stel dat Carol een bericht <notextile>$$C = E_{K}(M)$$</notextile> heeft en probeert het plaintext bericht \\(M\\) te achterhalen. Ze kan een random bericht \\(M\'\\) maken en het encrypteren <notextile>$$C' = E_{K}(M')$$</notextile> als \\(C = C\'\\) dan kent Carol origineel bericht \\(M\\) door te gokken. Als het fout is kan ze gewoon verder proberen.
+
+Er bestaan verschillende soorten aanvallen op RSA, soms kan het mogelijk zijn door een XOR te doen van bepaalde bits in het bericht om een zeker patroon te vinden. Met probabilistic encryption is dit niet het geval. Een iet-wat filosofisch idee is dat elke keer Carol een random bericht encrypteert met een public-key is er wat informatie dat word gelekt, niemand weet hoeveel, maar informatie gaat verloren. 
+
+Probabilistic encryption probeert dit verlies van informatie te elimineren. Ons doel hier is om te voorkomen dat elke soort berekening op de ciphertext niet resulteert in verlies van informatie. Het mag niet meer mogelijk zijn om random berichten te maken en deze te encrypteren met de public-key om te proberen de originele plaintext te achterhalen.
+
+Bij probabilistic encryption zal het encryptie algoritme probabilistische zijn ipv deterministisch. Dus een grote verzameling van ciphertexts zal decrypteren tot een gegeven plaintext en de originele ciphertext zal random worden gekozen.
+
+<notextile>$$
+C_{1} = E_{K}(M), C_{2} = E_{K}(M),\cdots, C_{i} = E_{K}(M)
+$$</notextile>
+<notextile>$$
+M = D_{K}(C_{1}) = D_{K}(C_{2}) = D_{K}(C_{3}) = \cdots = D_{K}(C_{i})
+$$</notextile>
+
+Deze eigenschap maakt het onmogelijk om random berichten \\(M\'\\) te maken en te encrypteren om te zien of er een gelijkenis is.
+Stel dat Carol beschikt over ciphertext \\(C\_{i} = E\_{K}(M) \\). Als Carol \\(M\\) correct heeft geraden en de ciphertext \\(E\_{K}(M)\\) heeft berekend dan nog zal  het resultaat toch volledig verschillend zijn. Ze zal niet instaat zijn om \\(C\_{i},C\_{j}\\) te vergelijken en een gelijkenis te observeren.
+
+Als Carol beschikt over de correcte plaintext, de ciphertext en de public key kan ze nog niet bewijzen ciphertext het resultaat is van het encryptie proces met de publieke sleutel van de correcte plaintext, zelfs niet met een "exhaustive search". Ze kan enkel beweren dat elke mogelijke plaintext de ciphertext kan zijn.
+
+Het is duidelijk dat als we bovenstaande werkwijze toepassen de ciphertext altijd groter zal zijn dan de corresponderende plaintext. De eerste implementatie had het probleem dat de ciphertext zo groot was dat ze onbruikbaar was. Er bestaat nu een efficiente implementatie van probabilistic encryption gebruik makend van de [Blub Blub Shub (BBS) random-bit generator](https://dl.acm.org/citation.cfm?id=19501). De BBS generator maakt gebruik van kwadratische residuen.
+
+Er zijn 2 priemgetallen \\(p,q\\) die congruent 3 modulo 4 zijn. Dit is de private-key. De public-key is hun product \\(n = pq\\) (Het is belangrijk om \\(p,q\\) goed te kiezen. De sterkte van dit algoritme berust op de moeilijkheid om \\(n\\) te factoriseren).
+
+Om een bericht \\(M\\) te encrypteren kiezen we eerst een random \\(x\\) zodat \\(x \perp n\\).
+dan
+<notextile>
+$$
+x_{0} = x^{2} \text{ mod n }
+$$
+</notextile>
+
+Gebruik \\(x\_{0}\\) als de seed voor de BBS pseudo-random bit generator en gebruik de output van de generator als "stream cipher".
+XOR \\(M\\) , bit per bit met de output van de generator. De generator heeft als output \\(b\_{i}\\) bits (de minst significante bit van \\(x\_{i}\\), waar \\(x\_{i} = x\_{i-1}^2 \text{ mod n}\\)), dus:
+<notextile>
+$$
+M = M_{1}, M_{2}, M_{3},\cdots,M_{t}
+$$
+$$
+C = M_{1} \oplus b_{1}, M_{2} \oplus b_{2}, M_{3} \oplus b_{3},\cdots,M_{t} \oplus b_{t}
+$$
+</notextile>
+waar \\(t\\) de lengte is van het plaintext bericht \\(M\\).
+Voeg de laatst berekende waarde van \\(x\_{t}\\) toe aan het einde van het bericht.
+De mogelijkheid om dit bericht terug de decrypteren is om \\(x\_{0}\\) terug te vinden en de zelfde BBS generator sequentie te gebruiken om te XOR-en met de ciphertext. Omdat de BBS generator veilig is naar richting links, de waarde \\(x\_{t}\\) is van geen nut voor Carol. Enkel de persoon met kennis van \\(p,q\\) kan het bericht decrypteren.
+
+<pre>
+<code>
+	int xt_to_x0(int p, int q, int n, int t, int xt){
+	    int a,b,u,w,z;
+	    // gcd(p,q) = 1
+	    ext_euclid(p,q,&a,&b);
+	    u = modexp((p+1)/4, t, p-1);
+	    v = modexp((q+1)/4, t, q-1);
+	    w = modexp(xt % p, u, p);
+	    z = modexp(xt % q, v, q);
+	    return (b*q*w + a*p*z) % n;
+	    }	   
+</code>
+</pre>
+
+Zodra je kennis hebt van \\(x\_{0}\\) is het decryptie proces vrij eenvoudig. Configureer de BBS generator met de juiste seed en XOR de output met de ciphertext.
+
+Je kan dit algoritme sneller maken door alle gekende veilige bits van BBS te gebruiken. Met deze verbetering is de Blum-Goldwasser probabilistic encryption sneller dan RSA terwijl er geen informatie verlies is. De moeilijkheid om dit schema te breken is equivalent met het factoriseren van \\(n\\)).
+
+Aan de andere kant is het belangrijk om te zien dat dit schema volledig breekt bij een chosen-ciphertext aanval. Van de minst significante bits van het rechter kwadratische residu is het mogelijk om de vierkantswortel te berekenen van elke kwadratische residu. Als je dit kan doen kan je de rest ook factoriseren.
+
+Gelieve bij fouten iets te laten weten."/stylesheet/{;{;	"d.content {
+  width: 800px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-top: none;
+  margin: 0 auto;
+  padding: 60px 20px 0 60px;
+}
+.post aside {
+  color: #888;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #aaa;
+}
+.post article {
+  margin: 10px 0 60px 0;
+}
+#image {
+	height: 300px;
+	width: 300px;
+	max-width: 300px;
+	max-height: 300px;
+}
+;
+@;@"/blog/int_fac/{;{	;"<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - Visualisation of the Integer factorization process</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/int_fac/">Visualisation of the Integer factorization process</a></h1>
+  <aside>
+    <p>Posted at: 2012-08-09 21:35:01 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/1.jpg">
+    </div>
+    
+  </aside>
+  <article>
+    <p>In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
+De verzameling van natuurlijke getallen is oneindig wat impliceert dat er oneindig veel priemfactoren zijn met gevolg dat er oneindig veel priem getallen zijn (De ontbinding is uniek voor elke getal op de volgorde na). Als we zouden stellen dat dit niet zo is dan bestaat er een eindig verzameling van priemgetallen \(p_{1},p_{2},\cdots,p_{n}\) waarvoor \(v= \Pi^{n}_{i=1} p\) met \(v+1\) die dus geen priemgetal zou zijn. Dit zou tot gevolg hebben dat \(v+1\) echt delers. Noemen we \(q\) de kleinste positieve deler van \(v+1\). Dan is \(q\) een deler en bijgevolg ook een deler van \(v\). Bijgevolg is \(q\) een deler van \((v+1)-v = 1\). Wat niet kan, dus er zijn <a href="http://en.wikipedia.org/wiki/Largest_known_prime_number">oneindig</a> veel priemgetallen.</p>
+
+<p>Er bestaan <a href="http://en.wikipedia.org/wiki/Integer_factorization#Factoring_algorithms">veel</a> algoritmes om getallen te ontbinden in hun priemfactoren.</p>
+
+<p>Ikzelf heb voor mijn versie (die zeker niet optimaal is) een Direct Search Factorization algoritme gebruikt waar ik steun op de eigenschap:</p>
+<notextile>
+$$
+\begin{equation}
+\frac{n}{\sqrt{n}+1} &lt; \sqrt{n}
+\end{equation}
+$$
+</notextile>
+<p>Wat het algoritme doet is, per iteratie kijken of \(n\) priem is, ja? stop. In het andere getal bereken \(s_{1} = \sqrt{n}\). Daarna wordt getest of \(n|p_{i}\), waar \(p_{i}\) een priem getal is waarvoor geldt dat \(p_{i}\leq \sqrt{n}\). We testen tot we een priemgetal vinden waarvoor \(n|p_{i}\), uit bovenstaande eigenschap weten we dat zoon getal bestaat endat we hem gaan vinden in de verzameling van priemgetallen kleiner dan \(\sqrt{n}\) als \(\sqrt{n}\) niet priem is.</p>
+
+<p>Met mijn beste javascript/css kennis (die niet zo heel erg indrukwekkend zijn) heb ik een <a href="http://bit.ly/visualprimefactor">visualisatie</a> gemaakt, die dit proces als een graaf voorstelt. 
+Het resultaat is een graaf \(G\), waar de verzameling van toppen \(V(G)\) natuurlijke getallen zijn, en de verzameling van \({uv} \in E(G)\) duid aan dat er een priemfactor relatie is tussen die 2 toppen.</p>
+
+<p>Notatie:
+\(v^{p}_{i} \in V(G)\) is een top uit G waar de sleutel priem is.
+\(v^{n}_{j} \in V(G)\) is een top uit G waar de sleutel niet priem is.</p>
+
+<p>Een van de dingen die me direct opviel is dat de Euler funtie \(\phi(n)\) visueel zichtbaar is, met tot gevolg dat Euler&#8217;s theorem kan worden uitgedrukt in termen die we gebruiken in grafentheorie.</p>
+
+<p>Voor het paar toppen </p>
+<notextile>
+$$v^{n}_{j},v^{n}_{j+1}$$ 
+</notextile>
+<p>noemen we</p>
+<notextile>
+$$
+\begin{eqnarray}
+A = N_{G}(v^{n}_{j}) \\
+B = N_{G}(v^{n}_{j+1})
+\end{eqnarray}
+$$
+</notextile>
+<p>waar</p>
+<notextile>
+$$
+N_{G}(v) = {u \in V(G) | vu \in E(G)} \rightarrow deg_{G}(v) = |N_{G}(v)|
+$$
+</notextile>
+<p>\(v^{n}_{j}\) en \(v^{n}_{j+1}\) zijn relatief priem als \(A \cap B = \emptyset\)</p>
+
+<p>We defineren Eulers functie als het aantal getallen die relatief priem zijn met (n), we noteren dit als (\Phi(n)).</p>
+<notextile>
+$$
+\begin{eqnarray}
+\Phi(n) &amp; = P^{e_{1}-1}_{1}(P_{1}-1) P^{e_{2}-1}_{2}(P_{2}-1)P^{e_{2}-1}_{2}\cdots P^{e_{k}-1}_{k}(p_{k}-1) \\
+	&amp; = \prod^{k}_{i=1}(P_{i}^{e_{i}-1}(P_{i}-1))
+\end{eqnarray}
+$$
+</notextile>
+<p>waar \(P^{e_{i}}_{i}\) de bijhorende sleutel waarde is voor elke top \(t\in N_{G}(v)|s(v)=n\).
+Nu het leuke gedeelte, euler&#8217;s theorem vertelt ons dat</p>
+<notextile>
+$$
+a^{\Phi(n)} \equiv 1 \mod(n)
+$$ 
+</notextile>
+<p>(waar \(a\) en \(n\) relatief priem zijn met elkaar).
+Wat de orde aanduid voor mijn favoriete groep van getallen, de multiplicatie groep modulo n, dit is de klasse van getallen die congurent zijn relatief priem tot een getal \(n\)</p>
+
+<p>Het aantal getallen die relatief priem zijn met een getal \(m\) kunnen we noteren als volgt:</p>
+
+<p>We noemen \(v^{n}_{i}\) de top in \(G\) waar de sleutel \(m\) is. 
+\(A_{m} = N_{G}(v^{n}_{i})\) en \(\forall v_{i} \in A_{m}\) geldt dat hun sleutel priem is.</p>
+<notextile>
+$$
+A'_{m} = N_{G}(u_{j})|u_{j} \in A_{m}
+$$
+</notextile>
+<p>We kunnen dus nu zeggen dat</p>
+<notextile>
+$$
+\Phi(n) = 
+\left\{
+\begin{array}{l l}
+|V(G)| - (|A_{m}| + |A'_{m}|)  &amp; \text{ als } |A'_{m}| &gt; 1 \\
+|V(G)| - (|A_{m}| + |A'_{m}|) + 1 &amp; \text{ als }|A'_{m}| = 1 \\
+\end{array} \right. $$
+</notextile>
+<p>We noteren de sleutel van \(v_{i}\) als \(s(v_{i})\). Dus:</p>
+<notextile>
+$$\forall s(v_{i}) \in V(G) | N_{G}(v_{i}) \cap N_{G}(v_{i+1}) = \emptyset \rightarrow s(v_{i})^{\Phi(s(v_{i+1}))} \equiv 1 \mod s(v_{i+1})$$
+</notextile>
+<p>De code voor de visualisatie kan worden gevonden op <a href="https://gist.github.com/3691347">github</a>
+ Als ik ergens een fout heb gemaakt, sorry. Laat het mij <a href="twitter.com/SanderDemeester">weten</a></p>
+
+  </article>
+</div>
+
+    </section>
+  </body>
+</html>
+;	@#;
+"í<p>In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
+De verzameling van natuurlijke getallen is oneindig wat impliceert dat er oneindig veel priemfactoren zijn met gevolg dat er oneindig veel priem getallen zijn (De ontbinding is uniek voor elke getal op de volgorde na). Als we zouden stellen dat dit niet zo is dan bestaat er een eindig verzameling van priemgetallen \(p_{1},p_{2},\cdots,p_{n}\) waarvoor \(v= \Pi^{n}_{i=1} p\) met \(v+1\) die dus geen priemgetal zou zijn. Dit zou tot gevolg hebben dat \(v+1\) echt delers. Noemen we \(q\) de kleinste positieve deler van \(v+1\). Dan is \(q\) een deler en bijgevolg ook een deler van \(v\). Bijgevolg is \(q\) een deler van \((v+1)-v = 1\). Wat niet kan, dus er zijn <a href="http://en.wikipedia.org/wiki/Largest_known_prime_number">oneindig</a> veel priemgetallen.</p>
+
+<p>Er bestaan <a href="http://en.wikipedia.org/wiki/Integer_factorization#Factoring_algorithms">veel</a> algoritmes om getallen te ontbinden in hun priemfactoren.</p>
+
+<p>Ikzelf heb voor mijn versie (die zeker niet optimaal is) een Direct Search Factorization algoritme gebruikt waar ik steun op de eigenschap:</p>
+<notextile>
+$$
+\begin{equation}
+\frac{n}{\sqrt{n}+1} &lt; \sqrt{n}
+\end{equation}
+$$
+</notextile>
+<p>Wat het algoritme doet is, per iteratie kijken of \(n\) priem is, ja? stop. In het andere getal bereken \(s_{1} = \sqrt{n}\). Daarna wordt getest of \(n|p_{i}\), waar \(p_{i}\) een priem getal is waarvoor geldt dat \(p_{i}\leq \sqrt{n}\). We testen tot we een priemgetal vinden waarvoor \(n|p_{i}\), uit bovenstaande eigenschap weten we dat zoon getal bestaat endat we hem gaan vinden in de verzameling van priemgetallen kleiner dan \(\sqrt{n}\) als \(\sqrt{n}\) niet priem is.</p>
+
+<p>Met mijn beste javascript/css kennis (die niet zo heel erg indrukwekkend zijn) heb ik een <a href="http://bit.ly/visualprimefactor">visualisatie</a> gemaakt, die dit proces als een graaf voorstelt. 
+Het resultaat is een graaf \(G\), waar de verzameling van toppen \(V(G)\) natuurlijke getallen zijn, en de verzameling van \({uv} \in E(G)\) duid aan dat er een priemfactor relatie is tussen die 2 toppen.</p>
+
+<p>Notatie:
+\(v^{p}_{i} \in V(G)\) is een top uit G waar de sleutel priem is.
+\(v^{n}_{j} \in V(G)\) is een top uit G waar de sleutel niet priem is.</p>
+
+<p>Een van de dingen die me direct opviel is dat de Euler funtie \(\phi(n)\) visueel zichtbaar is, met tot gevolg dat Euler&#8217;s theorem kan worden uitgedrukt in termen die we gebruiken in grafentheorie.</p>
+
+<p>Voor het paar toppen </p>
+<notextile>
+$$v^{n}_{j},v^{n}_{j+1}$$ 
+</notextile>
+<p>noemen we</p>
+<notextile>
+$$
+\begin{eqnarray}
+A = N_{G}(v^{n}_{j}) \\
+B = N_{G}(v^{n}_{j+1})
+\end{eqnarray}
+$$
+</notextile>
+<p>waar</p>
+<notextile>
+$$
+N_{G}(v) = {u \in V(G) | vu \in E(G)} \rightarrow deg_{G}(v) = |N_{G}(v)|
+$$
+</notextile>
+<p>\(v^{n}_{j}\) en \(v^{n}_{j+1}\) zijn relatief priem als \(A \cap B = \emptyset\)</p>
+
+<p>We defineren Eulers functie als het aantal getallen die relatief priem zijn met (n), we noteren dit als (\Phi(n)).</p>
+<notextile>
+$$
+\begin{eqnarray}
+\Phi(n) &amp; = P^{e_{1}-1}_{1}(P_{1}-1) P^{e_{2}-1}_{2}(P_{2}-1)P^{e_{2}-1}_{2}\cdots P^{e_{k}-1}_{k}(p_{k}-1) \\
+	&amp; = \prod^{k}_{i=1}(P_{i}^{e_{i}-1}(P_{i}-1))
+\end{eqnarray}
+$$
+</notextile>
+<p>waar \(P^{e_{i}}_{i}\) de bijhorende sleutel waarde is voor elke top \(t\in N_{G}(v)|s(v)=n\).
+Nu het leuke gedeelte, euler&#8217;s theorem vertelt ons dat</p>
+<notextile>
+$$
+a^{\Phi(n)} \equiv 1 \mod(n)
+$$ 
+</notextile>
+<p>(waar \(a\) en \(n\) relatief priem zijn met elkaar).
+Wat de orde aanduid voor mijn favoriete groep van getallen, de multiplicatie groep modulo n, dit is de klasse van getallen die congurent zijn relatief priem tot een getal \(n\)</p>
+
+<p>Het aantal getallen die relatief priem zijn met een getal \(m\) kunnen we noteren als volgt:</p>
+
+<p>We noemen \(v^{n}_{i}\) de top in \(G\) waar de sleutel \(m\) is. 
+\(A_{m} = N_{G}(v^{n}_{i})\) en \(\forall v_{i} \in A_{m}\) geldt dat hun sleutel priem is.</p>
+<notextile>
+$$
+A'_{m} = N_{G}(u_{j})|u_{j} \in A_{m}
+$$
+</notextile>
+<p>We kunnen dus nu zeggen dat</p>
+<notextile>
+$$
+\Phi(n) = 
+\left\{
+\begin{array}{l l}
+|V(G)| - (|A_{m}| + |A'_{m}|)  &amp; \text{ als } |A'_{m}| &gt; 1 \\
+|V(G)| - (|A_{m}| + |A'_{m}|) + 1 &amp; \text{ als }|A'_{m}| = 1 \\
+\end{array} \right. $$
+</notextile>
+<p>We noteren de sleutel van \(v_{i}\) als \(s(v_{i})\). Dus:</p>
+<notextile>
+$$\forall s(v_{i}) \in V(G) | N_{G}(v_{i}) \cap N_{G}(v_{i+1}) = \emptyset \rightarrow s(v_{i})^{\Phi(s(v_{i+1}))} \equiv 1 \mod s(v_{i+1})$$
+</notextile>
+<p>De code voor de visualisatie kan worden gevonden op <a href="https://gist.github.com/3691347">github</a>
+ Als ik ergens een fout heb gemaakt, sorry. Laat het mij <a href="twitter.com/SanderDemeester">weten</a></p>
+;"¹In getallen theorie zijn we vertrouwd met het idee dat elke natuurlijk getal kan worden ontbonden in priemfactoren. 
+De verzameling van natuurlijke getallen is oneindig wat impliceert dat er oneindig veel priemfactoren zijn met gevolg dat er oneindig veel priem getallen zijn (De ontbinding is uniek voor elke getal op de volgorde na). Als we zouden stellen dat dit niet zo is dan bestaat er een eindig verzameling van priemgetallen \\(p\_{1},p\_{2},\cdots,p\_{n}\\) waarvoor \\(v= \Pi^{n}\_{i=1} p\\) met \\(v+1\\) die dus geen priemgetal zou zijn. Dit zou tot gevolg hebben dat \\(v+1\\) echt delers. Noemen we \\(q\\) de kleinste positieve deler van \\(v+1\\). Dan is \\(q\\) een deler en bijgevolg ook een deler van \\(v\\). Bijgevolg is \\(q\\) een deler van \\((v+1)-v = 1\\). Wat niet kan, dus er zijn <a href="http://en.wikipedia.org/wiki/Largest_known_prime_number">oneindig</a> veel priemgetallen.
+
+Er bestaan <a href="http://en.wikipedia.org/wiki/Integer_factorization#Factoring_algorithms">veel</a> algoritmes om getallen te ontbinden in hun priemfactoren.
+
+Ikzelf heb voor mijn versie (die zeker niet optimaal is) een Direct Search Factorization algoritme gebruikt waar ik steun op de eigenschap:
+<notextile>
+$$
+\begin{equation}
+\frac{n}{\sqrt{n}+1} &lt; \sqrt{n}
+\end{equation}
+$$
+</notextile>
+Wat het algoritme doet is, per iteratie kijken of \\(n\\) priem is, ja? stop. In het andere getal bereken \\(s\_{1} = \sqrt{n}\\). Daarna wordt getest of \\(n|p\_{i}\\), waar \\(p\_{i}\\) een priem getal is waarvoor geldt dat \\(p\_{i}\\leq \sqrt{n}\\). We testen tot we een priemgetal vinden waarvoor \\(n|p\_{i}\\), uit bovenstaande eigenschap weten we dat zoon getal bestaat endat we hem gaan vinden in de verzameling van priemgetallen kleiner dan \\(\sqrt{n}\\) als \\(\sqrt{n}\\) niet priem is.
+
+Met mijn beste javascript/css kennis (die niet zo heel erg indrukwekkend zijn) heb ik een <a href="http://bit.ly/visualprimefactor">visualisatie</a> gemaakt, die dit proces als een graaf voorstelt. 
+Het resultaat is een graaf \\(G\\), waar de verzameling van toppen \\(V(G)\\) natuurlijke getallen zijn, en de verzameling van \\({uv} \\in E(G)\\) duid aan dat er een priemfactor relatie is tussen die 2 toppen.
+
+Notatie:
+\\(v^{p}\_{i} \\in V(G)\\) is een top uit G waar de sleutel priem is.
+\\(v^{n}\_{j} \\in V(G)\\) is een top uit G waar de sleutel niet priem is.
+
+Een van de dingen die me direct opviel is dat de Euler funtie \\(\phi(n)\\) visueel zichtbaar is, met tot gevolg dat Euler's theorem kan worden uitgedrukt in termen die we gebruiken in grafentheorie.
+
+Voor het paar toppen 
+<notextile>
+$$v^{n}_{j},v^{n}_{j+1}$$ 
+</notextile>
+noemen we
+<notextile>
+$$
+\begin{eqnarray}
+A = N_{G}(v^{n}_{j}) \\
+B = N_{G}(v^{n}_{j+1})
+\end{eqnarray}
+$$
+</notextile>
+waar
+<notextile>
+$$
+N_{G}(v) = {u \in V(G) | vu \in E(G)} \rightarrow deg_{G}(v) = |N_{G}(v)|
+$$
+</notextile>
+\\(v^{n}\_{j}\\) en \\(v^{n}\_{j+1}\\) zijn relatief priem als \\(A \cap B = \emptyset\\)
+
+We defineren Eulers functie als het aantal getallen die relatief priem zijn met \(n\), we noteren dit als \(\Phi(n)\).
+<notextile>
+$$
+\begin{eqnarray}
+\Phi(n) & = P^{e_{1}-1}_{1}(P_{1}-1) P^{e_{2}-1}_{2}(P_{2}-1)P^{e_{2}-1}_{2}\cdots P^{e_{k}-1}_{k}(p_{k}-1) \\
+	& = \prod^{k}_{i=1}(P_{i}^{e_{i}-1}(P_{i}-1))
+\end{eqnarray}
+$$
+</notextile>
+waar \\(P^{e\_{i}}\_{i}\\) de bijhorende sleutel waarde is voor elke top \\(t\in N\_{G}(v)|s(v)=n\\).
+Nu het leuke gedeelte, euler's theorem vertelt ons dat
+<notextile>
+$$
+a^{\Phi(n)} \equiv 1 \mod(n)
+$$ 
+</notextile>
+(waar \\(a\\) en \\(n\\) relatief priem zijn met elkaar).
+Wat de orde aanduid voor mijn favoriete groep van getallen, de multiplicatie groep modulo n, dit is de klasse van getallen die congurent zijn relatief priem tot een getal \\(n\\)
+
+Het aantal getallen die relatief priem zijn met een getal \\(m\\) kunnen we noteren als volgt:
+
+We noemen \\(v^{n}\_{i}\\) de top in \\(G\\) waar de sleutel \\(m\\) is. 
+\\(A\_{m} = N\_{G}(v^{n}\_{i})\\) en \\(\forall v\_{i} \in A\_{m}\\) geldt dat hun sleutel priem is.
+<notextile>
+$$
+A'_{m} = N_{G}(u_{j})|u_{j} \in A_{m}
+$$
+</notextile>
+We kunnen dus nu zeggen dat
+<notextile>
+$$
+\Phi(n) = 
+\left\{
+\begin{array}{l l}
+|V(G)| - (|A_{m}| + |A'_{m}|)  & \text{ als } |A'_{m}| > 1 \\
+|V(G)| - (|A_{m}| + |A'_{m}|) + 1 & \text{ als }|A'_{m}| = 1 \\
+\end{array} \right. $$
+</notextile>
+We noteren de sleutel van \\(v\_{i}\\) als \\(s(v\_{i})\\). Dus:
+<notextile>
+$$\forall s(v_{i}) \in V(G) | N_{G}(v_{i}) \cap N_{G}(v_{i+1}) = \emptyset \rightarrow s(v_{i})^{\Phi(s(v_{i+1}))} \equiv 1 \mod s(v_{i+1})$$
+</notextile>
+ De code voor de visualisatie kan worden gevonden op <a href="https://gist.github.com/3691347">github</a>
+ Als ik ergens een fout heb gemaakt, sorry. Laat het mij <a href="twitter.com/SanderDemeester">weten</a>"/img/1/{;{ "/mw/RSA-example/{;{ "/projects/{;{	;"1<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - Project</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      
+<div class="project">
+<a href="//github.com/SanderDemeester/Baboon">Baboon</a>
+<a href="//github.com/SanderDemeester/Mandark">Mandark</a>
+<a href="//github.com/Silox/PeerFun">PeerFun</a>
+<a href="//github.com/SanderDemeester/ckill">Ckill</a>
+</div>
+<script src="http://ricardo.cc/github-repos/github-repos.js"></script>
+<script>
+    GHRepos.create('.project a')
+</script>
+
+    </section>
+  </body>
+</html>
+
+;	@/;
+"@<a href="https://www.github.com/SanderDemeester">github</a>;@0"/about/{;{	;"<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - About</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      Mijn naam is Sander Demeester, ik ben een 23 jarige student aan de Universiteit van Gent.
+    </section>
+  </body>
+</html>
+;	@4;
+"^Mijn naam is Sander Demeester, ik ben een 23 jarige student aan de Universiteit van Gent.;"^Mijn naam is Sander Demeester, ik ben een 23 jarige student aan de Universiteit van Gent."/blog/AES/{;{	;",&<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - Advanced Encryption Standard (AES)</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/AES/">Advanced Encryption Standard (AES)</a></h1>
+  <aside>
+    <p>Posted at: 2012-01-07 19:59:01 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/aes.gif">
+    </div>
+    
+  </aside>
+  <article>
+    <p>Encryption with AES encryption algoritm.
+AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de &#8220;key scheduling&#8221; hangt af van de key lengte.
+<!-- more -->
+Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor &#8220;keying material&#8221;
+    128 bit key: 160 bytes + extra key permutation 176 bytes
+    192 bit key: 192 bytes + extra key permutation 208 bytes
+    256 bit key: 224 bytes + extra key permutation 240 bytes</p>
+
+<p>Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.</p>
+
+<p>Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.</p>
+
+<p>Om de 4 iteraties (bij een 128 bit key) wordt een transformatie toegepast, de vorige 4 bytes worden &#8220;ge-xorded&#8221;. Deze transformatie bestaat uit:</p>
+
+<pre><code>    het roteren van een 4 byte woord.
+    de AES sbox gebruiken (subsitutie)
+    XOR met een ronde constante
+</code></pre>
+
+<p>De rotatie:
+De 1ste byte wordt overschreven door de 2de byte. De tweede met de derde, de derde met de vierde. En de vierde met de eerste.</p>
+
+<p>De subsitutie:
+De subsitutie is het opzoeken van elke byte in de encryptie sbox, en het vervangen met de gevonden byte. De translatie tabel is een 16 bij 16 array. De rij wordt aangeduid met de 4 meest significante bits, de kolom wordt aangeduid met de 4 minst significante bits.
+Als voorbeeld, de byte 0x1A is rij 1 met kolom 10. Volgens de specificatie van AES heeft ons dit de &#8220;affine transformation over </p>
+
+<notextile>
+$$GF(2^{8})\text{ van } b_{i} + b_{(i+4)\text{%}8} + b_{(i+5)\text{%}8} + b_{(i+6)\text{%}8} + b_{(i+7)\text{%}8} + c_{i}$$
+</notextile>
+
+<p>De XOR:
+Op het einde wordt de geroteerde, gesubstitueerde waarde gexorderd met onze ronde constante. De 3 minst significante byte van de ronde constante zijn altijd 0. De meest significante byte start altijd met 0x01, deze byte wordt om de 4 iteraties 1 bit naar links geshift. In volgorde wort dit dus: 0x02 in de 8ste iteratie. 0x04 bij de twaalfde iteratie etc.</p>
+
+<p>Het is belangrijk op te merken dat voor een 128-bit key de ronde constante 10 keer moet worden naar links geshift, omdat een 128 bit key 44 iteratie&#8217;s nodig heeft, maar als je een byte 8 keert shift naar links eindig je met een 0x00 byte. De specificatie eist dat, waneer er overflow optreedt bij een left shift, dat je een XOR moet uitvoeren met de byte 0x1B. Voor de &#8220;waarom&#8221; verwijst ik naar de specificatie pagina 15.</p>
+
+<p>Voor de 192-bit key scheduler is het zelfde, het verschil is dat de rotatie, subsitutie en ronde constante XOR worden toegepast bij elke 6de iteratie van het &#8220;key scheduling algoritme&#8221;. Voor een 256-bit key is dit elke 8ste iteratie, omdat elke 8ste iteratie &#8220;redelijk ver&#8221; uit elkaar ligt. Wordt bij elke 4de iteratie de subsitutie gedaan, en bij elke achtste iteratie de rotatie en XOR operatie.</p>
+
+<p>Het is belangrijk om op te merken dat het resultaat van het &#8220;key scheduling&#8221; algoritme &#8220;non-linear&#8221; is, maar wel herhaalbaar.    </p>
+
+<p>AES Encryptie:</p>
+
+<p>AES werkt met blokken van 16-byte voor zijn input, onafhankelijk van de key lengte. We zien de input als een 4 bij 4 matrix, dit is natuurlijk de volledig set van hexadecimale tekens. We zullen dit de &#8220;AES state mapping initialization&#8221; noemen. We zullen tijdens het encryptie-proces permutaties, subsituties  en keying materiaal combineren met deze state om de output te produceren.</p>
+
+<p>We hebben dus de &#8220;Input Block (&#8220;State&#8221;)&#8221;, we doen een xor met de 1ste 16 bytes van de key en krijgen als output &#8220;Ronde 1 Input&#8221;, eee AES key combination.
+Dit wordt gedaan voor elke ronde, en bestaat uit 4 stappen:
+- Een subsitutie stap.
+- Een row-shifting -stap.
+- Een column-mixing step.
+- Een key-combination stap.</p>
+
+<p>De subsitutie stap voeren we uit op elke byte individueel van de input, en komt van de zelfde matrix die we gebruiken bij het &#8220;key scheduling algoritme&#8221;, nl onze sbox</p>
+
+<p>De rotatie stap voeren we uit op elke rij. De eerste rij roteren we 0 plaatsen. De tweede rij 1 plaats, de derde 2 plaatsen etc.
+De &#8220;column mixing&#8221;-stap. Deze stap is gedefinieerd als een matrixvermenigvuldiging met de matrix: </p>
+<notextile>
+$$ \begin{bmatrix}  
+02 &amp; 03 &amp; 01 &amp; 01 \\
+01 &amp; 02 &amp; 03 &amp; 01 \\
+01 &amp; 01 &amp; 02 &amp; 03 \\
+03 &amp; 01 &amp; 01 &amp; 02 \\
+\end{bmatrix} $$  
+</notextile>
+<p>AES herdefiniÃ«ert de matrix optelling en matrixvermenigvuldiging operaties voor zijn eigen versies van deze bewerkingen.
+De matrix optelling operatie in AES is gedefinieerd als een XOR operatie. matrixvermenigvuldiging is meervoudig optellen maar modulo 0x1B bij overflow.</p>
+
+<p>De specificatie noemt deze operaties het inproduct. Wat opnieuw is herdefinitie. Dus, het vermenigvuldigen van 2 bytes is het bepalen van hun inproduct, in AES is dit dus een XOR operatie op 2 bytes die $n$ keer wordt uitgevoerd. N is hier de waarde van is het aantal linker shift operatie en XOR met 0x1B bij overflow neemt.</p>
+
+<p>&#8220;Column mixing&#8221; stap, het toepassen van AES &#8220;inproduct&#8221;.</p>
+
+<p>AES Decryption:</p>
+
+<p>Alle wat we hebben gedaan tijdens de encryptie fase moeten we nu terug ontdoen. We starten met de ronden van de keys in omgekeerde volgorde, daarna &#8220;unmixen&#8221; van de kolommen en un-siften van de rijen. Dit wil dus zeggen dat het decryptie proces niet bestaat uit de zelfde volgorde van operaties als bij het encryptie proces.</p>
+
+<p>Wat opvalt is dat we voor het decryptie proces niet opniew kunnen gebruik maken van dezelfde AES sboxen omdat de subsitutie in omgekeerde volgorde moet verlopen. We hebben dus  1 sbox om te encrypteren en 1 om de decrypteren.</p>
+
+<p>Het inverteren houdt in dat we de omgekeerde matrix multiplicatie moeten doen van elke kolom in onze matrix. Dit is niet enkel een multiplicatie maar een multiplicatie en een inversie die we beschouwen als een polynoom over \(GF(2^{8})\) en vermenigvuldigd modulo \(x^{4}+1\) met een vaste polynoom \(a^{-1}\)
+ gegeven door </p>
+<notextile>
+$$ a^{-1}(x) = \{0b\}x^\{3\} + \{0d\}x^\{2\} + \{09\}x + \{0e\} $$ 
+</notextile>
+<p>Dit is gelijk met een matrixvermenigvuldiging met de matrix: </p>
+
+<notextile>
+$$ \begin{bmatrix}
+0e &amp; 0b &amp; 0d &amp; 09 \\
+09 &amp; 0e &amp; 0b &amp; 0d \\
+0d &amp; 09 &amp; 0e &amp; 0b \\
+0b &amp; 0d &amp; 09 &amp; 0e 
+\end{bmatrix} $$  
+</notextile>
+<p>Dit is natuurlijk met de hergedefiniÃ«ert operaties beschreven hierboven.</p>
+
+<p>link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a></p>
+
+  </article>
+</div>
+
+    </section>
+  </body>
+</html>
+;	@:;
+"<p>Encryption with AES encryption algoritm.
+AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de &#8220;key scheduling&#8221; hangt af van de key lengte.
+<!-- more -->
+Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor &#8220;keying material&#8221;
+    128 bit key: 160 bytes + extra key permutation 176 bytes
+    192 bit key: 192 bytes + extra key permutation 208 bytes
+    256 bit key: 224 bytes + extra key permutation 240 bytes</p>
+
+<p>Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.</p>
+
+<p>Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.</p>
+
+<p>Om de 4 iteraties (bij een 128 bit key) wordt een transformatie toegepast, de vorige 4 bytes worden &#8220;ge-xorded&#8221;. Deze transformatie bestaat uit:</p>
+
+<pre><code>    het roteren van een 4 byte woord.
+    de AES sbox gebruiken (subsitutie)
+    XOR met een ronde constante
+</code></pre>
+
+<p>De rotatie:
+De 1ste byte wordt overschreven door de 2de byte. De tweede met de derde, de derde met de vierde. En de vierde met de eerste.</p>
+
+<p>De subsitutie:
+De subsitutie is het opzoeken van elke byte in de encryptie sbox, en het vervangen met de gevonden byte. De translatie tabel is een 16 bij 16 array. De rij wordt aangeduid met de 4 meest significante bits, de kolom wordt aangeduid met de 4 minst significante bits.
+Als voorbeeld, de byte 0x1A is rij 1 met kolom 10. Volgens de specificatie van AES heeft ons dit de &#8220;affine transformation over </p>
+
+<notextile>
+$$GF(2^{8})\text{ van } b_{i} + b_{(i+4)\text{%}8} + b_{(i+5)\text{%}8} + b_{(i+6)\text{%}8} + b_{(i+7)\text{%}8} + c_{i}$$
+</notextile>
+
+<p>De XOR:
+Op het einde wordt de geroteerde, gesubstitueerde waarde gexorderd met onze ronde constante. De 3 minst significante byte van de ronde constante zijn altijd 0. De meest significante byte start altijd met 0x01, deze byte wordt om de 4 iteraties 1 bit naar links geshift. In volgorde wort dit dus: 0x02 in de 8ste iteratie. 0x04 bij de twaalfde iteratie etc.</p>
+
+<p>Het is belangrijk op te merken dat voor een 128-bit key de ronde constante 10 keer moet worden naar links geshift, omdat een 128 bit key 44 iteratie&#8217;s nodig heeft, maar als je een byte 8 keert shift naar links eindig je met een 0x00 byte. De specificatie eist dat, waneer er overflow optreedt bij een left shift, dat je een XOR moet uitvoeren met de byte 0x1B. Voor de &#8220;waarom&#8221; verwijst ik naar de specificatie pagina 15.</p>
+
+<p>Voor de 192-bit key scheduler is het zelfde, het verschil is dat de rotatie, subsitutie en ronde constante XOR worden toegepast bij elke 6de iteratie van het &#8220;key scheduling algoritme&#8221;. Voor een 256-bit key is dit elke 8ste iteratie, omdat elke 8ste iteratie &#8220;redelijk ver&#8221; uit elkaar ligt. Wordt bij elke 4de iteratie de subsitutie gedaan, en bij elke achtste iteratie de rotatie en XOR operatie.</p>
+
+<p>Het is belangrijk om op te merken dat het resultaat van het &#8220;key scheduling&#8221; algoritme &#8220;non-linear&#8221; is, maar wel herhaalbaar.    </p>
+
+<p>AES Encryptie:</p>
+
+<p>AES werkt met blokken van 16-byte voor zijn input, onafhankelijk van de key lengte. We zien de input als een 4 bij 4 matrix, dit is natuurlijk de volledig set van hexadecimale tekens. We zullen dit de &#8220;AES state mapping initialization&#8221; noemen. We zullen tijdens het encryptie-proces permutaties, subsituties  en keying materiaal combineren met deze state om de output te produceren.</p>
+
+<p>We hebben dus de &#8220;Input Block (&#8220;State&#8221;)&#8221;, we doen een xor met de 1ste 16 bytes van de key en krijgen als output &#8220;Ronde 1 Input&#8221;, eee AES key combination.
+Dit wordt gedaan voor elke ronde, en bestaat uit 4 stappen:
+- Een subsitutie stap.
+- Een row-shifting -stap.
+- Een column-mixing step.
+- Een key-combination stap.</p>
+
+<p>De subsitutie stap voeren we uit op elke byte individueel van de input, en komt van de zelfde matrix die we gebruiken bij het &#8220;key scheduling algoritme&#8221;, nl onze sbox</p>
+
+<p>De rotatie stap voeren we uit op elke rij. De eerste rij roteren we 0 plaatsen. De tweede rij 1 plaats, de derde 2 plaatsen etc.
+De &#8220;column mixing&#8221;-stap. Deze stap is gedefinieerd als een matrixvermenigvuldiging met de matrix: </p>
+<notextile>
+$$ \begin{bmatrix}  
+02 &amp; 03 &amp; 01 &amp; 01 \\
+01 &amp; 02 &amp; 03 &amp; 01 \\
+01 &amp; 01 &amp; 02 &amp; 03 \\
+03 &amp; 01 &amp; 01 &amp; 02 \\
+\end{bmatrix} $$  
+</notextile>
+<p>AES herdefiniÃ«ert de matrix optelling en matrixvermenigvuldiging operaties voor zijn eigen versies van deze bewerkingen.
+De matrix optelling operatie in AES is gedefinieerd als een XOR operatie. matrixvermenigvuldiging is meervoudig optellen maar modulo 0x1B bij overflow.</p>
+
+<p>De specificatie noemt deze operaties het inproduct. Wat opnieuw is herdefinitie. Dus, het vermenigvuldigen van 2 bytes is het bepalen van hun inproduct, in AES is dit dus een XOR operatie op 2 bytes die $n$ keer wordt uitgevoerd. N is hier de waarde van is het aantal linker shift operatie en XOR met 0x1B bij overflow neemt.</p>
+
+<p>&#8220;Column mixing&#8221; stap, het toepassen van AES &#8220;inproduct&#8221;.</p>
+
+<p>AES Decryption:</p>
+
+<p>Alle wat we hebben gedaan tijdens de encryptie fase moeten we nu terug ontdoen. We starten met de ronden van de keys in omgekeerde volgorde, daarna &#8220;unmixen&#8221; van de kolommen en un-siften van de rijen. Dit wil dus zeggen dat het decryptie proces niet bestaat uit de zelfde volgorde van operaties als bij het encryptie proces.</p>
+
+<p>Wat opvalt is dat we voor het decryptie proces niet opniew kunnen gebruik maken van dezelfde AES sboxen omdat de subsitutie in omgekeerde volgorde moet verlopen. We hebben dus  1 sbox om te encrypteren en 1 om de decrypteren.</p>
+
+<p>Het inverteren houdt in dat we de omgekeerde matrix multiplicatie moeten doen van elke kolom in onze matrix. Dit is niet enkel een multiplicatie maar een multiplicatie en een inversie die we beschouwen als een polynoom over \(GF(2^{8})\) en vermenigvuldigd modulo \(x^{4}+1\) met een vaste polynoom \(a^{-1}\)
+ gegeven door </p>
+<notextile>
+$$ a^{-1}(x) = \{0b\}x^\{3\} + \{0d\}x^\{2\} + \{09\}x + \{0e\} $$ 
+</notextile>
+<p>Dit is gelijk met een matrixvermenigvuldiging met de matrix: </p>
+
+<notextile>
+$$ \begin{bmatrix}
+0e &amp; 0b &amp; 0d &amp; 09 \\
+09 &amp; 0e &amp; 0b &amp; 0d \\
+0d &amp; 09 &amp; 0e &amp; 0b \\
+0b &amp; 0d &amp; 09 &amp; 0e 
+\end{bmatrix} $$  
+</notextile>
+<p>Dit is natuurlijk met de hergedefiniÃ«ert operaties beschreven hierboven.</p>
+
+<p>link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a></p>
+;".Encryption with AES encryption algoritm.
+AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de "key scheduling" hangt af van de key lengte.
+<!-- more -->
+Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor "keying material"
+    128 bit key: 160 bytes + extra key permutation 176 bytes
+    192 bit key: 192 bytes + extra key permutation 208 bytes
+    256 bit key: 224 bytes + extra key permutation 240 bytes
+
+Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.
+
+Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.
+
+Om de 4 iteraties (bij een 128 bit key) wordt een transformatie toegepast, de vorige 4 bytes worden "ge-xorded". Deze transformatie bestaat uit:
+
+        het roteren van een 4 byte woord.
+        de AES sbox gebruiken (subsitutie)
+        XOR met een ronde constante
+
+De rotatie:
+De 1ste byte wordt overschreven door de 2de byte. De tweede met de derde, de derde met de vierde. En de vierde met de eerste.
+
+De subsitutie:
+De subsitutie is het opzoeken van elke byte in de encryptie sbox, en het vervangen met de gevonden byte. De translatie tabel is een 16 bij 16 array. De rij wordt aangeduid met de 4 meest significante bits, de kolom wordt aangeduid met de 4 minst significante bits.
+Als voorbeeld, de byte 0x1A is rij 1 met kolom 10. Volgens de specificatie van AES heeft ons dit de "affine transformation over 
+
+<notextile>
+$$GF(2^{8})\text{ van } b_{i} + b_{(i+4)\text{%}8} + b_{(i+5)\text{%}8} + b_{(i+6)\text{%}8} + b_{(i+7)\text{%}8} + c_{i}$$
+</notextile>
+
+De XOR:
+Op het einde wordt de geroteerde, gesubstitueerde waarde gexorderd met onze ronde constante. De 3 minst significante byte van de ronde constante zijn altijd 0. De meest significante byte start altijd met 0x01, deze byte wordt om de 4 iteraties 1 bit naar links geshift. In volgorde wort dit dus: 0x02 in de 8ste iteratie. 0x04 bij de twaalfde iteratie etc.
+
+Het is belangrijk op te merken dat voor een 128-bit key de ronde constante 10 keer moet worden naar links geshift, omdat een 128 bit key 44 iteratie's nodig heeft, maar als je een byte 8 keert shift naar links eindig je met een 0x00 byte. De specificatie eist dat, waneer er overflow optreedt bij een left shift, dat je een XOR moet uitvoeren met de byte 0x1B. Voor de "waarom" verwijst ik naar de specificatie pagina 15.
+
+Voor de 192-bit key scheduler is het zelfde, het verschil is dat de rotatie, subsitutie en ronde constante XOR worden toegepast bij elke 6de iteratie van het "key scheduling algoritme". Voor een 256-bit key is dit elke 8ste iteratie, omdat elke 8ste iteratie "redelijk ver" uit elkaar ligt. Wordt bij elke 4de iteratie de subsitutie gedaan, en bij elke achtste iteratie de rotatie en XOR operatie.
+
+Het is belangrijk om op te merken dat het resultaat van het "key scheduling" algoritme "non-linear" is, maar wel herhaalbaar.    
+
+AES Encryptie:
+
+AES werkt met blokken van 16-byte voor zijn input, onafhankelijk van de key lengte. We zien de input als een 4 bij 4 matrix, dit is natuurlijk de volledig set van hexadecimale tekens. We zullen dit de "AES state mapping initialization" noemen. We zullen tijdens het encryptie-proces permutaties, subsituties  en keying materiaal combineren met deze state om de output te produceren.
+
+We hebben dus de "Input Block ("State")", we doen een xor met de 1ste 16 bytes van de key en krijgen als output "Ronde 1 Input", eee AES key combination.
+Dit wordt gedaan voor elke ronde, en bestaat uit 4 stappen:
+- Een subsitutie stap.
+- Een row-shifting -stap.
+- Een column-mixing step.
+- Een key-combination stap.
+
+De subsitutie stap voeren we uit op elke byte individueel van de input, en komt van de zelfde matrix die we gebruiken bij het "key scheduling algoritme", nl onze sbox
+
+De rotatie stap voeren we uit op elke rij. De eerste rij roteren we 0 plaatsen. De tweede rij 1 plaats, de derde 2 plaatsen etc.
+De "column mixing"-stap. Deze stap is gedefinieerd als een matrixvermenigvuldiging met de matrix: 
+<notextile>
+$$ \begin{bmatrix}  
+02 & 03 & 01 & 01 \\
+01 & 02 & 03 & 01 \\
+01 & 01 & 02 & 03 \\
+03 & 01 & 01 & 02 \\
+\end{bmatrix} $$  
+</notextile>
+AES herdefiniÃ«ert de matrix optelling en matrixvermenigvuldiging operaties voor zijn eigen versies van deze bewerkingen.
+De matrix optelling operatie in AES is gedefinieerd als een XOR operatie. matrixvermenigvuldiging is meervoudig optellen maar modulo 0x1B bij overflow.
+
+De specificatie noemt deze operaties het inproduct. Wat opnieuw is herdefinitie. Dus, het vermenigvuldigen van 2 bytes is het bepalen van hun inproduct, in AES is dit dus een XOR operatie op 2 bytes die $n$ keer wordt uitgevoerd. N is hier de waarde van is het aantal linker shift operatie en XOR met 0x1B bij overflow neemt.
+
+"Column mixing" stap, het toepassen van AES "inproduct".
+
+AES Decryption:
+
+Alle wat we hebben gedaan tijdens de encryptie fase moeten we nu terug ontdoen. We starten met de ronden van de keys in omgekeerde volgorde, daarna "unmixen" van de kolommen en un-siften van de rijen. Dit wil dus zeggen dat het decryptie proces niet bestaat uit de zelfde volgorde van operaties als bij het encryptie proces.
+
+Wat opvalt is dat we voor het decryptie proces niet opniew kunnen gebruik maken van dezelfde AES sboxen omdat de subsitutie in omgekeerde volgorde moet verlopen. We hebben dus  1 sbox om te encrypteren en 1 om de decrypteren.
+
+Het inverteren houdt in dat we de omgekeerde matrix multiplicatie moeten doen van elke kolom in onze matrix. Dit is niet enkel een multiplicatie maar een multiplicatie en een inversie die we beschouwen als een polynoom over \\(GF(2^{8})\\) en vermenigvuldigd modulo \\(x^{4}+1\\) met een vaste polynoom \\(a^{-1}\\)
+ gegeven door 
+<notextile>
+$$ a^{-1}(x) = \{0b\}x^\{3\} + \{0d\}x^\{2\} + \{09\}x + \{0e\} $$ 
+</notextile>
+Dit is gelijk met een matrixvermenigvuldiging met de matrix: 
+
+<notextile>
+$$ \begin{bmatrix}
+0e & 0b & 0d & 09 \\
+09 & 0e & 0b & 0d \\
+0d & 09 & 0e & 0b \\
+0b & 0d & 09 & 0e 
+\end{bmatrix} $$  
+</notextile>
+Dit is natuurlijk met de hergedefiniÃ«ert operaties beschreven hierboven.
+
+link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a>"/blog/netcat_fun/{;{	;"S<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - </title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/netcat_fun/"></a></h1>
+  <aside>
+    <p>Posted at: </p>
+	
+    <p>Contributors: (none) </p>
+    
+  </aside>
+  <article>
+    
+
+  </article>
+</div>
+
+    </section>
+  </body>
+</html>
+;	@@;
+"
+;" "/{;{	;"	<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - Home</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <h1>Sander Demeester Blog</h1>
+
+<p>Blog over CS, Cryptografie, wiskunde en al de rest van dingen die mij interesseren, wie is "mij"? Ik ben Sander Demeester, een 23 jarige student aan de universiteit van Gent, meer over "mij" is te vinden in de about sectie</p>
+
+<ul>
+  <li><p><strong>Blog</strong> Mijn blog gaat vooral over cryptografie en cryptografische protocollen. De focus ligt meer op het "hoe" dan op "waarom". </p></li>
+  <li><p><strong>Projecten</strong>. Een lijst van projecten waar ik actief mee bezig bent kunt U vinden bij "projecten"..</p></li>
+</ul>
+
+<p>nanos gigantum humeris insidentes</p>
+    </section>
+  </body>
+</html>
+;	@F;
+"a<h1>Sander Demeester Blog</h1>
+
+<p>Blog over CS, Cryptografie, wiskunde en al de rest van dingen die mij interesseren, wie is "mij"? Ik ben Sander Demeester, een 23 jarige student aan de universiteit van Gent, meer over "mij" is te vinden in de about sectie</p>
+
+<ul>
+  <li><p><strong>Blog</strong> Mijn blog gaat vooral over cryptografie en cryptografische protocollen. De focus ligt meer op het "hoe" dan op "waarom". </p></li>
+  <li><p><strong>Projecten</strong>. Een lijst van projecten waar ik actief mee bezig bent kunt U vinden bij "projecten"..</p></li>
+</ul>
+
+<p>nanos gigantum humeris insidentes</p>;"a<h1>Sander Demeester Blog</h1>
+
+<p>Blog over CS, Cryptografie, wiskunde en al de rest van dingen die mij interesseren, wie is "mij"? Ik ben Sander Demeester, een 23 jarige student aan de universiteit van Gent, meer over "mij" is te vinden in de about sectie</p>
+
+<ul>
+  <li><p><strong>Blog</strong> Mijn blog gaat vooral over cryptografie en cryptografische protocollen. De focus ligt meer op het "hoe" dan op "waarom". </p></li>
+  <li><p><strong>Projecten</strong>. Een lijst van projecten waar ik actief mee bezig bent kunt U vinden bij "projecten"..</p></li>
+</ul>
+
+<p>nanos gigantum humeris insidentes</p>"/img/znp/{;{ "/blog/DH_math/{;{	;"K<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - Groups and Subgroups while using DH</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/DH_math/">Groups and Subgroups while using DH</a></h1>
+  <aside>
+    <p>Posted at: 2013-09-01 09:35:01 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/4.jpg">
+    </div>
+    
+  </aside>
+  <article>
+    <h3 id="groepen">Groepen</h3>
+
+<p>Voor de rest van deze tekst, beschouw \(p\) als een groot priem-getal (orde 2000-4000 bits). De meeste van onze berekeningnen zullen module \(p\) zijn. 
+Het DH (Diffie Hellman) protocol gebruikt \(Z^{*}_{p} \), multiplicative group modulo p.</p>
+
+<p>Kies een \(g\) in die groep en beschouw de getallen:</p>
+<notextile>
+$$
+	1,g,g^{2},g^{3},\cdots,
+$$
+</notextile>
+
+<p>Allemaal module \(p\). Dit is een oneindige reeks in \(Z^{*}_{p} \) (Herinner dat \(Z^{*}_{p} \) de getallen \(1,2,\cdots,p-1\) bevat met de multiplicatie operatie modulo 
+\(p\) ).</p>
+
+<p>Er komt een moment waar getallen zich moeten beginnen herhalen.<br />
+We maken de veronderstelling dat dit gebeurd bij \(g^{i} = g^{j}\) waar \(i &lt; j\). </p>
+
+<p>We kunnen een deling module \(p\) uitvoeren op beide getallen, we delen elke kant door \(g^{i}\) en krijgen \(1 = g^{j-i}\). 
+Anders gezegd bestaat er een getal \(q = j-i\) zodat \(g^q = 1 \text{ mod } p\) We noemen de kleinste waarde voor \(q\) de orde van \(g\).</p>
+
+<p>Als we \(g\) nu blijven vermenigvuldigingen bekomen we de reeks</p>
+<notextile>
+$$
+1,g,g^{2},\cdots,g^{q-1}
+$$
+</notextile>
+<p>Daarna komen we terug uit bij \(g^{q} = 1\) en herhaalt de reeks zich terug. We zeggen dat \(g\) een generator is voor de verzameling \(1,g,g^{2},\cdots,g^{q-1}\). Het aantal elementen dat we kunnen schrijven als een macht van \(g\) is \(q\), de orde van \(g\).</p>
+
+<p>Een eigenschap van multiplicatieve modulo \(p\) is dat er minstens Ã©Ã©n waarde voor \(g\) bestaat die de volledige groep genereert, we bedoelen dus dat er een waarde voor \(g\) bestaat zodat \(q = p -1 \). Dus inplaats van de getallen in \( Z^{*}_{p} \) te zien als \(1,\cdots,p-1\) kunnen we ze ook bekijken als </p>
+<notextile>
+$$
+	1,g,g^{2},\cdots,g^{p-2}
+$$
+</notextile>
+
+<p>Een \(g\) die de volledige groep genereert noemen we een premetief element van de groep. Andere waardes voor \(g\) kunnen kleinere verzamelingen voortbrengen.<br />
+We observeren dat als we twee getallen nemen uit de verzameling die is voortgebracht uit \(g\) we terug een macht van \(g\) tegenkomen, dus ook een element uit die verzameling. Alle elementen uit deze verzameling vormen terug een groep. Deze kleinere groepen noemen we subgroepen.</p>
+
+<p>Voor elk element \(g\) geld dat de orde van \(g\) een deler is van \(p-1\), dit is eenvoudig aan te tonen. Kies \(g\) een primitief element. Laat \(h\) elk ander element zijn. Omdat \(g\) de volledige groep genereert zal er een \(x\) zijn zodat \(h = g^{x}\). Beschouw nu de elementen voortgebracht door \(h\). Dit zijn:</p>
+<notextile>
+$$
+1,h,h^{2},h^{3},\cdots
+$$
+</notextile>
+<p>Dit is het zelfde als:</p>
+<notextile>
+$$
+1,g^{x},g^{2x},g^{3x},\cdots, 
+$$
+</notextile>
+<p>(al deze berekeningen zijn steeds module \(p\). )
+De order van \(h\) is de kleinste \(q\) zodat \(h^{q} = 1\).<br />
+Dit is het zelfde als zeggen dat het een \(q\) is zodat \(g^{xq} = 1\) voor elke \(t\), \(g^{t} = 1\). <br />
+Dit is hetzelfde als zeggen dat \(t = 0 (\text{mod }p-1)\). Dus \(q\) is de kleinste \(q\) zodat \(xq = 0 (\text{ mod }p-1)\). <br />
+Dit gebeurd wanneer</p>
+<notextile>
+$$
+q = \frac{p-1}{gcd(x,p-1)}
+$$
+</notextile>
+<p>Dus \(q\) is duidelijk een factor van \(p-1\).</p>
+
+<p>Een simpel voorbeeld:
+We kiezen \(p = 7\), en kiezen \(g = 3\). Dus \(g\) is een primitief element omdat:</p>
+<notextile>
+$$
+1,g,g^{2},g^{3},\cdots,g^{5} = 1,3,2,6,4,5
+$$
+</notextile>
+<p>(Alle bewerkingen zijn module 7).
+We kiezen \(h = 2\), \(h\) brengt de volgende subgroep voor:</p>
+<notextile>
+$$
+1,h,h^{2} = 1,2,4.
+$$
+</notextile>
+<p>Omdat \(h^{3} = 2^{3} (\text{mod } 7) = 1\). Het element \(h = 6\) genereert de subgroep \(1,6\). Deze subgroepen hebben lengte 2 en 3, beide zijn delers van \(p-1\). 
+We kunnen dit aan aantonen door Fermats test. Gebasseerd of het feit dat voor elke \(a\) geld dat \(a^{p-1} = 1\). Dit is eenvoudig aan te tonen. Laat \(g\) een generator zijn van \(Z^{*}_{p}\) en kies \(x\) zodat \(g^{x} = a\). \(g\) is een generator van de volledige groep, er bestaat dus altijd zoon \(x\). Maar nu geld dat</p>
+<notextile>
+$$
+a^{p-1} = g^{x(p-1)} = (g^{p-1})^{x} = 1^{x} = 1
+$$
+</notextile>
+
+  </article>
+</div>
+
+    </section>
+  </body>
+</html>
+;	@O;
+"8<h3 id="groepen">Groepen</h3>
+
+<p>Voor de rest van deze tekst, beschouw \(p\) als een groot priem-getal (orde 2000-4000 bits). De meeste van onze berekeningnen zullen module \(p\) zijn. 
+Het DH (Diffie Hellman) protocol gebruikt \(Z^{*}_{p} \), multiplicative group modulo p.</p>
+
+<p>Kies een \(g\) in die groep en beschouw de getallen:</p>
+<notextile>
+$$
+	1,g,g^{2},g^{3},\cdots,
+$$
+</notextile>
+
+<p>Allemaal module \(p\). Dit is een oneindige reeks in \(Z^{*}_{p} \) (Herinner dat \(Z^{*}_{p} \) de getallen \(1,2,\cdots,p-1\) bevat met de multiplicatie operatie modulo 
+\(p\) ).</p>
+
+<p>Er komt een moment waar getallen zich moeten beginnen herhalen.<br />
+We maken de veronderstelling dat dit gebeurd bij \(g^{i} = g^{j}\) waar \(i &lt; j\). </p>
+
+<p>We kunnen een deling module \(p\) uitvoeren op beide getallen, we delen elke kant door \(g^{i}\) en krijgen \(1 = g^{j-i}\). 
+Anders gezegd bestaat er een getal \(q = j-i\) zodat \(g^q = 1 \text{ mod } p\) We noemen de kleinste waarde voor \(q\) de orde van \(g\).</p>
+
+<p>Als we \(g\) nu blijven vermenigvuldigingen bekomen we de reeks</p>
+<notextile>
+$$
+1,g,g^{2},\cdots,g^{q-1}
+$$
+</notextile>
+<p>Daarna komen we terug uit bij \(g^{q} = 1\) en herhaalt de reeks zich terug. We zeggen dat \(g\) een generator is voor de verzameling \(1,g,g^{2},\cdots,g^{q-1}\). Het aantal elementen dat we kunnen schrijven als een macht van \(g\) is \(q\), de orde van \(g\).</p>
+
+<p>Een eigenschap van multiplicatieve modulo \(p\) is dat er minstens Ã©Ã©n waarde voor \(g\) bestaat die de volledige groep genereert, we bedoelen dus dat er een waarde voor \(g\) bestaat zodat \(q = p -1 \). Dus inplaats van de getallen in \( Z^{*}_{p} \) te zien als \(1,\cdots,p-1\) kunnen we ze ook bekijken als </p>
+<notextile>
+$$
+	1,g,g^{2},\cdots,g^{p-2}
+$$
+</notextile>
+
+<p>Een \(g\) die de volledige groep genereert noemen we een premetief element van de groep. Andere waardes voor \(g\) kunnen kleinere verzamelingen voortbrengen.<br />
+We observeren dat als we twee getallen nemen uit de verzameling die is voortgebracht uit \(g\) we terug een macht van \(g\) tegenkomen, dus ook een element uit die verzameling. Alle elementen uit deze verzameling vormen terug een groep. Deze kleinere groepen noemen we subgroepen.</p>
+
+<p>Voor elk element \(g\) geld dat de orde van \(g\) een deler is van \(p-1\), dit is eenvoudig aan te tonen. Kies \(g\) een primitief element. Laat \(h\) elk ander element zijn. Omdat \(g\) de volledige groep genereert zal er een \(x\) zijn zodat \(h = g^{x}\). Beschouw nu de elementen voortgebracht door \(h\). Dit zijn:</p>
+<notextile>
+$$
+1,h,h^{2},h^{3},\cdots
+$$
+</notextile>
+<p>Dit is het zelfde als:</p>
+<notextile>
+$$
+1,g^{x},g^{2x},g^{3x},\cdots, 
+$$
+</notextile>
+<p>(al deze berekeningen zijn steeds module \(p\). )
+De order van \(h\) is de kleinste \(q\) zodat \(h^{q} = 1\).<br />
+Dit is het zelfde als zeggen dat het een \(q\) is zodat \(g^{xq} = 1\) voor elke \(t\), \(g^{t} = 1\). <br />
+Dit is hetzelfde als zeggen dat \(t = 0 (\text{mod }p-1)\). Dus \(q\) is de kleinste \(q\) zodat \(xq = 0 (\text{ mod }p-1)\). <br />
+Dit gebeurd wanneer</p>
+<notextile>
+$$
+q = \frac{p-1}{gcd(x,p-1)}
+$$
+</notextile>
+<p>Dus \(q\) is duidelijk een factor van \(p-1\).</p>
+
+<p>Een simpel voorbeeld:
+We kiezen \(p = 7\), en kiezen \(g = 3\). Dus \(g\) is een primitief element omdat:</p>
+<notextile>
+$$
+1,g,g^{2},g^{3},\cdots,g^{5} = 1,3,2,6,4,5
+$$
+</notextile>
+<p>(Alle bewerkingen zijn module 7).
+We kiezen \(h = 2\), \(h\) brengt de volgende subgroep voor:</p>
+<notextile>
+$$
+1,h,h^{2} = 1,2,4.
+$$
+</notextile>
+<p>Omdat \(h^{3} = 2^{3} (\text{mod } 7) = 1\). Het element \(h = 6\) genereert de subgroep \(1,6\). Deze subgroepen hebben lengte 2 en 3, beide zijn delers van \(p-1\). 
+We kunnen dit aan aantonen door Fermats test. Gebasseerd of het feit dat voor elke \(a\) geld dat \(a^{p-1} = 1\). Dit is eenvoudig aan te tonen. Laat \(g\) een generator zijn van \(Z^{*}_{p}\) en kies \(x\) zodat \(g^{x} = a\). \(g\) is een generator van de volledige groep, er bestaat dus altijd zoon \(x\). Maar nu geld dat</p>
+<notextile>
+$$
+a^{p-1} = g^{x(p-1)} = (g^{p-1})^{x} = 1^{x} = 1
+$$
+</notextile>
+;"I### Groepen ###
+
+Voor de rest van deze tekst, beschouw \\(p\\) als een groot priem-getal (orde 2000-4000 bits). De meeste van onze berekeningnen zullen module \\(p\\) zijn. 
+Het DH (Diffie Hellman) protocol gebruikt \\(Z^{*}_{p} \\), multiplicative group modulo p.
+
+Kies een \\(g\\) in die groep en beschouw de getallen:
+<notextile>
+$$
+	1,g,g^{2},g^{3},\cdots,
+$$
+</notextile>
+
+Allemaal module \\(p\\). Dit is een oneindige reeks in \\(Z^{\*}\_{p} \\) (Herinner dat \\(Z^{\*}_{p} \\) de getallen \\(1,2,\cdots,p-1\\) bevat met de multiplicatie operatie modulo 
+\\(p\\) ).
+
+Er komt een moment waar getallen zich moeten beginnen herhalen.<br>
+We maken de veronderstelling dat dit gebeurd bij \\(g^{i} = g^{j}\\) waar \\(i < j\\). 
+
+We kunnen een deling module \\(p\\) uitvoeren op beide getallen, we delen elke kant door \\(g^{i}\\) en krijgen \\(1 = g^{j-i}\\). 
+Anders gezegd bestaat er een getal \\(q = j-i\\) zodat \\(g^q = 1 \text{ mod } p\\) We noemen de kleinste waarde voor \\(q\\) de orde van \\(g\\).
+
+Als we \\(g\\) nu blijven vermenigvuldigingen bekomen we de reeks
+<notextile>
+$$
+1,g,g^{2},\cdots,g^{q-1}
+$$
+</notextile>
+Daarna komen we terug uit bij \\(g^{q} = 1\\) en herhaalt de reeks zich terug. We zeggen dat \\(g\\) een generator is voor de verzameling \\(1,g,g^{2},\cdots,g^{q-1}\\). Het aantal elementen dat we kunnen schrijven als een macht van \\(g\\) is \\(q\\), de orde van \\(g\\).
+
+Een eigenschap van multiplicatieve modulo \\(p\\) is dat er minstens Ã©Ã©n waarde voor \\(g\\) bestaat die de volledige groep genereert, we bedoelen dus dat er een waarde voor \\(g\\) bestaat zodat \\(q = p -1 \\). Dus inplaats van de getallen in \\( Z^{\*}\_{p} \\) te zien als \\(1,\cdots,p-1\\) kunnen we ze ook bekijken als 
+<notextile>
+$$
+	1,g,g^{2},\cdots,g^{p-2}
+$$
+</notextile>
+
+Een \\(g\\) die de volledige groep genereert noemen we een premetief element van de groep. Andere waardes voor \\(g\\) kunnen kleinere verzamelingen voortbrengen.<br>
+We observeren dat als we twee getallen nemen uit de verzameling die is voortgebracht uit \\(g\\) we terug een macht van \\(g\\) tegenkomen, dus ook een element uit die verzameling. Alle elementen uit deze verzameling vormen terug een groep. Deze kleinere groepen noemen we subgroepen.
+
+Voor elk element \\(g\\) geld dat de orde van \\(g\\) een deler is van \\(p-1\\), dit is eenvoudig aan te tonen. Kies \\(g\\) een primitief element. Laat \\(h\\) elk ander element zijn. Omdat \\(g\\) de volledige groep genereert zal er een \\(x\\) zijn zodat \\(h = g^{x}\\). Beschouw nu de elementen voortgebracht door \\(h\\). Dit zijn:
+<notextile>
+$$
+1,h,h^{2},h^{3},\cdots
+$$
+</notextile>
+Dit is het zelfde als:
+<notextile>
+$$
+1,g^{x},g^{2x},g^{3x},\cdots, 
+$$
+</notextile>
+(al deze berekeningen zijn steeds module \\(p\\). )
+De order van \\(h\\) is de kleinste \\(q\\) zodat \\(h^{q} = 1\\).<br>
+Dit is het zelfde als zeggen dat het een \\(q\\) is zodat \\(g^{xq} = 1\\) voor elke \\(t\\), \\(g^{t} = 1\\). <br>
+Dit is hetzelfde als zeggen dat \\(t = 0 (\text{mod }p-1)\\). Dus \\(q\\) is de kleinste \\(q\\) zodat \\(xq = 0 (\text{ mod }p-1)\\). <br>
+Dit gebeurd wanneer
+<notextile>
+$$
+q = \frac{p-1}{gcd(x,p-1)}
+$$
+</notextile>
+Dus \\(q\\) is duidelijk een factor van \\(p-1\\).
+
+Een simpel voorbeeld:
+We kiezen \\(p = 7\\), en kiezen \\(g = 3\\). Dus \\(g\\) is een primitief element omdat:
+<notextile>
+$$
+1,g,g^{2},g^{3},\cdots,g^{5} = 1,3,2,6,4,5
+$$
+</notextile>
+(Alle bewerkingen zijn module 7).
+We kiezen \\(h = 2\\), \\(h\\) brengt de volgende subgroep voor:
+<notextile>
+$$
+1,h,h^{2} = 1,2,4.
+$$
+</notextile>
+Omdat \\(h^{3} = 2^{3} (\text{mod } 7) = 1\\). Het element \\(h = 6\\) genereert de subgroep \\(1,6\\). Deze subgroepen hebben lengte 2 en 3, beide zijn delers van \\(p-1\\). 
+We kunnen dit aan aantonen door Fermats test. Gebasseerd of het feit dat voor elke \\(a\\) geld dat \\(a^{p-1} = 1\\). Dit is eenvoudig aan te tonen. Laat \\(g\\) een generator zijn van \\(Z^{\*}\_{p}\\) en kies \\(x\\) zodat \\(g^{x} = a\\). \\(g\\) is een generator van de volledige groep, er bestaat dus altijd zoon \\(x\\). Maar nu geld dat
+<notextile>
+$$
+a^{p-1} = g^{x(p-1)} = (g^{p-1})^{x} = 1^{x} = 1
+$$
+</notextile>"/notes/#note/{;{ "/img/4/{;{ "/img/2/{;{ "/blog/znp/{;{	;"û-<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - Zero Knowledge Proof</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/znp/">Zero Knowledge Proof</a></h1>
+  <aside>
+    <p>Posted at: 2013-04-02 10:45:51 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: <a href='https://github.com/FelixVanderJeugt'>FelixVDJ</a> </p>
+    
+    <div id="image">
+      <img src="/img/znp.jpg">
+    </div>
+    
+  </aside>
+  <article>
+    <p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
+
+<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.</p>
+
+<p>Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van \(\frac{1}{2}\) om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.</p>
+
+<p>Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
+Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.</p>
+
+<ul>
+  <li>Volledigheid:
+Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</li>
+  <li>Correctheid:
+Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</li>
+  <li>Zero-Knowledge:
+Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</li>
+</ul>
+
+<h3 id="basic-zero-knowledge-protocol">Basic Zero-Knowledge Protocol</h3>
+<p>Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf" title="deze link">QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children</a></p>
+
+<p>Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiÃ«ren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. </p>
+
+<p>Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.</p>
+
+<ol>
+  <li>Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.</li>
+  <li>Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).</li>
+  <li>Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.</li>
+  <li>Victor vraagt Peggy om
+    <ul>
+      <li>Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).</li>
+      <li>De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.</li>
+    </ul>
+  </li>
+  <li>Peggy doet wat haar wordt gevraagd</li>
+  <li>Peggy en Victor herhalen de stappen 1 tem 5 n keer.</li>
+</ol>
+
+<p>Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan &#8220;faken&#8221;. </p>
+
+<p>In de volgende sectie bespreek ik 2 voorbeelden:</p>
+
+<h3 id="graph-isomorphism">Graph Isomorphism</h3>
+<p>Basis voor dit protocol komt uit 
+We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen \(G\),\(H\)</p>
+
+<notextile>
+$$
+\begin{equation*}
+f : V(G) \rightarrow V(H)
+\end{equation*}
+$$
+</notextile>
+
+<p>zodat elk paar bogen \({u,v}\) aangrenzend zijn in \(G\) als en alleen als \(f(u)\) en \(f(v)\) aangrenzend zijn in \(H\).
+Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.</p>
+
+<p>We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf \(G_{1}\) en \(G_{2}\).
+Het volgende protocol zal Victor overtuigen van Peggy haar kennis.</p>
+
+<ol>
+  <li>Peggy random permuteert \(G_{1}\) om een graaf \(H\) te produceren. \(H\) is isomorf met \(G_{1}\), omdat Peggy kennis heeft van isomorfisme tussen \(H\) en \(G_{1}\) heeft ze ook kennis van isomorfisme tussen \(H\) en \(G_{1}\). Voor alle andere is isomorfisme vinden tussen \(G_{1}\) en \(H\) of tussen \(G_{2}\) en \(H\) even moeilijk als het vinden van isomorfisme tussen \(G_{1}\) en \(G_{2}\).</li>
+  <li>Peggy zend H naar Victor.</li>
+  <li>Victor vraagt Peggy om:
+    <ul>
+      <li>Te bewijzen dan H en \(G_{1}\) isomorf zijn.</li>
+      <li>Te bewijzen dat H en \(G_{2}\) isomorf zijn.</li>
+    </ul>
+  </li>
+  <li>Peggy doet wat haar wordt gevraagd, ofwel
+    <ul>
+      <li>Bewijst ze dat \(H\) en \(G_{1}\) isomorf zijn, zonder te bewijzen dat \(H\) en \(G_{2}\) isomorf zijn.</li>
+      <li>Bewijst ze dat \(H\) en \(G_{2}\) isomorf zijn, zonder te bewijzen dat \(H\) en \(G_{1}\) isomorf zijn.</li>
+    </ul>
+  </li>
+  <li>Peggy en Victor herhalen de stappen 1 tem 4 n keer.</li>
+</ol>
+
+<p>Als Peggy geen kennis heeft van isomorfisme tussen \(G_{1}\) en \(G_{2}\) kan ze geen graaf \(H\) produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel \(G_{1}\) ofwel \(G_{2}\). Ze heeft dus \(\frac{1}{2}\) kans om te gokken. 
+Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe \(H\) maakt kan hij ook geen kennis overdragen van ronde tot ronde.</p>
+
+<h3 id="hamiltonian-cycles">&#8220;Hamiltonian Cycles&#8221;</h3>
+
+<p>Een variant van dit protocol werd voorgesteld door .
+Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.</p>
+
+<p>Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf \(G\). Victor kent \(G\) maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.</p>
+
+<ol>
+  <li>Peggy random permuteert \(G\). 
+Ze verplaatst de toppen om een nieuwe graaf \(H\) te maken. \(G\) en \(H\) zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in \(G\) is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in \(H\). Als ze zelf niet \(H\) heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen \(G\) en \(H\).
+Daarna encrypteert Peggy \(H\) naar \(H&#8217;\) (dit moet een probabilistische encryptie methode zijn voor elke lijn in \(H\), dat is een encrypted 0 of een encrypted 1 voor elke lijn in \(H\)).</li>
+  <li>Peggy geeft Victor \(H&#8217;\).</li>
+  <li>Victor vraagt Peggy om:
+    <ul>
+      <li>Te bewijzen dat \(H&#8217;\) een geencrypteerde isomorfe kopie van \(G\) is.</li>
+      <li>Een Hamiltoniaanse cycle tonen in \(H\)</li>
+    </ul>
+  </li>
+  <li>Peggy doet wat haar gevraagt word.
+    <ul>
+      <li>Bewijs dat \(H&#8217;\) een geencrypteerde isomorfe kopie is van \(G\) door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor \(G\) of \(H\)</li>
+      <li>Ze toont een Hamiltoniaanse cycle voor \(H\) door enkel de lijnen de decrypteren in \(H&#8217;\) die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat \(G\) en \(H\) topologisch isomorf zijn.</li>
+    </ul>
+  </li>
+  <li>Peggy en Victor herhalen stappen 1 temp 4 n keer.</li>
+</ol>
+
+<p>Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor \(G\) is het voor haar onmogelijk een geencrypteerde \(H&#8217;\) te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met \(G\) of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van \(\frac{1}{2}\) om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor \(G\).</p>
+
+<p>Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten.</p>
+
+  </article>
+</div>
+
+    </section>
+  </body>
+</html>
+;	@^;
+"Ô$<p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
+
+<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.</p>
+
+<p>Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van \(\frac{1}{2}\) om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.</p>
+
+<p>Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
+Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.</p>
+
+<ul>
+  <li>Volledigheid:
+Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.</li>
+  <li>Correctheid:
+Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.</li>
+  <li>Zero-Knowledge:
+Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.</li>
+</ul>
+
+<h3 id="basic-zero-knowledge-protocol">Basic Zero-Knowledge Protocol</h3>
+<p>Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf" title="deze link">QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children</a></p>
+
+<p>Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiÃ«ren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. </p>
+
+<p>Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.</p>
+
+<ol>
+  <li>Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.</li>
+  <li>Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).</li>
+  <li>Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.</li>
+  <li>Victor vraagt Peggy om
+    <ul>
+      <li>Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).</li>
+      <li>De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.</li>
+    </ul>
+  </li>
+  <li>Peggy doet wat haar wordt gevraagd</li>
+  <li>Peggy en Victor herhalen de stappen 1 tem 5 n keer.</li>
+</ol>
+
+<p>Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan &#8220;faken&#8221;. </p>
+
+<p>In de volgende sectie bespreek ik 2 voorbeelden:</p>
+
+<h3 id="graph-isomorphism">Graph Isomorphism</h3>
+<p>Basis voor dit protocol komt uit 
+We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen \(G\),\(H\)</p>
+
+<notextile>
+$$
+\begin{equation*}
+f : V(G) \rightarrow V(H)
+\end{equation*}
+$$
+</notextile>
+
+<p>zodat elk paar bogen \({u,v}\) aangrenzend zijn in \(G\) als en alleen als \(f(u)\) en \(f(v)\) aangrenzend zijn in \(H\).
+Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.</p>
+
+<p>We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf \(G_{1}\) en \(G_{2}\).
+Het volgende protocol zal Victor overtuigen van Peggy haar kennis.</p>
+
+<ol>
+  <li>Peggy random permuteert \(G_{1}\) om een graaf \(H\) te produceren. \(H\) is isomorf met \(G_{1}\), omdat Peggy kennis heeft van isomorfisme tussen \(H\) en \(G_{1}\) heeft ze ook kennis van isomorfisme tussen \(H\) en \(G_{1}\). Voor alle andere is isomorfisme vinden tussen \(G_{1}\) en \(H\) of tussen \(G_{2}\) en \(H\) even moeilijk als het vinden van isomorfisme tussen \(G_{1}\) en \(G_{2}\).</li>
+  <li>Peggy zend H naar Victor.</li>
+  <li>Victor vraagt Peggy om:
+    <ul>
+      <li>Te bewijzen dan H en \(G_{1}\) isomorf zijn.</li>
+      <li>Te bewijzen dat H en \(G_{2}\) isomorf zijn.</li>
+    </ul>
+  </li>
+  <li>Peggy doet wat haar wordt gevraagd, ofwel
+    <ul>
+      <li>Bewijst ze dat \(H\) en \(G_{1}\) isomorf zijn, zonder te bewijzen dat \(H\) en \(G_{2}\) isomorf zijn.</li>
+      <li>Bewijst ze dat \(H\) en \(G_{2}\) isomorf zijn, zonder te bewijzen dat \(H\) en \(G_{1}\) isomorf zijn.</li>
+    </ul>
+  </li>
+  <li>Peggy en Victor herhalen de stappen 1 tem 4 n keer.</li>
+</ol>
+
+<p>Als Peggy geen kennis heeft van isomorfisme tussen \(G_{1}\) en \(G_{2}\) kan ze geen graaf \(H\) produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel \(G_{1}\) ofwel \(G_{2}\). Ze heeft dus \(\frac{1}{2}\) kans om te gokken. 
+Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe \(H\) maakt kan hij ook geen kennis overdragen van ronde tot ronde.</p>
+
+<h3 id="hamiltonian-cycles">&#8220;Hamiltonian Cycles&#8221;</h3>
+
+<p>Een variant van dit protocol werd voorgesteld door .
+Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.</p>
+
+<p>Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf \(G\). Victor kent \(G\) maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.</p>
+
+<ol>
+  <li>Peggy random permuteert \(G\). 
+Ze verplaatst de toppen om een nieuwe graaf \(H\) te maken. \(G\) en \(H\) zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in \(G\) is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in \(H\). Als ze zelf niet \(H\) heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen \(G\) en \(H\).
+Daarna encrypteert Peggy \(H\) naar \(H&#8217;\) (dit moet een probabilistische encryptie methode zijn voor elke lijn in \(H\), dat is een encrypted 0 of een encrypted 1 voor elke lijn in \(H\)).</li>
+  <li>Peggy geeft Victor \(H&#8217;\).</li>
+  <li>Victor vraagt Peggy om:
+    <ul>
+      <li>Te bewijzen dat \(H&#8217;\) een geencrypteerde isomorfe kopie van \(G\) is.</li>
+      <li>Een Hamiltoniaanse cycle tonen in \(H\)</li>
+    </ul>
+  </li>
+  <li>Peggy doet wat haar gevraagt word.
+    <ul>
+      <li>Bewijs dat \(H&#8217;\) een geencrypteerde isomorfe kopie is van \(G\) door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor \(G\) of \(H\)</li>
+      <li>Ze toont een Hamiltoniaanse cycle voor \(H\) door enkel de lijnen de decrypteren in \(H&#8217;\) die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat \(G\) en \(H\) topologisch isomorf zijn.</li>
+    </ul>
+  </li>
+  <li>Peggy en Victor herhalen stappen 1 temp 4 n keer.</li>
+</ol>
+
+<p>Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor \(G\) is het voor haar onmogelijk een geencrypteerde \(H&#8217;\) te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met \(G\) of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van \(\frac{1}{2}\) om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor \(G\).</p>
+
+<p>Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten.</p>
+;"Œ"De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat "iets" willen bewijzen aan Bob zonder dat "iets" te moeten onthullen.
+
+Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de "prover", en Victor, die de rol zal spelen van de "verifierer".
+
+Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van \\(\frac{1}{2}\\) om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.
+
+Laat ons eerst eens kijken naar de definitie van een Zero-Knowledge proof.
+Onze interactie tussen de beide partijen moet voldoen aan volgende 3 vereisten.
+
+- Volledigheid:
+Als de verklaring waar is, zal Victor (die het protocol volledig en correct heeft gevolgd) overtuigd zijn dat het gepresenteerde feit door Peggy correct is.
+-  Correctheid:
+Als de verklaring vals is, zal oneerlijke Peggy de eerlijke Victor niet kunnen overtuigen dat het gepresenteerde feit correct is.
+- Zero-Knowledge:
+Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis om het gepresenteerde feit te bewijzen aan een ander persoon. Hij heeft geen kennis van het gepresenteerde feit zelf, behalve dat hij overtuigd is dat Peggy in het bezit is van het feit.
+
+### Basic Zero-Knowledge Protocol
+Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op [QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children](http://www.cs.wisc.edu/~mkowalcz/628.pdf "deze link")
+
+Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiÃ«ren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. 
+
+Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.
+
+1. Peggy gebruikt haar informatie en een random nummer om een NP-compleet probleem om te vormen tot een ander NP-compleet probleem, een probleem dat isomorf is met het origineel probleem. Ze gebruikt dan haar informatie en het random nummer om de nieuwe instantie van het probleem op te lossen.
+2. Peggy verbindt zich ertoe om deze oplossing als correct te aanvaarden. (eventueel met een bit-commitment scheme).
+3. Peggys onthult aan Victor de nieuwe instantie van het probleem. Victor kan met dit nieuw probleem geen informatie verkrijgen over het origineel NP-hard probleem noch kan Victor informatie verkrijgen over de oplossing.
+4. Victor vraagt Peggy om
+   - Aan hem te bewijzen dat het oude en nieuwe probleem isomorf zijn (maw 2 verschillende oplossingen voor twee gerelateerde problemen).
+   - De oplossing te tonen waartoe Peggy zich had verbonden in stap 2. en te bewijzen dat het een oplossing is van het nieuwe probleem.
+
+5. Peggy doet wat haar wordt gevraagd
+6. Peggy en Victor herhalen de stappen 1 tem 5 n keer.
+
+
+Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan "faken". 
+
+In de volgende sectie bespreek ik 2 voorbeelden:
+
+### Graph Isomorphism
+Basis voor dit protocol komt uit 
+We noemen 2 grafen isomorfistisch als er een bijectie bestaat tussen de verzamelingen van toppen \\(G\\),\\(H\\)
+
+<notextile>
+$$
+\begin{equation*}
+f : V(G) \rightarrow V(H)
+\end{equation*}
+$$
+</notextile>
+
+zodat elk paar bogen \\({u,v}\\) aangrenzend zijn in \\(G\\) als en alleen als \\(f(u)\\) en \\(f(v)\\) aangrenzend zijn in \\(H\\).
+Grafen vinden die isomorf zijn aan elkaar is een NP-compleet probleem.
+
+We aanvaarden dat Peggy kennis heeft van isomorfisme tussen graaf \\(G\_{1}\\) en \\(G\_{2}\\).
+Het volgende protocol zal Victor overtuigen van Peggy haar kennis.
+
+
+1. Peggy random permuteert \\(G\_{1}\\) om een graaf \\(H\\) te produceren. \\(H\\) is isomorf met \\(G\_{1}\\), omdat Peggy kennis heeft van isomorfisme tussen \\(H\\) en \\(G\_{1}\\) heeft ze ook kennis van isomorfisme tussen \\(H\\) en \\(G\_{1}\\). Voor alle andere is isomorfisme vinden tussen \\(G\_{1}\\) en \\(H\\) of tussen \\(G\_{2}\\) en \\(H\\) even moeilijk als het vinden van isomorfisme tussen \\(G\_{1}\\) en \\(G\_{2}\\).
+2. Peggy zend H naar Victor.
+3. Victor vraagt Peggy om:
+  - Te bewijzen dan H en \\(G\_{1}\\) isomorf zijn.
+  - Te bewijzen dat H en \\(G\_{2}\\) isomorf zijn.
+4. Peggy doet wat haar wordt gevraagd, ofwel
+   - Bewijst ze dat \\(H\\) en \\(G\_{1}\\) isomorf zijn, zonder te bewijzen dat \\(H\\) en \\(G\_{2}\\) isomorf zijn.
+   - Bewijst ze dat \\(H\\) en \\(G\_{2}\\) isomorf zijn, zonder te bewijzen dat \\(H\\) en \\(G\_{1}\\) isomorf zijn.
+5. Peggy en Victor herhalen de stappen 1 tem 4 n keer.
+
+Als Peggy geen kennis heeft van isomorfisme tussen \\(G\_{1}\\) en \\(G\_{2}\\) kan ze geen graaf \\(H\\) produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel \\(G\_{1}\\) ofwel \\(G\_{2}\\). Ze heeft dus \\(\frac{1}{2}\\) kans om te gokken. 
+Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe \\(H\\) maakt kan hij ook geen kennis overdragen van ronde tot ronde.
+
+### "Hamiltonian Cycles"
+
+Een variant van dit protocol werd voorgesteld door .
+Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.
+
+Peggy wil Victor overtuigen dat ze een Hamiltoniaanse cycle kent van graaf \\(G\\). Victor kent \\(G\\) maar kent niet de cycle. Peggy kan het volgende protocol gebruiken om Victor van het feit te overtuigen.
+
+1. Peggy random permuteert \\(G\\). 
+Ze verplaatst de toppen om een nieuwe graaf \\(H\\) te maken. \\(G\\) en \\(H\\) zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in \\(G\\) is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in \\(H\\). Als ze zelf niet \\(H\\) heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen \\(G\\) en \\(H\\).
+Daarna encrypteert Peggy \\(H\\) naar \\(H'\\) (dit moet een probabilistische encryptie methode zijn voor elke lijn in \\(H\\), dat is een encrypted 0 of een encrypted 1 voor elke lijn in \\(H\\)).
+2. Peggy geeft Victor \\(H'\\).
+3. Victor vraagt Peggy om:
+  - Te bewijzen dat \\(H'\\) een geencrypteerde isomorfe kopie van \\(G\\) is.
+  - Een Hamiltoniaanse cycle tonen in \\(H\\)
+4. Peggy doet wat haar gevraagt word.
+   - Bewijs dat \\(H'\\) een geencrypteerde isomorfe kopie is van \\(G\\) door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor \\(G\\) of \\(H\\)
+   - Ze toont een Hamiltoniaanse cycle voor \\(H\\) door enkel de lijnen de decrypteren in \\(H'\\) die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat \\(G\\) en \\(H\\) topologisch isomorf zijn.
+5. Peggy en Victor herhalen stappen 1 temp 4 n keer.
+
+
+Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor \\(G\\) is het voor haar onmogelijk een geencrypteerde \\(H'\\) te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met \\(G\\) of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van \\(\frac{1}{2}\\) om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor \\(G\\).
+
+Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten."/notes/note/{;{	;"´<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - </title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      
+    </section>
+  </body>
+</html>
+;	@d;
+" ;" "/img/fn/{;{ "/blog/RSA/{;{	;"2#<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - Chosen Ciphertext Attack against RSA</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/RSA/">Chosen Ciphertext Attack against RSA</a></h1>
+  <aside>
+    <p>Posted at: 2012-07-27 20:49:00 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/1.jpg">
+    </div>
+    
+  </aside>
+  <article>
+    <p>We onderscheiden 2 soorten problemen als we het hebben over het &#8220;aanvallen&#8221; van cryptografische protocollen. 
+Soort 1, aanvallen tegen de implementatie van het protocol. 
+Soort 2, aanvallen tegen het protocol zelf. 
+&lt;! &#8211; more &#8211;&gt;
+De volgende 3 senario&#8217;s die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.</p>
+
+<p>Zeer korte beschrijving van het RSA protocol.
+RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote getallen. De public en private key zijn functies van een paar (200 of meer digits) priem getallen. Het bekomen van de plaintext van de public key en de ciphertext is equivalent met het factoriseren van het product bestaand uit 2 priem getallen.</p>
+
+<p>Om de twee keys te maken kiezen we 2 random priem getallen van gelijk lengte, we noemen deze \((p,q)\). We bepalen het product.</p>
+<notextile>
+$$n = pq$$
+</notextile>
+<p>We kiezen random een encryptie key \(e\), zodanig dat \(e\) en \((p-1)(q-1)\) relatief priem zijn. 
+Daarna gebruiken we het <a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended euclidean algoritm</a> om een decryptie key \(d\) te vinden zodanig dat</p>
+
+<notextile>
+$$ed \equiv 1 \text{ mod } (p-1)(q-1)$$
+Of
+$$d = e^{-1} \text{ mod } ((p-1)(q-1))$$
+</notextile>
+
+<p>We merken op dat \(d\) en \(n\) relatief priem zijn.  De getallen \(e\) en \(n\) zijn de public key, \(d\) is de private key. \(p,q\) zijn verder niet meer nodig, maar moeten wel geheim blijven.
+Om een bericht \(m\) te encrypteren delen we het eerst op in blokken smaller dan \(n\), het resultaat, \(e\) zal zijn bestaan uit gelijkaardige blokken die we \(c_{i}\) zullen noemen.
+De encryptie formule is de volgende:</p>
+<notextile>
+$$c_{i} = m_{i}^{e} \text{ mod n }$$
+</notextile>
+<p>Decrypteren is dan logischerwijze:</p>
+<notextile>
+$$m_{i} = c_{i}^{d} \text{mod n}$$
+</notextile>
+
+<p>Omdat</p>
+
+<notextile>
+$$c_{i}^{d}=(m_{i}^{e})^{d} = m_{i}^{ed}=m_{i}^{k(p-1)(q-1)+1} = m_{i}m_{i}^{k(p-1)(q-1)} = m_{i}*1=m_{i} \text{ alles mod n.}$$
+</notextile>
+<p><a href="/mw/RSA-example.mw">maple voorbeeld</a></p>
+
+<p>Samenvatting van het protocol:<br />
+Public Key:<br />
+  - n: product van 2 priem getallen, \(p,q\) (beide getallen moeten geheim blijven)<br />
+  - e: relatief priem met \((p-1)(q-1)\) <br />
+Private Key: <br />
+  - d: \(e^{-1} \text{mod } ((p-1)(q-1))\) <br />
+Encrypteren: <br />
+  - c: \(c=m^{e} \text{ mod n }\) <br />
+Decrypteren: <br />
+  - m: \(m = c^{d} \text{ mod n }\) <br />
+Nu de werking van het protocol is begrepen ga ik 3 bekende scenario&#8217;s tekenen waar deze manier van werken zijn doel mist. </p>
+
+<p><strong>Scenario 1</strong>: 
+Eve, luistert in op de communicatie van Alice en slaagt erin om een ciphertext bericht \(c\) te onderscheppen, \(c\) is geÃ«ncrypteerd met Alice haar public key. Eve wilt het bericht kunnen lezen. 
+Wiskundig uitgedrukt wilt Eve het volgende doen,</p>
+<notextile>
+$$m = c^{d}$$
+</notextile>
+<p>Om \(m\) te herstellen kiest Eve eerst een random getal \(r\), zodanig dat \(r\) kleiner is dan \(n\) alsook Alice haar public key \(e\), die gepubliceerd is.
+Alice voert de volgende berekeningen uit:</p>
+<notextile>
+$$x = r^{e} \text{ mod n}$$
+$$y = xc \text{ mod n}$$
+$$t = r^{-1} \text{mod n}$$
+</notextile>
+
+<p>Let op dat als \(x = r^{e} \text{ mod n}\), dan \(r = x^{d} \text{ mod n}\)
+Nu moet Eve Alice overtuigen om y te signeren met haar private key, m.a.w \(y\) te decrypteren (Let op, Alice decrypteert het bericht, niet een hash van het bericht). Alice heeft \(y\) nog nooit gezien, dus ze signed \(y\)</p>
+<notextile>
+$$u = y^{d} \text{mod n}$$
+</notextile>
+
+<p>Alice stuurt het resultaat terug door naar Eve die </p>
+<notextile>
+$$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n} = c^{d} \text{ mod n} = m$$
+</notextile>
+<p>berekent, eve beschikt nu over m.</p>
+
+<p><strong>Senario 2</strong>:
+Trent is een publieke computer notaris. Als Alice een document laat notaliseren, stuurt ze het document naar Trent. Trent signeert het document een RSA digital signature en stuurt het 
+document terug naar Alice (opnieuw wordt hier geen one-way hash function gebruikt, Trent encrypteert het volledige document met zijn private key).</p>
+
+<p>Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht \(m&#8217;\).
+Eerst, Mallory kiest een arbitrere waarde \(x\) en berekent </p>
+
+<p>\(y = x^{e} \text{ mod n}\), waar \(e\) Trent zijn public key is, deze moet publiek zijn anders zouden andere entiteiten zijn signature niet kunnen controleren.</p>
+
+<p>Daarna berekent Mallory,</p>
+
+<script type="math/tex; mode=display">m = ym' \text{ mod n}</script>
+
+<p>Mallory stuurt dit resultaat naar Trent, die het resultaat \(m&#8217;^{d} mod \text{ } n\) terug geeft. Wat nu moet gebeuren is</p>
+
+<p>\((m^{d} \text{ mod n})x^{-1} \text{ mod n}\), wat gelijk is aan \(n&#8217;^{d}\) en dus de signature is van \(m&#8217;\)</p>
+
+<p>Er zijn verschillende werkwijze&#8217;s mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
+<a href="http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf">G.I. Davida, &#8220;Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem&#8221;</a></p>
+
+<p><a href="http://faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf">D.E. Denning, &#8220;Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems&#8221;</a></p>
+
+<p><a href="http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html">Y. Desmedt and A.M. Odlykzo, &#8220;A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems&#8221;</a></p>
+
+<p>De manier van werken die wordt gebruikt is het zelfde voor alle exploits, en is dat de machtsverheffing de multipliciteits structuur behoudt van zijn input:</p>
+
+<notextile>
+$$(xm)^{d} \text{ mod n} = x^{d}m^{d} \text{ mod n}$$
+</notextile>
+
+<p><strong>Senario 3</strong>:
+Eve wilt dat Alice \(m_{3}\) signed. Ze genereert twee berichten, \(m_{1},m_{2}\) zodanig dat</p>
+
+<notextile>
+$$m_{3} \equiv m_{1}m_{2} (\text{ mod n})$$
+</notextile>
+
+<p>Als Eve instaat is om Alice \(m_{1}\) en \(m_{2}\) te laten signeren kan ze volgende berekening toepassen om \(m_{3}\) te bekomen.</p>
+<notextile>
+$$m_{3}^{d} = (m_{1}^{d})(m_{2}^{d} \text{ mod n})$$
+</notextile>
+<p>Conclusie: 
+Gebruik RSA nooit om een random document te signen.
+Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso\_catalogue/catalogue\_tc/catalogue\_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen.</p>
+
+  </article>
+</div>
+
+    </section>
+  </body>
+</html>
+;	@m;
+"!<p>We onderscheiden 2 soorten problemen als we het hebben over het &#8220;aanvallen&#8221; van cryptografische protocollen. 
+Soort 1, aanvallen tegen de implementatie van het protocol. 
+Soort 2, aanvallen tegen het protocol zelf. 
+&lt;! &#8211; more &#8211;&gt;
+De volgende 3 senario&#8217;s die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.</p>
+
+<p>Zeer korte beschrijving van het RSA protocol.
+RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote getallen. De public en private key zijn functies van een paar (200 of meer digits) priem getallen. Het bekomen van de plaintext van de public key en de ciphertext is equivalent met het factoriseren van het product bestaand uit 2 priem getallen.</p>
+
+<p>Om de twee keys te maken kiezen we 2 random priem getallen van gelijk lengte, we noemen deze \((p,q)\). We bepalen het product.</p>
+<notextile>
+$$n = pq$$
+</notextile>
+<p>We kiezen random een encryptie key \(e\), zodanig dat \(e\) en \((p-1)(q-1)\) relatief priem zijn. 
+Daarna gebruiken we het <a href="http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm">extended euclidean algoritm</a> om een decryptie key \(d\) te vinden zodanig dat</p>
+
+<notextile>
+$$ed \equiv 1 \text{ mod } (p-1)(q-1)$$
+Of
+$$d = e^{-1} \text{ mod } ((p-1)(q-1))$$
+</notextile>
+
+<p>We merken op dat \(d\) en \(n\) relatief priem zijn.  De getallen \(e\) en \(n\) zijn de public key, \(d\) is de private key. \(p,q\) zijn verder niet meer nodig, maar moeten wel geheim blijven.
+Om een bericht \(m\) te encrypteren delen we het eerst op in blokken smaller dan \(n\), het resultaat, \(e\) zal zijn bestaan uit gelijkaardige blokken die we \(c_{i}\) zullen noemen.
+De encryptie formule is de volgende:</p>
+<notextile>
+$$c_{i} = m_{i}^{e} \text{ mod n }$$
+</notextile>
+<p>Decrypteren is dan logischerwijze:</p>
+<notextile>
+$$m_{i} = c_{i}^{d} \text{mod n}$$
+</notextile>
+
+<p>Omdat</p>
+
+<notextile>
+$$c_{i}^{d}=(m_{i}^{e})^{d} = m_{i}^{ed}=m_{i}^{k(p-1)(q-1)+1} = m_{i}m_{i}^{k(p-1)(q-1)} = m_{i}*1=m_{i} \text{ alles mod n.}$$
+</notextile>
+<p><a href="/mw/RSA-example.mw">maple voorbeeld</a></p>
+
+<p>Samenvatting van het protocol:<br />
+Public Key:<br />
+  - n: product van 2 priem getallen, \(p,q\) (beide getallen moeten geheim blijven)<br />
+  - e: relatief priem met \((p-1)(q-1)\) <br />
+Private Key: <br />
+  - d: \(e^{-1} \text{mod } ((p-1)(q-1))\) <br />
+Encrypteren: <br />
+  - c: \(c=m^{e} \text{ mod n }\) <br />
+Decrypteren: <br />
+  - m: \(m = c^{d} \text{ mod n }\) <br />
+Nu de werking van het protocol is begrepen ga ik 3 bekende scenario&#8217;s tekenen waar deze manier van werken zijn doel mist. </p>
+
+<p><strong>Scenario 1</strong>: 
+Eve, luistert in op de communicatie van Alice en slaagt erin om een ciphertext bericht \(c\) te onderscheppen, \(c\) is geÃ«ncrypteerd met Alice haar public key. Eve wilt het bericht kunnen lezen. 
+Wiskundig uitgedrukt wilt Eve het volgende doen,</p>
+<notextile>
+$$m = c^{d}$$
+</notextile>
+<p>Om \(m\) te herstellen kiest Eve eerst een random getal \(r\), zodanig dat \(r\) kleiner is dan \(n\) alsook Alice haar public key \(e\), die gepubliceerd is.
+Alice voert de volgende berekeningen uit:</p>
+<notextile>
+$$x = r^{e} \text{ mod n}$$
+$$y = xc \text{ mod n}$$
+$$t = r^{-1} \text{mod n}$$
+</notextile>
+
+<p>Let op dat als \(x = r^{e} \text{ mod n}\), dan \(r = x^{d} \text{ mod n}\)
+Nu moet Eve Alice overtuigen om y te signeren met haar private key, m.a.w \(y\) te decrypteren (Let op, Alice decrypteert het bericht, niet een hash van het bericht). Alice heeft \(y\) nog nooit gezien, dus ze signed \(y\)</p>
+<notextile>
+$$u = y^{d} \text{mod n}$$
+</notextile>
+
+<p>Alice stuurt het resultaat terug door naar Eve die </p>
+<notextile>
+$$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n} = c^{d} \text{ mod n} = m$$
+</notextile>
+<p>berekent, eve beschikt nu over m.</p>
+
+<p><strong>Senario 2</strong>:
+Trent is een publieke computer notaris. Als Alice een document laat notaliseren, stuurt ze het document naar Trent. Trent signeert het document een RSA digital signature en stuurt het 
+document terug naar Alice (opnieuw wordt hier geen one-way hash function gebruikt, Trent encrypteert het volledige document met zijn private key).</p>
+
+<p>Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht \(m&#8217;\).
+Eerst, Mallory kiest een arbitrere waarde \(x\) en berekent </p>
+
+<p>\(y = x^{e} \text{ mod n}\), waar \(e\) Trent zijn public key is, deze moet publiek zijn anders zouden andere entiteiten zijn signature niet kunnen controleren.</p>
+
+<p>Daarna berekent Mallory,</p>
+
+<script type="math/tex; mode=display">m = ym' \text{ mod n}</script>
+
+<p>Mallory stuurt dit resultaat naar Trent, die het resultaat \(m&#8217;^{d} mod \text{ } n\) terug geeft. Wat nu moet gebeuren is</p>
+
+<p>\((m^{d} \text{ mod n})x^{-1} \text{ mod n}\), wat gelijk is aan \(n&#8217;^{d}\) en dus de signature is van \(m&#8217;\)</p>
+
+<p>Er zijn verschillende werkwijze&#8217;s mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
+<a href="http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf">G.I. Davida, &#8220;Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem&#8221;</a></p>
+
+<p><a href="http://faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf">D.E. Denning, &#8220;Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems&#8221;</a></p>
+
+<p><a href="http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html">Y. Desmedt and A.M. Odlykzo, &#8220;A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems&#8221;</a></p>
+
+<p>De manier van werken die wordt gebruikt is het zelfde voor alle exploits, en is dat de machtsverheffing de multipliciteits structuur behoudt van zijn input:</p>
+
+<notextile>
+$$(xm)^{d} \text{ mod n} = x^{d}m^{d} \text{ mod n}$$
+</notextile>
+
+<p><strong>Senario 3</strong>:
+Eve wilt dat Alice \(m_{3}\) signed. Ze genereert twee berichten, \(m_{1},m_{2}\) zodanig dat</p>
+
+<notextile>
+$$m_{3} \equiv m_{1}m_{2} (\text{ mod n})$$
+</notextile>
+
+<p>Als Eve instaat is om Alice \(m_{1}\) en \(m_{2}\) te laten signeren kan ze volgende berekening toepassen om \(m_{3}\) te bekomen.</p>
+<notextile>
+$$m_{3}^{d} = (m_{1}^{d})(m_{2}^{d} \text{ mod n})$$
+</notextile>
+<p>Conclusie: 
+Gebruik RSA nooit om een random document te signen.
+Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso\_catalogue/catalogue\_tc/catalogue\_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen.</p>
+;"¾We onderscheiden 2 soorten problemen als we het hebben over het "aanvallen" van cryptografische protocollen. 
+Soort 1, aanvallen tegen de implementatie van het protocol. 
+Soort 2, aanvallen tegen het protocol zelf. 
+<! -- more -->
+De volgende 3 senario's die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.
+
+Zeer korte beschrijving van het RSA protocol.
+RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote getallen. De public en private key zijn functies van een paar (200 of meer digits) priem getallen. Het bekomen van de plaintext van de public key en de ciphertext is equivalent met het factoriseren van het product bestaand uit 2 priem getallen.
+
+Om de twee keys te maken kiezen we 2 random priem getallen van gelijk lengte, we noemen deze \\((p,q)\\). We bepalen het product.
+<notextile>
+$$n = pq$$
+</notextile>
+We kiezen random een encryptie key \\(e\\), zodanig dat \\(e\\) en \\((p-1)(q-1)\\) relatief priem zijn. 
+Daarna gebruiken we het [extended euclidean algoritm](http://en.wikipedia.org/wiki/Extended_Euclidean_algorithm) om een decryptie key \\(d\\) te vinden zodanig dat
+
+<notextile>
+$$ed \equiv 1 \text{ mod } (p-1)(q-1)$$
+Of
+$$d = e^{-1} \text{ mod } ((p-1)(q-1))$$
+</notextile>
+
+We merken op dat \\(d\\) en \\(n\\) relatief priem zijn.  De getallen \\(e\\) en \\(n\\) zijn de public key, \\(d\\) is de private key. \\(p,q\\) zijn verder niet meer nodig, maar moeten wel geheim blijven.
+Om een bericht \\(m\\) te encrypteren delen we het eerst op in blokken smaller dan \\(n\\), het resultaat, \\(e\\) zal zijn bestaan uit gelijkaardige blokken die we \\(c_{i}\\) zullen noemen.
+De encryptie formule is de volgende:
+<notextile>
+$$c_{i} = m_{i}^{e} \text{ mod n }$$
+</notextile>
+Decrypteren is dan logischerwijze:
+<notextile>
+$$m_{i} = c_{i}^{d} \text{mod n}$$
+</notextile>
+
+Omdat
+
+<notextile>
+$$c_{i}^{d}=(m_{i}^{e})^{d} = m_{i}^{ed}=m_{i}^{k(p-1)(q-1)+1} = m_{i}m_{i}^{k(p-1)(q-1)} = m_{i}*1=m_{i} \text{ alles mod n.}$$
+</notextile>
+[maple voorbeeld](/mw/RSA-example.mw)
+
+Samenvatting van het protocol:<br>
+Public Key:<br>
+  - n: product van 2 priem getallen, \\(p,q\\) (beide getallen moeten geheim blijven)<br>
+  - e: relatief priem met \\((p-1)(q-1)\\) <br>
+Private Key: <br>
+  - d: \\(e^{-1} \\text{mod } ((p-1)(q-1))\\) <br>
+Encrypteren: <br>
+  - c: \\(c=m^{e} \\text{ mod n }\\) <br>
+Decrypteren: <br>
+  - m: \\(m = c^{d} \\text{ mod n }\\) <br>
+Nu de werking van het protocol is begrepen ga ik 3 bekende scenario's tekenen waar deze manier van werken zijn doel mist. 
+
+**Scenario 1**: 
+Eve, luistert in op de communicatie van Alice en slaagt erin om een ciphertext bericht \\(c\\) te onderscheppen, \\(c\\) is geÃ«ncrypteerd met Alice haar public key. Eve wilt het bericht kunnen lezen. 
+Wiskundig uitgedrukt wilt Eve het volgende doen,
+<notextile>
+$$m = c^{d}$$
+</notextile>
+Om \\(m\\) te herstellen kiest Eve eerst een random getal \\(r\\), zodanig dat \\(r\\) kleiner is dan \\(n\\) alsook Alice haar public key \\(e\\), die gepubliceerd is.
+Alice voert de volgende berekeningen uit:
+<notextile>
+$$x = r^{e} \text{ mod n}$$
+$$y = xc \text{ mod n}$$
+$$t = r^{-1} \text{mod n}$$
+</notextile>
+
+Let op dat als \\(x = r^{e} \text{ mod n}\\), dan \\(r = x^{d} \text{ mod n}\\)
+Nu moet Eve Alice overtuigen om y te signeren met haar private key, m.a.w \\(y\\) te decrypteren (Let op, Alice decrypteert het bericht, niet een hash van het bericht). Alice heeft \\(y\\) nog nooit gezien, dus ze signed \\(y\\)
+<notextile>
+$$u = y^{d} \text{mod n}$$
+</notextile>
+
+Alice stuurt het resultaat terug door naar Eve die 
+<notextile>
+$$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n} = c^{d} \text{ mod n} = m$$
+</notextile>
+berekent, eve beschikt nu over m.
+
+**Senario 2**:
+Trent is een publieke computer notaris. Als Alice een document laat notaliseren, stuurt ze het document naar Trent. Trent signeert het document een RSA digital signature en stuurt het 
+document terug naar Alice (opnieuw wordt hier geen one-way hash function gebruikt, Trent encrypteert het volledige document met zijn private key).
+
+Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht \\(m'\\).
+Eerst, Mallory kiest een arbitrere waarde \\(x\\) en berekent 
+
+\\(y = x^{e} \text{ mod n}\\), waar \\(e\\) Trent zijn public key is, deze moet publiek zijn anders zouden andere entiteiten zijn signature niet kunnen controleren.
+
+Daarna berekent Mallory,
+
+$$m = ym' \text{ mod n}$$
+
+Mallory stuurt dit resultaat naar Trent, die het resultaat \\(m'^{d} mod \text{ } n\\) terug geeft. Wat nu moet gebeuren is
+
+\\((m^{d} \text{ mod n})x^{-1} \text{ mod n}\\), wat gelijk is aan \\(n'^{d}\\) en dus de signature is van \\(m'\\)
+
+Er zijn verschillende werkwijze's mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
+[G.I. Davida, "Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem"](http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf)
+
+[D.E. Denning, "Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems"](http://faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf)
+
+[Y. Desmedt and A.M. Odlykzo, "A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems"](http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html)
+
+De manier van werken die wordt gebruikt is het zelfde voor alle exploits, en is dat de machtsverheffing de multipliciteits structuur behoudt van zijn input:
+
+<notextile>
+$$(xm)^{d} \text{ mod n} = x^{d}m^{d} \text{ mod n}$$
+</notextile>
+
+**Senario 3**:
+Eve wilt dat Alice \\(m\_{3}\\) signed. Ze genereert twee berichten, \\(m\_{1},m_{2}\\) zodanig dat
+
+<notextile>
+$$m_{3} \equiv m_{1}m_{2} (\text{ mod n})$$
+</notextile>
+
+Als Eve instaat is om Alice \\(m\_{1}\\) en \\(m\_{2}\\) te laten signeren kan ze volgende berekening toepassen om \\(m\_{3}\\) te bekomen.
+<notextile>
+$$m_{3}^{d} = (m_{1}^{d})(m_{2}^{d} \text{ mod n})$$
+</notextile>
+Conclusie: 
+Gebruik RSA nooit om een random document te signen.
+Maak altijd eerst een message digest van het document met een one-way hashing functie. <a href="http://www.iso.org/iso/iso\_catalogue/catalogue\_tc/catalogue\_detail.htm?csnumber=35455">ISO 9796</a> block formaat voorkomt dit soort aanvallen."/img/aes/{;{ 

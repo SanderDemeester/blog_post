@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - Groups and Subgroups while using DH</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/DH_math/">Groups and Subgroups while using DH</a></h1>
+  <aside>
+    <p>Posted at: 2013-09-01 09:35:01 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/4.jpg">
+    </div>
+    
+  </aside>
+  <article>
+    <h3 id="groepen">Groepen</h3>
+
+<p>Voor de rest van deze tekst, beschouw \(p\) als een groot priem-getal (orde 2000-4000 bits). De meeste van onze berekeningnen zullen module \(p\) zijn. 
+Het DH (Diffie Hellman) protocol gebruikt \(Z^{*}_{p} \), multiplicative group modulo p.</p>
+
+<p>Kies een \(g\) in die groep en beschouw de getallen:</p>
+<notextile>
+$$
+	1,g,g^{2},g^{3},\cdots,
+$$
+</notextile>
+
+<p>Allemaal module \(p\). Dit is een oneindige reeks in \(Z^{*}_{p} \) (Herinner dat \(Z^{*}_{p} \) de getallen \(1,2,\cdots,p-1\) bevat met de multiplicatie operatie modulo 
+\(p\) ).</p>
+
+<p>Er komt een moment waar getallen zich moeten beginnen herhalen.<br />
+We maken de veronderstelling dat dit gebeurd bij \(g^{i} = g^{j}\) waar \(i &lt; j\). </p>
+
+<p>We kunnen een deling module \(p\) uitvoeren op beide getallen, we delen elke kant door \(g^{i}\) en krijgen \(1 = g^{j-i}\). 
+Anders gezegd bestaat er een getal \(q = j-i\) zodat \(g^q = 1 \text{ mod } p\) We noemen de kleinste waarde voor \(q\) de orde van \(g\).</p>
+
+<p>Als we \(g\) nu blijven vermenigvuldigingen bekomen we de reeks</p>
+<notextile>
+$$
+1,g,g^{2},\cdots,g^{q-1}
+$$
+</notextile>
+<p>Daarna komen we terug uit bij \(g^{q} = 1\) en herhaalt de reeks zich terug. We zeggen dat \(g\) een generator is voor de verzameling \(1,g,g^{2},\cdots,g^{q-1}\). Het aantal elementen dat we kunnen schrijven als een macht van \(g\) is \(q\), de orde van \(g\).</p>
+
+<p>Een eigenschap van multiplicatieve modulo \(p\) is dat er minstens één waarde voor \(g\) bestaat die de volledige groep genereert, we bedoelen dus dat er een waarde voor \(g\) bestaat zodat \(q = p -1 \). Dus inplaats van de getallen in \( Z^{*}_{p} \) te zien als \(1,\cdots,p-1\) kunnen we ze ook bekijken als </p>
+<notextile>
+$$
+	1,g,g^{2},\cdots,g^{p-2}
+$$
+</notextile>
+
+<p>Een \(g\) die de volledige groep genereert noemen we een premetief element van de groep. Andere waardes voor \(g\) kunnen kleinere verzamelingen voortbrengen.<br />
+We observeren dat als we twee getallen nemen uit de verzameling die is voortgebracht uit \(g\) we terug een macht van \(g\) tegenkomen, dus ook een element uit die verzameling. Alle elementen uit deze verzameling vormen terug een groep. Deze kleinere groepen noemen we subgroepen.</p>
+
+<p>Voor elk element \(g\) geld dat de orde van \(g\) een deler is van \(p-1\), dit is eenvoudig aan te tonen. Kies \(g\) een primitief element. Laat \(h\) elk ander element zijn. Omdat \(g\) de volledige groep genereert zal er een \(x\) zijn zodat \(h = g^{x}\). Beschouw nu de elementen voortgebracht door \(h\). Dit zijn:</p>
+<notextile>
+$$
+1,h,h^{2},h^{3},\cdots
+$$
+</notextile>
+<p>Dit is het zelfde als:</p>
+<notextile>
+$$
+1,g^{x},g^{2x},g^{3x},\cdots, 
+$$
+</notextile>
+<p>(al deze berekeningen zijn steeds module \(p\). )
+De order van \(h\) is de kleinste \(q\) zodat \(h^{q} = 1\).<br />
+Dit is het zelfde als zeggen dat het een \(q\) is zodat \(g^{xq} = 1\) voor elke \(t\), \(g^{t} = 1\). <br />
+Dit is hetzelfde als zeggen dat \(t = 0 (\text{mod }p-1)\). Dus \(q\) is de kleinste \(q\) zodat \(xq = 0 (\text{ mod }p-1)\). <br />
+Dit gebeurd wanneer</p>
+<notextile>
+$$
+q = \frac{p-1}{gcd(x,p-1)}
+$$
+</notextile>
+<p>Dus \(q\) is duidelijk een factor van \(p-1\).</p>
+
+<p>Een simpel voorbeeld:
+We kiezen \(p = 7\), en kiezen \(g = 3\). Dus \(g\) is een primitief element omdat:</p>
+<notextile>
+$$
+1,g,g^{2},g^{3},\cdots,g^{5} = 1,3,2,6,4,5
+$$
+</notextile>
+<p>(Alle bewerkingen zijn module 7).
+We kiezen \(h = 2\), \(h\) brengt de volgende subgroep voor:</p>
+<notextile>
+$$
+1,h,h^{2} = 1,2,4.
+$$
+</notextile>
+<p>Omdat \(h^{3} = 2^{3} (\text{mod } 7) = 1\). Het element \(h = 6\) genereert de subgroep \(1,6\). Deze subgroepen hebben lengte 2 en 3, beide zijn delers van \(p-1\). 
+We kunnen dit aan aantonen door Fermats test. Gebasseerd of het feit dat voor elke \(a\) geld dat \(a^{p-1} = 1\). Dit is eenvoudig aan te tonen. Laat \(g\) een generator zijn van \(Z^{*}_{p}\) en kies \(x\) zodat \(g^{x} = a\). \(g\) is een generator van de volledige groep, er bestaat dus altijd zoon \(x\). Maar nu geld dat</p>
+<notextile>
+$$
+a^{p-1} = g^{x(p-1)} = (g^{p-1})^{x} = 1^{x} = 1
+$$
+</notextile>
+
+  </article>
+</div>
+
+    </section>
+  </body>
+</html>

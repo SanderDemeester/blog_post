@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="cache-control" content="no-cache">	
+    <link rel="icon" href="/faveicon.ico" type="image/x-icon">
+    <title>Sander Demeester - RSA Blind Signature</title>
+    <link rel="stylesheet" type="text/css" 
+      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      media="screen">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+  </head>
+  <body>
+    <div class='navbar'>
+      <div class='navbar-inner'>
+        <div class='container'>
+          <a class='brand' href='/'>0xFE</a>
+          <ul class='nav'>
+            <li class='active'><a href='/'>Home</a></li>
+            <li><a href='/about'>About</a></li>
+   	    <li><a href='/blog'>Blog</a></li>			
+	    <li><a href='/projects'>Projects</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-34425622-1']);
+      _gaq.push(['_trackPageview']);
+      
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+      
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <section class='content'>
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<link rel="stylesheet" type="text/css" href="/blogs.css">
+<div class='post'>
+  <h1><a href="/blog/blind_sig/">RSA Blind Signature</a></h1>
+  <aside>
+    <p>Posted at: 2013-09-01 09:35:01 +0000</p>
+	
+	Auteur   : Sander Demeester    
+	
+    <p>Contributors: (none) </p>
+    
+    <div id="image">
+      <img src="/img/4.jpg">
+    </div>
+    
+  </aside>
+  <article>
+    <p>De notie van &#8220;blind signatures&#8221; is uitgevonden door David Chaum. <br />
+<a href="http://sce.uhcl.edu/yang/teaching/csci5234WebSecurityFall2011/Chaum-blind-signatures.PDF">D. Chaum, &#8220;Blind Signatures for Untracable Payments&#8221;</a> <br />
+<a href="http://www.google.com/patents/US4759063">D. Chaum, &#8220;Blind Signature System Patent&#8221;</a> <br />
+Het maakt gebruik van het RSA Algoritme. Voor meer informatie over RSA kan je terug kijken naar een vorige <a href="/blog/RSA/">blog post</a></p>
+
+<p>Bob heeft een publieke sleutel \(e\), een private sleutel \(d\) en een publieke modulus \(n\). Alice wilt dat Bob een &#8220;blind signature&#8221; plaatst op bericht \(m\) .</p>
+
+<ul>
+  <li>Alice kiest een random waarde \(k\) tussen \(1\) en \(n\) .
+Ze blindeerd \(m\) door de volgende berekening:</li>
+</ul>
+<notextile>
+	$$
+	t = mk^{e} \text{mod } n
+	$$
+</notextile>
+<ul>
+  <li>Bob tekent \(t\):</li>
+</ul>
+<notextile>
+	$$
+	t^{d} = (mk^{e})^{d} \text{mod } n
+	$$
+</notextile>
+<ul>
+  <li>Alice on-blindeerd \(t^d\) door de volgende berekening:</li>
+</ul>
+<notextile>
+	$$
+	s = \frac{t^{d}}{k} \text{mod } n
+	$$
+</notextile>
+<ul>
+  <li>Het resultaat is:</li>
+</ul>
+<notextile>
+	$$
+	s = m^{d} \text{mod } n
+	$$		
+</notextile>
+<p>Dit is eenvoudig aan te tonen:</p>
+<notextile>
+	$$
+	t^{d} \equiv (mk^{e})^{d} \equiv m^{d}k(\text{mod }n)
+	$$		
+</notextile>
+<p>Dus:</p>
+<notextile>
+	$$
+	\frac{t^{d}}{k} = \frac{m^{d}k}{k} \equiv m^{d} (\text{mod }n)
+	$$		
+</notextile>
+
+<p>Ter illustratie vind je <a href="http://sage.ugent.be/home/pub/59/">hier</a> een sage voorbeeld.</p>
+
+  </article>
+</div>
+
+    </section>
+  </body>
+</html>

@@ -1,0 +1,152 @@
+Crashlog created at Sat Oct 05 15:09:56 +0200 2013
+
+===== MESSAGE:
+
+Errno::EADDRINUSE: Address already in use - bind(2)
+
+===== COMPILATION STACK:
+
+  (empty)
+
+===== STACK TRACE:
+
+  0. /usr/lib/ruby/1.8/webrick/utils.rb:73:in `initialize'
+  1. /usr/lib/ruby/1.8/webrick/utils.rb:73:in `new'
+  2. /usr/lib/ruby/1.8/webrick/utils.rb:73:in `create_listeners'
+  3. /usr/lib/ruby/1.8/webrick/utils.rb:70:in `each'
+  4. /usr/lib/ruby/1.8/webrick/utils.rb:70:in `create_listeners'
+  5. /usr/lib/ruby/1.8/webrick/server.rb:75:in `listen'
+  6. /usr/lib/ruby/1.8/webrick/server.rb:63:in `initialize'
+  7. /usr/lib/ruby/1.8/webrick/httpserver.rb:24:in `initialize'
+  8. /var/lib/gems/1.8/gems/rack-1.5.2/lib/rack/handler/webrick.rb:11:in `new'
+  9. /var/lib/gems/1.8/gems/rack-1.5.2/lib/rack/handler/webrick.rb:11:in `run'
+  10. /var/lib/gems/1.8/gems/nanoc-3.6.4/lib/nanoc/cli/commands/view.rb:51:in `run'
+  11. /var/lib/gems/1.8/gems/nanoc-3.6.4/lib/nanoc/cli/command_runner.rb:14:in `call'
+  12. /var/lib/gems/1.8/gems/nanoc-3.6.4/lib/nanoc/cli/error_handler.rb:70:in `handle_while'
+  13. /var/lib/gems/1.8/gems/nanoc-3.6.4/lib/nanoc/cli/error_handler.rb:26:in `handle_while'
+  14. /var/lib/gems/1.8/gems/nanoc-3.6.4/lib/nanoc/cli/command_runner.rb:13:in `call'
+  15. /var/lib/gems/1.8/gems/cri-2.3.0/lib/cri/command_dsl.rb:185:in `runner'
+  16. /var/lib/gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:296:in `call'
+  17. /var/lib/gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:296:in `run_this'
+  18. /var/lib/gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:249:in `run'
+  19. /var/lib/gems/1.8/gems/cri-2.3.0/lib/cri/command.rb:262:in `run'
+  20. /var/lib/gems/1.8/gems/nanoc-3.6.4/lib/nanoc/cli.rb:52:in `run'
+  21. /var/lib/gems/1.8/gems/nanoc-3.6.4/lib/nanoc/cli/error_handler.rb:70:in `handle_while'
+  22. /var/lib/gems/1.8/gems/nanoc-3.6.4/lib/nanoc/cli/error_handler.rb:26:in `handle_while'
+  23. /var/lib/gems/1.8/gems/nanoc-3.6.4/lib/nanoc/cli.rb:50:in `run'
+  24. /var/lib/gems/1.8/gems/nanoc-3.6.4/bin/nanoc:19
+  25. /usr/local/bin/nanoc:19:in `load'
+  ... 28 more lines omitted. See full crash log for details.
+
+===== VERSION INFORMATION:
+
+nanoc 3.6.4 © 2007-2013 Denis Defreyne.
+Running ruby 1.8.7 (2011-06-30) on x86_64-linux with RubyGems 1.8.15.
+
+===== SYSTEM INFORMATION:
+
+Linux sander-desktop 3.2.0-53-generic #81-Ubuntu SMP Thu Aug 22 21:01:03 UTC 2013 x86_64 x86_64 x86_64 GNU/Linux
+
+===== INSTALLED GEMS:
+
+  tzinfo 0.3.37, 1.0.1
+  ffi 1.9.0
+  ethon 0.6.1
+  adsf 1.1.1
+  activemodel 3.2.13
+  rake 10.0.4, 10.1.0
+  bundler 1.3.5
+  hashr 0.0.22
+  diff-lcs 1.2.2, 1.2.4
+  i18n 0.6.1, 0.6.5
+  cri 2.3.0
+  bourne 1.4.0, 1.5.0
+  arel 3.0.2, 4.0.0
+  rack 1.5.2
+  bundle 0.0.1
+  builder 3.0.4, 3.2.2
+  activerecord 3.2.13
+  thread_safe 0.1.2
+  nanoc 3.6.4
+  colored 1.2
+  sqlite3 1.3.8
+  mime-types 1.25
+  database_cleaner 0.9.1, 1.1.1
+  wirble 0.1.3
+  atomic 1.1.13
+  typhoeus 0.6.5
+  metaclass 0.0.1
+  travis-lint 1.7.0
+  multi_json 1.0.4, 1.7.9
+  mocha 0.13.3, 0.14.0
+  minitest 4.7.5
+  kramdown 1.1.0
+  activesupport 3.2.13
+
+===== ENVIRONMENT:
+
+DBUS_SESSION_BUS_ADDRESS => "unix:abstract=/tmp/dbus-l2JK0aVtk9,guid=a16a0257aca4563cd3fc1f2a00000898"
+DEFAULTS_PATH => "/usr/share/gconf/xfce.default.path"
+DESKTOP_SESSION => "xfce"
+DISPLAY => ":0.0"
+EDITOR => "emacsclient -nw"
+GDMSESSION => "xfce"
+GDM_LANG => "nl_NL"
+GLADE_CATALOG_PATH => ":"
+GLADE_MODULE_PATH => ":"
+GLADE_PIXMAP_PATH => ":"
+GNOME_KEYRING_CONTROL => "/tmp/keyring-WWKN2i"
+GNOME_KEYRING_PID => "3141"
+GREP_COLOR => "1;32"
+GREP_OPTIONS => "--color=auto"
+HOME => "/home/test"
+LANG => "nl_NL.UTF-8"
+LANGUAGE => "nl_NL:en"
+LC_CTYPE => "nl_NL.UTF-8"
+LESS => "-R"
+LIBGLADE_MODULE_PATH => ":"
+LIBGL_DRIVERS_PATH => "/usr/lib/fglrx/dri:/usr/lib32/fglrx/dri"
+LOGNAME => "test"
+LSCOLORS => "Gxfxcxdxbxegedabagacad"
+MANDATORY_PATH => "/usr/share/gconf/xfce.mandatory.path"
+MSF_DATABASE_CONFIG => "/opt/framework/database.yml"
+OLDPWD => "/home/test"
+PAGER => "less"
+PATH => "/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/home/sander/programming/bake_ip/arm-2008q3/bin:/home/test/android-sdks/tools"
+PWD => "/home/test/blog_post"
+SESSION_MANAGER => "local/sander-desktop:@/tmp/.ICE-unix/3223,unix/sander-desktop:/tmp/.ICE-unix/3223"
+SHELL => "/bin/zsh"
+SHLVL => "1"
+SSH_AGENT_PID => "3203"
+SSH_AUTH_SOCK => "/tmp/ssh-qJGRRhjE3158/agent.3158"
+TERM => "xterm-256color"
+UBUNTU_MENUPROXY => "libappmenu.so"
+USER => "test"
+USERNAME => "test"
+WINDOWPATH => "7"
+XAUTHORITY => "/var/run/gdm/auth-for-test-SSLFqp/database"
+XDG_CONFIG_DIRS => "/etc/xdg/xdg-xfce:/etc/xdg:/etc/xdg"
+XDG_CURRENT_DESKTOP => "XFCE"
+XDG_DATA_DIRS => "/usr/share/xfce:/usr/local/share/:/usr/share/:/usr/share"
+XDG_MENU_PREFIX => "xfce-"
+XDG_SESSION_COOKIE => "41b11c5093b07fac28f623fe0000000b-1380967115.152121-1660615830"
+_ => "/usr/local/bin/nanoc"
+
+===== LOAD PATHS:
+
+  0. /var/lib/gems/1.8/gems/nanoc-3.6.4/lib
+  1. /var/lib/gems/1.8/gems/colored-1.2/lib
+  2. /var/lib/gems/1.8/gems/cri-2.3.0/lib
+  3. /var/lib/gems/1.8/gems/nanoc-3.6.4/lib
+  4. /var/lib/gems/1.8/gems/bundler-1.3.5/lib
+  5. /var/lib/gems/1.8/gems/rack-1.5.2/lib
+  6. /var/lib/gems/1.8/gems/adsf-1.1.1/lib
+  7. /usr/local/lib/site_ruby/1.8
+  8. /usr/local/lib/site_ruby/1.8/x86_64-linux
+  9. /usr/local/lib/site_ruby
+  10. /usr/lib/ruby/vendor_ruby/1.8
+  11. /usr/lib/ruby/vendor_ruby/1.8/x86_64-linux
+  12. /usr/lib/ruby/vendor_ruby
+  13. /usr/lib/ruby/1.8
+  14. /usr/lib/ruby/1.8/x86_64-linux
+  15. .
