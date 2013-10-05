@@ -91,4 +91,5 @@ $$
 </notextile>
 
 ### Diffie-Hellman Basis###
-
+Om het origineel DH protocol hebben we een groot priem getal nodig \\(p\\), en een primitief element \\(g\\) die de volledige groep \\(Z^{\*}\_{p}\\) genereerd.
+(\\(p,g\\) zijn publieke constanten.
