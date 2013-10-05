@@ -92,4 +92,21 @@ $$
 
 ### Diffie-Hellman Basis###
 Om het origineel DH protocol hebben we een groot priem getal nodig \\(p\\), en een primitief element \\(g\\) die de volledige groep \\(Z^{\*}\_{p}\\) genereerd.
-(\\(p,g\\) zijn publieke constanten.
+(\\(p,g\\)) zijn publieke constanten. We maken de veronderstelling dat alle entiteiten (inclusief onze aanvaller) kennis hebben van deze waarden.<br>
+Het protocol verloopt op de volgende manier:
+- Alice kiest een random \\(x \in Z^{\*}\_{p} \\).<br>
+  Ze berekent \\(g^{x} \text{ mod } p\\) en verstuurd dit naar Bob.<br>
+- Bob kiest een random \\(y \in Z^{\*}\_{p} \\).<br>
+  En hij berekent \\(g^{y} \text{ mod } p\\) en stuurd dit naar Alice.<br>
+- Het finale resultaat voor beide is \\(k = g^{yx}\\).<br>
+<br>
+Alice kan dit berekenen door matchsverheffing te doen van \\(g^{x}\\) met de waarde die ze van Bob heeft gekregen.
+<notextile>
+$$
+(g^{y})^{x} = g^{xy}
+$$
+</notextile>
+Bob kan op gelijkaardige manier dezelfde berekening uitvoeren. Maar wat kan de aanvaller doen?
+De aanvaller ziet de waarde (\\(g^{x} \text{ mod } p,g^{y} \text{ mod } p\\)), maar niet de waarden (\\(x,y\\)). <br>
+Het probleem om \\(g^{xy}\\) te bepalen met kennis van \\(g^{x} \text{ mod }p,g^{y} \text{mod p }\\) noemen we het Diffie-Hellman probleem. <br>
+Zolang (\\(g,p\\)) correct zijn gekozen bestaat er geen efficient algoritme om dit te berekenen.
