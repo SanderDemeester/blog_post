@@ -94,6 +94,6 @@ $$ \begin{bmatrix}
 0b & 0d & 09 & 0e 
 \end{bmatrix} $$  
 </notextile>
-Dit is natuurlijk met de hergedefiniëert operaties beschreven hierboven.
+Dit is natuurlijk met de hergedefineert operaties beschreven hierboven.
 
 link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a>

@@ -5,25 +5,30 @@
     <meta http-equiv="cache-control" content="no-cache">	
     <link rel="icon" href="/faveicon.ico" type="image/x-icon">
     <title>Sander Demeester - Chosen Ciphertext Attack against RSA</title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+    <link rel="stylesheet" type="text/css"
+	  href="http://cdn.foundation5.zurb.com/foundation.css"
       media="screen">
     <link rel="stylesheet" type="text/css" href="/style.css">
+
   </head>
   <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>0xFE</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <nav class="top-bar" data-topbar role="navigation">
+      <ul class="title-area">
+	<li class="name">
+	  <h1><a href="#">0xeF</a></h1>
+	</li>
+	<!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+	<li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+	<!-- Left Nav Section -->
+	<ul class="left">
+	  <li><a href="/about">About</a></li>
+	  <li><a href="/">Blog</a></li>
+	</ul>
+      </section>
+      </nav>
     <script type="text/javascript">
       
       var _gaq = _gaq || [];
@@ -39,6 +44,7 @@
     </script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdn.foundation5.zurb.com/foundation.js"></script>
     <section class='content'>
       <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -47,7 +53,7 @@
 <div class='post'>
   <h1><a href="/blog/RSA/">Chosen Ciphertext Attack against RSA</a></h1>
   <aside>
-    <p>Posted at: 2012-07-27 20:49:00 +0000</p>
+    <p>Posted at: 2012-07-27 22:49:00 +0200</p>
 	
 	Auteur   : Sander Demeester    
 	
@@ -59,11 +65,11 @@
     
   </aside>
   <article>
-    <p>We onderscheiden 2 soorten problemen als we het hebben over het &#8220;aanvallen&#8221; van cryptografische protocollen. 
+    <p>We onderscheiden 2 soorten problemen als we het hebben over het “aanvallen” van cryptografische protocollen. 
 Soort 1, aanvallen tegen de implementatie van het protocol. 
 Soort 2, aanvallen tegen het protocol zelf. 
-&lt;! &#8211; more &#8211;&gt;
-De volgende 3 senario&#8217;s die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.</p>
+&lt;! – more –&gt;
+De volgende 3 senario’s die ik beschrijf zijn bekende aanvallen tegen het RSA protocol.</p>
 
 <p>Zeer korte beschrijving van het RSA protocol.
 RSA krijgt zijn beveiliging door de moeilijkheid van het factoriseren van grote getallen. De public en private key zijn functies van een paar (200 of meer digits) priem getallen. Het bekomen van de plaintext van de public key en de ciphertext is equivalent met het factoriseren van het product bestaand uit 2 priem getallen.</p>
@@ -109,7 +115,7 @@ Encrypteren: <br />
   - c: \(c=m^{e} \text{ mod n }\) <br />
 Decrypteren: <br />
   - m: \(m = c^{d} \text{ mod n }\) <br />
-Nu de werking van het protocol is begrepen ga ik 3 bekende scenario&#8217;s tekenen waar deze manier van werken zijn doel mist. </p>
+Nu de werking van het protocol is begrepen ga ik 3 bekende scenario’s tekenen waar deze manier van werken zijn doel mist.</p>
 
 <p><strong>Scenario 1</strong>: 
 Eve, luistert in op de communicatie van Alice en slaagt erin om een ciphertext bericht \(c\) te onderscheppen, \(c\) is geëncrypteerd met Alice haar public key. Eve wilt het bericht kunnen lezen. 
@@ -131,7 +137,7 @@ Nu moet Eve Alice overtuigen om y te signeren met haar private key, m.a.w \(y\) 
 $$u = y^{d} \text{mod n}$$
 </notextile>
 
-<p>Alice stuurt het resultaat terug door naar Eve die </p>
+<p>Alice stuurt het resultaat terug door naar Eve die</p>
 <notextile>
 $$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n} = c^{d} \text{ mod n} = m$$
 </notextile>
@@ -141,8 +147,8 @@ $$tu \text{ mod n}  = r^{-1}y^{d} \text{ mod n} = r^{-1}x^{d}c^{d} \text{ mod n}
 Trent is een publieke computer notaris. Als Alice een document laat notaliseren, stuurt ze het document naar Trent. Trent signeert het document een RSA digital signature en stuurt het 
 document terug naar Alice (opnieuw wordt hier geen one-way hash function gebruikt, Trent encrypteert het volledige document met zijn private key).</p>
 
-<p>Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht \(m&#8217;\).
-Eerst, Mallory kiest een arbitrere waarde \(x\) en berekent </p>
+<p>Mallory wilt dat Trent een bericht signeert dat hij normaal zou weigeren om te signeren. Wat de reden ook is, hij zou het nooit doen uit vrije wil. We noemen dit bericht \(m’\).
+Eerst, Mallory kiest een arbitrere waarde \(x\) en berekent</p>
 
 <p>\(y = x^{e} \text{ mod n}\), waar \(e\) Trent zijn public key is, deze moet publiek zijn anders zouden andere entiteiten zijn signature niet kunnen controleren.</p>
 
@@ -150,16 +156,16 @@ Eerst, Mallory kiest een arbitrere waarde \(x\) en berekent </p>
 
 <script type="math/tex; mode=display">m = ym' \text{ mod n}</script>
 
-<p>Mallory stuurt dit resultaat naar Trent, die het resultaat \(m&#8217;^{d} mod \text{ } n\) terug geeft. Wat nu moet gebeuren is</p>
+<p>Mallory stuurt dit resultaat naar Trent, die het resultaat \(m’^{d} mod \text{ } n\) terug geeft. Wat nu moet gebeuren is</p>
 
-<p>\((m^{d} \text{ mod n})x^{-1} \text{ mod n}\), wat gelijk is aan \(n&#8217;^{d}\) en dus de signature is van \(m&#8217;\)</p>
+<p>\((m^{d} \text{ mod n})x^{-1} \text{ mod n}\), wat gelijk is aan \(n’^{d}\) en dus de signature is van \(m’\)</p>
 
-<p>Er zijn verschillende werkwijze&#8217;s mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
-<a href="http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf">G.I. Davida, &#8220;Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem&#8221;</a></p>
+<p>Er zijn verschillende werkwijze’s mogelijk om het zelfde resultaat te bekomen en worden besproken in volgende papers: 
+<a href="http://www.dtc.umn.edu/~odlyzko/doc/arch/rsa.attack.pdf">G.I. Davida, “Chosen Signture Cryptanalysis of the RSA (MIT) Public Key Cryptosystem”</a></p>
 
-<p><a href="http://faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf">D.E. Denning, &#8220;Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems&#8221;</a></p>
+<p><a href="http://faculty.nps.edu/dedennin/publications/digitalsigsrsa.pdf">D.E. Denning, “Digital Signaatures with RSA and Other Pubilc-Key Cryptosystems”</a></p>
 
-<p><a href="http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html">Y. Desmedt and A.M. Odlykzo, &#8220;A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems&#8221;</a></p>
+<p><a href="http://wenku.baidu.com/view/78bfd93767ec102de2bd89e3.html">Y. Desmedt and A.M. Odlykzo, “A Chosen Text Attack on the RSA Cryptosystem and Some Discrete Logarithm Problems”</a></p>
 
 <p>De manier van werken die wordt gebruikt is het zelfde voor alle exploits, en is dat de machtsverheffing de multipliciteits structuur behoudt van zijn input:</p>
 

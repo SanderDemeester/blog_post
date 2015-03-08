@@ -5,25 +5,30 @@
     <meta http-equiv="cache-control" content="no-cache">	
     <link rel="icon" href="/faveicon.ico" type="image/x-icon">
     <title>Sander Demeester - Groups and Subgroups while using DH</title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+    <link rel="stylesheet" type="text/css"
+	  href="http://cdn.foundation5.zurb.com/foundation.css"
       media="screen">
     <link rel="stylesheet" type="text/css" href="/style.css">
+
   </head>
   <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>0xFE</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <nav class="top-bar" data-topbar role="navigation">
+      <ul class="title-area">
+	<li class="name">
+	  <h1><a href="#">0xeF</a></h1>
+	</li>
+	<!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+	<li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+	<!-- Left Nav Section -->
+	<ul class="left">
+	  <li><a href="/about">About</a></li>
+	  <li><a href="/">Blog</a></li>
+	</ul>
+      </section>
+      </nav>
     <script type="text/javascript">
       
       var _gaq = _gaq || [];
@@ -39,6 +44,7 @@
     </script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdn.foundation5.zurb.com/foundation.js"></script>
     <section class='content'>
       <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -47,7 +53,7 @@
 <div class='post'>
   <h1><a href="/blog/DH_math/">Groups and Subgroups while using DH</a></h1>
   <aside>
-    <p>Posted at: 2013-09-01 09:35:01 +0000</p>
+    <p>Posted at: 2013-09-01 11:35:01 +0200</p>
 	
 	Auteur   : Sander Demeester    
 	
@@ -75,7 +81,7 @@ $$
 \(p\) ).</p>
 
 <p>Er komt een moment waar getallen zich moeten beginnen herhalen.<br />
-We maken de veronderstelling dat dit gebeurd bij \(g^{i} = g^{j}\) waar \(i &lt; j\). </p>
+We maken de veronderstelling dat dit gebeurd bij \(g^{i} = g^{j}\) waar \(i &lt; j\).</p>
 
 <p>We kunnen een deling module \(p\) uitvoeren op beide getallen, we delen elke kant door \(g^{i}\) en krijgen \(1 = g^{j-i}\). 
 Anders gezegd bestaat er een getal \(q = j-i\) zodat \(g^q = 1 \text{ mod } p\) We noemen de kleinste waarde voor \(q\) de orde van \(g\).</p>
@@ -88,7 +94,7 @@ $$
 </notextile>
 <p>Daarna komen we terug uit bij \(g^{q} = 1\) en herhaalt de reeks zich terug. We zeggen dat \(g\) een generator is voor de verzameling \(1,g,g^{2},\cdots,g^{q-1}\). Het aantal elementen dat we kunnen schrijven als een macht van \(g\) is \(q\), de orde van \(g\).</p>
 
-<p>Een eigenschap van multiplicatieve modulo \(p\) is dat er minstens één waarde voor \(g\) bestaat die de volledige groep genereert, we bedoelen dus dat er een waarde voor \(g\) bestaat zodat \(q = p -1 \). Dus inplaats van de getallen in \( Z^{*}_{p} \) te zien als \(1,\cdots,p-1\) kunnen we ze ook bekijken als </p>
+<p>Een eigenschap van multiplicatieve modulo \(p\) is dat er minstens één waarde voor \(g\) bestaat die de volledige groep genereert, we bedoelen dus dat er een waarde voor \(g\) bestaat zodat \(q = p -1 \). Dus inplaats van de getallen in \( Z^{*}_{p} \) te zien als \(1,\cdots,p-1\) kunnen we ze ook bekijken als</p>
 <notextile>
 $$
 	1,g,g^{2},\cdots,g^{p-2}

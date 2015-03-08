@@ -5,25 +5,30 @@
     <meta http-equiv="cache-control" content="no-cache">	
     <link rel="icon" href="/faveicon.ico" type="image/x-icon">
     <title>Sander Demeester - RSA Blind Signature</title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+    <link rel="stylesheet" type="text/css"
+	  href="http://cdn.foundation5.zurb.com/foundation.css"
       media="screen">
     <link rel="stylesheet" type="text/css" href="/style.css">
+
   </head>
   <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>0xFE</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <nav class="top-bar" data-topbar role="navigation">
+      <ul class="title-area">
+	<li class="name">
+	  <h1><a href="#">0xeF</a></h1>
+	</li>
+	<!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+	<li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+	<!-- Left Nav Section -->
+	<ul class="left">
+	  <li><a href="/about">About</a></li>
+	  <li><a href="/">Blog</a></li>
+	</ul>
+      </section>
+      </nav>
     <script type="text/javascript">
       
       var _gaq = _gaq || [];
@@ -39,6 +44,7 @@
     </script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdn.foundation5.zurb.com/foundation.js"></script>
     <section class='content'>
       <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -47,7 +53,7 @@
 <div class='post'>
   <h1><a href="/blog/blind_sig/">RSA Blind Signature</a></h1>
   <aside>
-    <p>Posted at: 2013-09-01 09:35:01 +0000</p>
+    <p>Posted at: 2013-09-01 11:35:01 +0200</p>
 	
 	Auteur   : Sander Demeester    
 	
@@ -59,12 +65,12 @@
     
   </aside>
   <article>
-    <p>De notie van &#8220;blind signatures&#8221; is uitgevonden door David Chaum. <br />
-<a href="http://sce.uhcl.edu/yang/teaching/csci5234WebSecurityFall2011/Chaum-blind-signatures.PDF">D. Chaum, &#8220;Blind Signatures for Untracable Payments&#8221;</a> <br />
-<a href="http://www.google.com/patents/US4759063">D. Chaum, &#8220;Blind Signature System Patent&#8221;</a> <br />
+    <p>De notie van “blind signatures” is uitgevonden door David Chaum. <br />
+<a href="http://sce.uhcl.edu/yang/teaching/csci5234WebSecurityFall2011/Chaum-blind-signatures.PDF">D. Chaum, “Blind Signatures for Untracable Payments”</a> <br />
+<a href="http://www.google.com/patents/US4759063">D. Chaum, “Blind Signature System Patent”</a> <br />
 Het maakt gebruik van het RSA Algoritme. Voor meer informatie over RSA kan je terug kijken naar een vorige <a href="/blog/RSA/">blog post</a></p>
 
-<p>Bob heeft een publieke sleutel \(e\), een private sleutel \(d\) en een publieke modulus \(n\). Alice wilt dat Bob een &#8220;blind signature&#8221; plaatst op bericht \(m\) .</p>
+<p>Bob heeft een publieke sleutel \(e\), een private sleutel \(d\) en een publieke modulus \(n\). Alice wilt dat Bob een “blind signature” plaatst op bericht \(m\) .</p>
 
 <ul>
   <li>Alice kiest een random waarde \(k\) tussen \(1\) en \(n\) .

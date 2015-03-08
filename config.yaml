@@ -14,6 +14,7 @@ base_url: 'sanderdemeester.be'
 # such as “default.htm”. This list is used by nanoc to generate pretty URLs.
 index_filenames: [ 'index.html' ]
 
+encoding: utf-8
 # Whether or not to generate a diff of the compiled content when compiling a
 # site. The diff will contain the differences between the compiled content
 # before and after the last site compilation.
@@ -38,7 +39,7 @@ data_sources:
     # The type is the identifier of the data source. By default, this will be
     # `filesystem_unified`.
     type: filesystem_unified
-
+    encoding: utf-8
     # The path where items should be mounted (comparable to mount points in
     # Unix-like systems). This is “/” by default, meaning that items will have
     # “/” prefixed to their identifiers. If the items root were “/en/”

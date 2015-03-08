@@ -5,25 +5,30 @@
     <meta http-equiv="cache-control" content="no-cache">	
     <link rel="icon" href="/faveicon.ico" type="image/x-icon">
     <title>Sander Demeester - Zero Knowledge Proof</title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+    <link rel="stylesheet" type="text/css"
+	  href="http://cdn.foundation5.zurb.com/foundation.css"
       media="screen">
     <link rel="stylesheet" type="text/css" href="/style.css">
+
   </head>
   <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>0xFE</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <nav class="top-bar" data-topbar role="navigation">
+      <ul class="title-area">
+	<li class="name">
+	  <h1><a href="#">0xeF</a></h1>
+	</li>
+	<!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+	<li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+	<!-- Left Nav Section -->
+	<ul class="left">
+	  <li><a href="/about">About</a></li>
+	  <li><a href="/">Blog</a></li>
+	</ul>
+      </section>
+      </nav>
     <script type="text/javascript">
       
       var _gaq = _gaq || [];
@@ -39,6 +44,7 @@
     </script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdn.foundation5.zurb.com/foundation.js"></script>
     <section class='content'>
       <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -47,7 +53,7 @@
 <div class='post'>
   <h1><a href="/blog/znp/">Zero Knowledge Proof</a></h1>
   <aside>
-    <p>Posted at: 2013-04-02 10:45:51 +0000</p>
+    <p>Posted at: 2013-04-02 12:45:51 +0200</p>
 	
 	Auteur   : Sander Demeester    
 	
@@ -59,9 +65,9 @@
     
   </aside>
   <article>
-    <p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat &#8220;iets&#8221; willen bewijzen aan Bob zonder dat &#8220;iets&#8221; te moeten onthullen.</p>
+    <p>De normale manier voor Alice om iets te bewijzen aan Bob is door het hem te vertellen. Maar dan weet Bob dat iets ook en kan hij het verder vertellen aan andere entiteiten en Alice kan daar niks aan doen. Alice zou op een of andere manier dat “iets” willen bewijzen aan Bob zonder dat “iets” te moeten onthullen.</p>
 
-<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de &#8220;prover&#8221;, en Victor, die de rol zal spelen van de &#8220;verifierer&#8221;.</p>
+<p>Om dit idee verder uit te leggen zal ik onderstaande tekst gebruik maken van 2 nieuwe personages, nl: Peggy, die de rol zal vervullen van de “prover”, en Victor, die de rol zal spelen van de “verifierer”.</p>
 
 <p>Peggy zou een zero-knowledge proof kunnen uitvoeren, dit protocol bewijst aan Victor dat Peggy in het bezit is van een stuk informatie maar heeft Victor geen mogelijkheid om te achterhalen wat deze informatie is. Dit bewijs neem de vorm aan van een interactief protocol waar Victor een aantal vragen stelt aan Peggy. Als Peggy alle vragen correct kan beantwoorden heeft ze kennis van het geheim, zo niet heeft ze een kans van \(\frac{1}{2}\) om een vraag juist te beantwoorden, na een n-tal vragen zal Victor overtuigd zijn dat Peggy kennis heeft van het geheim zonder dat hijzelf iets van het geheim weet, dit is natuurlijk om voorwaarde dat de vragen nog de antwoorden iets van informatie bevatten over het geheim zelf.</p>
 
@@ -80,7 +86,7 @@ Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis
 <h3 id="basic-zero-knowledge-protocol">Basic Zero-Knowledge Protocol</h3>
 <p>Volgende demonstratie/uitleg van Zero-Knowledge is een vereenvoudigd voorbeeld bedacht door Jean-Jacques Quisquater en Louis Guillou. Het origineel kan gevonden worden op <a href="http://www.cs.wisc.edu/~mkowalcz/628.pdf" title="deze link">QUIQUATER Jean-Jacques, GUILLOU Louis, How to Explain Zero-Knowledge Protocols to Your Children</a></p>
 
-<p>Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken. </p>
+<p>Lezen van bovenstaande paper is aan te raden. Het legt zeer simpel uit hoe een zero-knowledge proof werkt. Maar omdat ik deze tekst kort wil houden zal ik de woorden van Jean-Jacques en Louis Guillou kopiëren en laat ik dit over als oefening voor de lezer. Ik wil mij meer focussen op praktische zero-knowledge protocollen die ik hieronder zal bespreken.</p>
 
 <p>Neem aan dat Peggy kennis heeft van informatie en dat die informatie de oplossing is voor een NP-hard probleem. Het basis zero-knowledge protocol bestaat uit meerdere rondes.</p>
 
@@ -98,7 +104,7 @@ Als de verklaring waar is, zal eerlijke Victor niet in het bezit zijn van kennis
   <li>Peggy en Victor herhalen de stappen 1 tem 5 n keer.</li>
 </ol>
 
-<p>Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan &#8220;faken&#8221;. </p>
+<p>Victor zal na afloop niet instaat zijn om bijvoorbeeld een andere entiteit, nl Carol te overhalen dat Peggy kennis heeft van de informatie omdat Victor de kennis van Peggy kan “faken”.</p>
 
 <p>In de volgende sectie bespreek ik 2 voorbeelden:</p>
 
@@ -141,7 +147,7 @@ Het volgende protocol zal Victor overtuigen van Peggy haar kennis.</p>
 <p>Als Peggy geen kennis heeft van isomorfisme tussen \(G_{1}\) en \(G_{2}\) kan ze geen graaf \(H\) produceren die isomorf is met beide. Ze kan enkel een graaf maken die isomorf is met ofwel \(G_{1}\) ofwel \(G_{2}\). Ze heeft dus \(\frac{1}{2}\) kans om te gokken. 
 Dit protocol heeft Victor ook helemaal geen informatie om zelf instaat te zijn de isomorfe structuur te bepalen. Omdat Peggy elke ronde een nieuwe \(H\) maakt kan hij ook geen kennis overdragen van ronde tot ronde.</p>
 
-<h3 id="hamiltonian-cycles">&#8220;Hamiltonian Cycles&#8221;</h3>
+<h3 id="hamiltonian-cycles">“Hamiltonian Cycles”</h3>
 
 <p>Een variant van dit protocol werd voorgesteld door .
 Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph that exact door elke top 1 keer passeert. Dit noemen we, zoals we weten, een Hamiltioniaanse cycle. Het vinden van een Hamiltoniaase cycle is terug een NP-compleet probleem.</p>
@@ -151,26 +157,27 @@ Peggy heeft kennis van een circulaire, continu pad langs de bogen van een graph 
 <ol>
   <li>Peggy random permuteert \(G\). 
 Ze verplaatst de toppen om een nieuwe graaf \(H\) te maken. \(G\) en \(H\) zijn topologisch isomorf, als ze een Hamiltoniaanse cycle kent in \(G\) is het voor haar eenvoudig om een Hamiltoniaanse cycle te vinden in \(H\). Als ze zelf niet \(H\) heeft geproduceerd is het voor haar een moeilijk probleem om isomorfisme te vinden tussen \(G\) en \(H\).
-Daarna encrypteert Peggy \(H\) naar \(H&#8217;\) (dit moet een probabilistische encryptie methode zijn voor elke lijn in \(H\), dat is een encrypted 0 of een encrypted 1 voor elke lijn in \(H\)).</li>
-  <li>Peggy geeft Victor \(H&#8217;\).</li>
+Daarna encrypteert Peggy \(H\) naar \(H’\) (dit moet een probabilistische encryptie methode zijn voor elke lijn in \(H\), dat is een encrypted 0 of een encrypted 1 voor elke lijn in \(H\)).</li>
+  <li>Peggy geeft Victor \(H’\).</li>
   <li>Victor vraagt Peggy om:
     <ul>
-      <li>Te bewijzen dat \(H&#8217;\) een geencrypteerde isomorfe kopie van \(G\) is.</li>
+      <li>Te bewijzen dat \(H’\) een geencrypteerde isomorfe kopie van \(G\) is.</li>
       <li>Een Hamiltoniaanse cycle tonen in \(H\)</li>
     </ul>
   </li>
   <li>Peggy doet wat haar gevraagt word.
     <ul>
-      <li>Bewijs dat \(H&#8217;\) een geencrypteerde isomorfe kopie is van \(G\) door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor \(G\) of \(H\)</li>
-      <li>Ze toont een Hamiltoniaanse cycle voor \(H\) door enkel de lijnen de decrypteren in \(H&#8217;\) die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat \(G\) en \(H\) topologisch isomorf zijn.</li>
+      <li>Bewijs dat \(H’\) een geencrypteerde isomorfe kopie is van \(G\) door de permutaties te tonen en alles de decrypteren, zonder het tonen van de Hamiltoniaanse cycle voor \(G\) of \(H\)</li>
+      <li>Ze toont een Hamiltoniaanse cycle voor \(H\) door enkel de lijnen de decrypteren in \(H’\) die overeen stemmen met een Hamiltioniaanse cycle, zonder bewijzen dat \(G\) en \(H\) topologisch isomorf zijn.</li>
     </ul>
   </li>
   <li>Peggy en Victor herhalen stappen 1 temp 4 n keer.</li>
 </ol>
 
-<p>Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor \(G\) is het voor haar onmogelijk een geencrypteerde \(H&#8217;\) te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met \(G\) of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van \(\frac{1}{2}\) om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor \(G\).</p>
+<p>Als Peggy eerlijk is, kan ze elke bewijs in stap 4 aan Victor demonsteren. Als ze geen Hamiltoniaanse cycle kent voor \(G\) is het voor haar onmogelijk een geencrypteerde \(H’\) te maken die kan voldoen aan beide uitdagingen die Victor haar voorlegt. Het beste wat ze kan doen is ofwel een graaf maken die isomorf is met \(G\) of een graaf maken die het zelfde aantal toppen en bogen heeft en een geldige Hamiltoniaanse cycle. Ze heeft opnieuw een kans van \(\frac{1}{2}\) om te gokken welk bewijs Victor zal vragen in stap 3. Victor kan het protocol blijven herhalen tot hij overtuigd is van Peggy een Hamiltioniaanse cycle kent voor \(G\).</p>
 
 <p>Ik ben niet perfect, het is meer dan mogelijk dat ik ergens een typ fout heb. Als iemand fouten vind laat mij iets weten.</p>
+
 
   </article>
 </div>

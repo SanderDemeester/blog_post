@@ -5,25 +5,30 @@
     <meta http-equiv="cache-control" content="no-cache">	
     <link rel="icon" href="/faveicon.ico" type="image/x-icon">
     <title>Sander Demeester - Probabilistic Encryption</title>
-    <link rel="stylesheet" type="text/css" 
-      href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+    <link rel="stylesheet" type="text/css"
+	  href="http://cdn.foundation5.zurb.com/foundation.css"
       media="screen">
     <link rel="stylesheet" type="text/css" href="/style.css">
+
   </head>
   <body>
-    <div class='navbar'>
-      <div class='navbar-inner'>
-        <div class='container'>
-          <a class='brand' href='/'>0xFE</a>
-          <ul class='nav'>
-            <li class='active'><a href='/'>Home</a></li>
-            <li><a href='/about'>About</a></li>
-   	    <li><a href='/blog'>Blog</a></li>			
-	    <li><a href='/projects'>Projects</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <nav class="top-bar" data-topbar role="navigation">
+      <ul class="title-area">
+	<li class="name">
+	  <h1><a href="#">0xeF</a></h1>
+	</li>
+	<!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+	<li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+      </ul>
+
+      <section class="top-bar-section">
+	<!-- Left Nav Section -->
+	<ul class="left">
+	  <li><a href="/about">About</a></li>
+	  <li><a href="/">Blog</a></li>
+	</ul>
+      </section>
+      </nav>
     <script type="text/javascript">
       
       var _gaq = _gaq || [];
@@ -39,6 +44,7 @@
     </script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdn.foundation5.zurb.com/foundation.js"></script>
     <section class='content'>
       <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -47,7 +53,7 @@
 <div class='post'>
   <h1><a href="/blog/probabilistic_enc/">Probabilistic Encryption</a></h1>
   <aside>
-    <p>Posted at: 2013-06-30 13:33:21 +0000</p>
+    <p>Posted at: 2013-06-30 15:33:21 +0200</p>
 	
 	Auteur   : Sander Demeester    
 	
@@ -59,13 +65,14 @@
     
   </aside>
   <article>
-    <p>Het idee van &#8220;probabilistic encryption&#8221; is uitgevonden door <a href="http://people.csail.mit.edu/joanne/shafi-pubs.html">&#8220;Shafi Goldwasser en Silvio Micali&#8221;</a> en is in theorie het veiligste cryptosysteem uitgevonden. De eerste implementaties waren helaas niet praktisch. Dit is recent geëvolueerd naar meer praktische implementaties.</p>
+    
+<p>Het idee van “probabilistic encryption” is uitgevonden door <a href="http://people.csail.mit.edu/joanne/shafi-pubs.html">“Shafi Goldwasser en Silvio Micali”</a> en is in theorie het veiligste cryptosysteem uitgevonden. De eerste implementaties waren helaas niet praktisch. Dit is recent geëvolueerd naar meer praktische implementaties.</p>
 
 <p>Het idee achter probabilistic encryption is om eventuele informatie lekken te elimineren die voorkomen bij public-key cryptografie. Het is altijd mogelijk om een random bericht te encrypteren met de public-key.</p>
 
 <p>Stel dat Carol een bericht <notextile>$$C = E_{K}(M)$$</notextile> heeft en probeert het plaintext bericht \(M\) te achterhalen. Ze kan een random bericht \(M'\) maken en het encrypteren <notextile>$$C' = E_{K}(M')$$</notextile> als \(C = C'\) dan kent Carol origineel bericht \(M\) door te gokken. Als het fout is kan ze gewoon verder proberen.</p>
 
-<p>Er bestaan verschillende soorten aanvallen op RSA, soms kan het mogelijk zijn door een XOR te doen van bepaalde bits in het bericht om een zeker patroon te vinden. Met probabilistic encryption is dit niet het geval. Een iet-wat filosofisch idee is dat elke keer Carol een random bericht encrypteert met een public-key is er wat informatie dat word gelekt, niemand weet hoeveel, maar informatie gaat verloren. </p>
+<p>Er bestaan verschillende soorten aanvallen op RSA, soms kan het mogelijk zijn door een XOR te doen van bepaalde bits in het bericht om een zeker patroon te vinden. Met probabilistic encryption is dit niet het geval. Een iet-wat filosofisch idee is dat elke keer Carol een random bericht encrypteert met een public-key is er wat informatie dat word gelekt, niemand weet hoeveel, maar informatie gaat verloren.</p>
 
 <p>Probabilistic encryption probeert dit verlies van informatie te elimineren. Ons doel hier is om te voorkomen dat elke soort berekening op de ciphertext niet resulteert in verlies van informatie. Het mag niet meer mogelijk zijn om random berichten te maken en deze te encrypteren met de public-key om te proberen de originele plaintext te achterhalen.</p>
 
@@ -81,7 +88,7 @@ $$</notextile>
 <p>Deze eigenschap maakt het onmogelijk om random berichten \(M'\) te maken en te encrypteren om te zien of er een gelijkenis is.
 Stel dat Carol beschikt over ciphertext \(C_{i} = E_{K}(M) \). Als Carol \(M\) correct heeft geraden en de ciphertext \(E_{K}(M)\) heeft berekend dan nog zal  het resultaat toch volledig verschillend zijn. Ze zal niet instaat zijn om \(C_{i},C_{j}\) te vergelijken en een gelijkenis te observeren.</p>
 
-<p>Als Carol beschikt over de correcte plaintext, de ciphertext en de public key kan ze nog niet bewijzen ciphertext het resultaat is van het encryptie proces met de publieke sleutel van de correcte plaintext, zelfs niet met een &#8220;exhaustive search&#8221;. Ze kan enkel beweren dat elke mogelijke plaintext de ciphertext kan zijn.</p>
+<p>Als Carol beschikt over de correcte plaintext, de ciphertext en de public key kan ze nog niet bewijzen ciphertext het resultaat is van het encryptie proces met de publieke sleutel van de correcte plaintext, zelfs niet met een “exhaustive search”. Ze kan enkel beweren dat elke mogelijke plaintext de ciphertext kan zijn.</p>
 
 <p>Het is duidelijk dat als we bovenstaande werkwijze toepassen de ciphertext altijd groter zal zijn dan de corresponderende plaintext. De eerste implementatie had het probleem dat de ciphertext zo groot was dat ze onbruikbaar was. Er bestaat nu een efficiente implementatie van probabilistic encryption gebruik makend van de <a href="https://dl.acm.org/citation.cfm?id=19501">Blub Blub Shub (BBS) random-bit generator</a>. De BBS generator maakt gebruik van kwadratische residuen.</p>
 
@@ -95,7 +102,7 @@ x_{0} = x^{2} \text{ mod n }
 $$
 </notextile>
 
-<p>Gebruik \(x_{0}\) als de seed voor de BBS pseudo-random bit generator en gebruik de output van de generator als &#8220;stream cipher&#8221;.
+<p>Gebruik \(x_{0}\) als de seed voor de BBS pseudo-random bit generator en gebruik de output van de generator als “stream cipher”.
 XOR \(M\) , bit per bit met de output van de generator. De generator heeft als output \(b_{i}\) bits (de minst significante bit van \(x_{i}\), waar \(x_{i} = x_{i-1}^2 \text{ mod n}\)), dus:</p>
 <notextile>
 $$
