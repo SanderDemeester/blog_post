@@ -5,59 +5,74 @@ auteur: "Sander Demeester"
 kind: article
 img: "/img/aes.gif"
 ---
-Encryption with AES encryption algoritm.
-AES werkt met blokken van 16-byte groot, zonder rekening te houden met de key-lengte. AES maakt gebruik van permutaties en een subsitutie-network als interne structuur. Het aantal iteraties dat gebruikt wordt bij het de "key scheduling" hangt af van de key lengte.
+AES operates on blocks of 16 byte (128 bit). 
+AES uses permutations and a substitution-network as the internal structure, the number of iterations that is used when the "key scheduling" depends upon the key length.
 <!-- more -->
-Als de key een lengte heeft van 128-bit (16 bytes), dan is het aantal iteraties 10. Als de key een lengte heeft van 192 bits (24 byte), dan hebben we 12 iteraties. Als de key een lengte heerft van 256 bits, dan maken we gebruik van 14 iteraties. In het algemeen is het aantal iteraties gelijk aan (key-size in 4-byte woorden)+6. Elke iteratie heeft 16 bytes nodig voor "keying material"
-    128 bit key: 160 bytes + extra key permutation 176 bytes
-    192 bit key: 192 bytes + extra key permutation 208 bytes
-    256 bit key: 224 bytes + extra key permutation 240 bytes
+If the key has a length of 128 bit (16 bytes) the number of iterations is 10. If the key has a length of 192 bits (24 byte), then we have 12 iterations. If the key length is 256 bits then we use 14 iterations. In general, the number of iterations is equal to (key size in 4 byte words)+6. Each iteration has 16 bytes needed for "keying material"
+     128 bit key: 160 bytes + 176 bytes extra key permutation
+     192 bit key: 192 bytes + 208 bytes extra key permutation
+     256-bit key: 224 bytes + 240 bytes extra key permutation
 
-Dus voor een 16 byte input, moet het AES key scheduling algoritme een 176 bytes output genereren. De eerste 16 bytes zijn de input zelf. De andere 160 bytes worden berekend in 4 byte blokken per iteratie. Voor alle blokken van 4 byte geldt dat ze een permutatie zijn het vorige 4 byte woord.
+So for a 16 byte input, the AES key scheduling algorithm is to generate a 176 byte output. The first 16 bytes are the input itself. The other 160 bytes are calculated in 4 byte blocks per iteration. Each of the current 4 byte block is a permutation of the privous 4 byte block.
 
-Als voorbeeld kunnen we dus zeggen dat key scheduling bytes 17-20 een permutatie zijn van 13-16. Ofwel bytes 17-20 = bytes 1-4 xor bytes 13-16.
+As an example we can say that the key scheudling bytes 17-20 are a permutation of byte 13-16. Either bytes 17-20 = 1-4 bytes xor bytes 13-16
 
-Om de 4 iteraties (bij een 128 bit key) wordt een transformatie toegepast, de vorige 4 bytes worden "ge-xorded". Deze transformatie bestaat uit:
+A transformation sis applied every 4th iterations (for a 128 bit key). The last 4 bytes are xored. Each transformation consists of the following steps:
 
-        het roteren van een 4 byte woord.
-        de AES sbox gebruiken (subsitutie)
-        XOR met een ronde constante
+		Rotation of a 4 byte word
+		Using the AES sbox (subsitution)
+		XOR with a round constant
 
-De rotatie:
-De 1ste byte wordt overschreven door de 2de byte. De tweede met de derde, de derde met de vierde. En de vierde met de eerste.
+The rotation:
 
-De subsitutie:
-De subsitutie is het opzoeken van elke byte in de encryptie sbox, en het vervangen met de gevonden byte. De translatie tabel is een 16 bij 16 array. De rij wordt aangeduid met de 4 meest significante bits, de kolom wordt aangeduid met de 4 minst significante bits.
-Als voorbeeld, de byte 0x1A is rij 1 met kolom 10. Volgens de specificatie van AES heeft ons dit de "affine transformation over 
 
+The rotation:
+The first byte is overwritting with the second byte.
+The second byte is overwritting by the third byte, the third with the fourth byte and the last byte with the first byte.
+
+
+The subsitutation:
+The subsitation phase looks up each byte in the AES sbox, and replaces it with the corresponding byte in the sbox. The translation table is a 16 by 16 byte array, the row is identified by the 4 most significant bits.
+
+The column is identified by the 4 least significant bits.
+
+For example, the byte 0x1A would correspond with row 1, column 10.
+The AES specification uses an affine transformation over:
 <notextile>
 $$GF(2^{8})\text{ van } b_{i} + b_{(i+4)\text{%}8} + b_{(i+5)\text{%}8} + b_{(i+6)\text{%}8} + b_{(i+7)\text{%}8} + c_{i}$$
 </notextile>
 
-De XOR:
-Op het einde wordt de geroteerde, gesubstitueerde waarde gexorderd met onze ronde constante. De 3 minst significante byte van de ronde constante zijn altijd 0. De meest significante byte start altijd met 0x01, deze byte wordt om de 4 iteraties 1 bit naar links geshift. In volgorde wort dit dus: 0x02 in de 8ste iteratie. 0x04 bij de twaalfde iteratie etc.
+The XOR:
+At the end, our value is xored with our round constant. The 3 least significant bytes of the round constant are always 0. The most significant byte always starts with 0x01. This byte is every 4 iterations shifted 1 bit to the left. In order, this takes on values like so: 0x02 in the 8th iteration. 0x04 to the twelfth iteration etc.
 
-Het is belangrijk op te merken dat voor een 128-bit key de ronde constante 10 keer moet worden naar links geshift, omdat een 128 bit key 44 iteratie's nodig heeft, maar als je een byte 8 keert shift naar links eindig je met een 0x00 byte. De specificatie eist dat, waneer er overflow optreedt bij een left shift, dat je een XOR moet uitvoeren met de byte 0x1B. Voor de "waarom" verwijst ik naar de specificatie pagina 15.
+It is important to note that for a 128 bit key the round constant will be 10 times shifted to the left. Because a 128 bit key needs 44 iterations. But if you have a byte shifted 8 times to the left, you end up with a 0x00 byte. The specification requires that , when overflow occurs in a left shift, you have to perform an XOR with the byte 0x1B. For the "why" I refer to the specification page 15.
 
-Voor de 192-bit key scheduler is het zelfde, het verschil is dat de rotatie, subsitutie en ronde constante XOR worden toegepast bij elke 6de iteratie van het "key scheduling algoritme". Voor een 256-bit key is dit elke 8ste iteratie, omdat elke 8ste iteratie "redelijk ver" uit elkaar ligt. Wordt bij elke 4de iteratie de subsitutie gedaan, en bij elke achtste iteratie de rotatie en XOR operatie.
+The 192 bit key scheduler works very much in the same way. The difference is that the rotation, substituation and the round constant XOR is applied each 9th iteration.
+For a 256 bit key this is each 8th iteration.
+ 
+Because each 8th iteration is a pretty large interval, the subsituation step is applied every 4th iteration.
 
-Het is belangrijk om op te merken dat het resultaat van het "key scheduling" algoritme "non-linear" is, maar wel herhaalbaar.    
 
-AES Encryptie:
+It is important to note that the result of the key scheduling algorithm is non-linear but repeatable.  
 
-AES werkt met blokken van 16-byte voor zijn input, onafhankelijk van de key lengte. We zien de input als een 4 bij 4 matrix, dit is natuurlijk de volledig set van hexadecimale tekens. We zullen dit de "AES state mapping initialization" noemen. We zullen tijdens het encryptie-proces permutaties, subsituties  en keying materiaal combineren met deze state om de output te produceren.
+AES Encryption:
 
-We hebben dus de "Input Block ("State")", we doen een xor met de 1ste 16 bytes van de key en krijgen als output "Ronde 1 Input", eee AES key combination.
-Dit wordt gedaan voor elke ronde, en bestaat uit 4 stappen:
-- Een subsitutie stap.
-- Een row-shifting -stap.
-- Een column-mixing step.
-- Een key-combination stap.
+AES operates on blocks of 16 bytes for each of his inputs regardless of the key length. We view the input as a 4 x 4 matrix, this is obviously the complete set of hexadecimal characters. 
+We'll call this the "AES state mapping initialization". During the encryption we will process this state using permutations, substitutions in combination with keying material to produce the output.
 
-De subsitutie stap voeren we uit op elke byte individueel van de input, en komt van de zelfde matrix die we gebruiken bij het "key scheduling algoritme", nl onze sbox
 
-De rotatie stap voeren we uit op elke rij. De eerste rij roteren we 0 plaatsen. De tweede rij 1 plaats, de derde 2 plaatsen etc.
-De "column mixing"-stap. Deze stap is gedefinieerd als een matrixvermenigvuldiging met de matrix: 
+So we have the "Input Block ("State")". We first do a XOR with the first 16 bytes of the key and get as output "Round 1 input". An AES key combination is performed, each of these rounds exists of the following 4 steps:
+- A substitution step.
+- A row shifting -step.
+- A column mixing step.
+- A key combination step.
+
+We perform the subsitation step on each individual byte of the input. The subsitution is done using the same matrix from the key scheduling algorithm, namely our sbox.
+
+
+We perform the rotation step on each row of our state block.
+The first row is rotated 0 places. The second row is rotated one place, the third row 2 places and so on.
+The column mixing step is defined as a matrix multiplication with the following matrix:
 <notextile>
 $$ \begin{bmatrix}  
 02 & 03 & 01 & 01 \\
@@ -66,25 +81,27 @@ $$ \begin{bmatrix}
 03 & 01 & 01 & 02 \\
 \end{bmatrix} $$  
 </notextile>
-AES herdefiniëert de matrix optelling en matrixvermenigvuldiging operaties voor zijn eigen versies van deze bewerkingen.
-De matrix optelling operatie in AES is gedefinieerd als een XOR operatie. matrixvermenigvuldiging is meervoudig optellen maar modulo 0x1B bij overflow.
+AES redefines the matrix addition and matrix multiplication operations.
+The matrix addition operation in AES is defined as an XOR operation. Matrix multiplication is the multiplication mod 0x1B.
 
-De specificatie noemt deze operaties het inproduct. Wat opnieuw is herdefinitie. Dus, het vermenigvuldigen van 2 bytes is het bepalen van hun inproduct, in AES is dit dus een XOR operatie op 2 bytes die $n$ keer wordt uitgevoerd. N is hier de waarde van is het aantal linker shift operatie en XOR met 0x1B bij overflow neemt.
-
-"Column mixing" stap, het toepassen van AES "inproduct".
+The specification calls this the inner product operation. This again is a redefication. Thus, the multiplication of 2 bytes is the determination of their inner product.
+So this becomes the XOR operation on 2 bytes performed $n$ bytes. $n$ is the number of left shift operations that are xored with 0x1B.
 
 AES Decryption:
 
-Alle wat we hebben gedaan tijdens de encryptie fase moeten we nu terug ontdoen. We starten met de ronden van de keys in omgekeerde volgorde, daarna "unmixen" van de kolommen en un-siften van de rijen. Dit wil dus zeggen dat het decryptie proces niet bestaat uit de zelfde volgorde van operaties als bij het encryptie proces.
+Everything that we have done during the encryption phase must be reversable. We start with the rounds of the keys in reverse order.
+We then start "unmixen" of the columns and reshifting of the rows. Unlike DES, it is not possible so simply reuse the same operations to perform decryption.
 
-Wat opvalt is dat we voor het decryptie proces niet opniew kunnen gebruik maken van dezelfde AES sboxen omdat de subsitutie in omgekeerde volgorde moet verlopen. We hebben dus  1 sbox om te encrypteren en 1 om de decrypteren.
+What is striking is that for decryption we can not reuse the same AES sboxes because the subsitation is in the reverse order. So we have one pair of sboxes to encrypt, and a different set to decrypt.
 
-Het inverteren houdt in dat we de omgekeerde matrix multiplicatie moeten doen van elke kolom in onze matrix. Dit is niet enkel een multiplicatie maar een multiplicatie en een inversie die we beschouwen als een polynoom over \\(GF(2^{8})\\) en vermenigvuldigd modulo \\(x^{4}+1\\) met een vaste polynoom \\(a^{-1}\\)
+Inverting means that we need to do the inverse matrix multiplication of each column in our matrix.
+This is not only a multiplication, but also an inversion. Consider the following polynomial over 
+over \\(GF(2^{8})\\) and multiplied mod \\(x^{4}+1\\) with a polynomial \\(a^{-1}\\)
  gegeven door 
 <notextile>
 $$ a^{-1}(x) = \{0b\}x^\{3\} + \{0d\}x^\{2\} + \{09\}x + \{0e\} $$ 
 </notextile>
-Dit is gelijk met een matrixvermenigvuldiging met de matrix: 
+This is equivalent to a matrix multiplication with the matrix:
 
 <notextile>
 $$ \begin{bmatrix}
@@ -94,6 +111,6 @@ $$ \begin{bmatrix}
 0b & 0d & 09 & 0e 
 \end{bmatrix} $$  
 </notextile>
-Dit is natuurlijk met de hergedefineert operaties beschreven hierboven.
+This is of course with the redefined operations as described above.
 
-link naar specificatie: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a>
+Link to the formal specification: <a href="csrc.nist.gov/publications/fips/fips197/fips-197.pdf">csrc.nist.gov/publications/fips/fips197/fips-197.pdf</a>
